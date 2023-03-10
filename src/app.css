@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .hero-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-8 w-full lg:w-2/3 mx-auto;
+  }
+  .hero-button {
+    @apply p-3 transition text-xl text-white
+    rounded shadow-lg hover:scale-110 duration-300;
+  }
+  .hero-button-container {
+    @apply flex flex-col gap-2 items-center justify-center
+  }
+}
