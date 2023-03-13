@@ -11,6 +11,6 @@
     rounded shadow-lg hover:scale-110 duration-300;
   }
   .hero-button-container {
-    @apply flex flex-col gap-2 items-center justify-center
+    @apply flex flex-col gap-2 items-center justify-center;
   }
 }

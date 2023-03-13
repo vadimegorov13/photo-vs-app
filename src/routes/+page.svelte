@@ -21,19 +21,11 @@
 
     <div class="hero-grid mt-20">
       <div class="hero-button-container">
-        <button
-          class="hero-button bg-purple-500 "
-        >
-          Create Tournament
-        </button>
+        <button class="hero-button bg-purple-500 "> Create Tournament </button>
       </div>
 
       <div class="hero-button-container">
-        <button
-          class="hero-button bg-blue-600"
-        >
-          Join Tournament
-        </button>
+        <button class="hero-button bg-blue-600"> Join Tournament </button>
       </div>
     </div>
   </div>
