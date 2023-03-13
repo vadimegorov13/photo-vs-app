@@ -1,5 +1,14 @@
-<script>
+<script lang="ts">
   import IoMdPhotos from "svelte-icons/io/IoMdPhotos.svelte";
+
+  type User = {
+    id: string;
+    username: string;
+    email: string;
+    avatar: string;
+  };
+
+  export let user: User;
 </script>
 
 <div class="navbar container mx-auto bg-base-100 px-4">
@@ -7,14 +16,29 @@
     <a href="/" class="h-12 w-12 text-xl text-base-100 hover:cursor-pointer bg-primary rounded-md">
       <IoMdPhotos />
     </a>
-    <a href="/" class="ml-2 text-xl md:text-3xl duration-300 hover:cursor-pointer hover:text-primary">Photo-VS </a>
+    <a
+      href="/"
+      class="ml-2 text-xl md:text-3xl duration-300 hover:cursor-pointer hover:text-primary"
+      >Photo-VS
+    </a>
   </div>
 
   <div class="navbar-end space-x-2">
-    <div class="hidden md:block">
-      <a href="/login" class="btn btn-outline">Login</a>
-      <a href="/register" class="btn btn-outline hover:bg-primary hover:text-white hover:border-primary">Register</a>
-    </div>
+    {#if !user}
+      <div class="hidden md:block">
+        <a href="/login" class="btn btn-outline">Login</a>
+        <a
+          href="/register"
+          class="btn btn-outline hover:bg-primary hover:text-white hover:border-primary">Register</a
+        >
+      </div>
+    {:else}
+      <div class="hidden md:block">
+          <form action="/logout" method="POST">
+            <button class="btn btn-outline" type="submit">Logout</button>
+          </form>
+      </div>
+    {/if}
     <div class="dropdown dropdown-end">
       <button class="btn btn-ghost md:hidden">
         <svg
@@ -32,8 +56,18 @@
         >
       </button>
       <ul class="menu dropdown-content mt-4 p-2 shadow bg-base-100 rounded-box w-52">
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Register</a></li>
+        {#if !user}
+          <div>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+          </div>
+        {:else}
+          <div>
+            <form action="/logout" method="POST">
+              <button type="submit">Logout</button>
+            </form>
+          </div>
+        {/if}
       </ul>
     </div>
   </div>

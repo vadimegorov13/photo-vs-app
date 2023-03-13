@@ -7,10 +7,10 @@
   <div class="bg-base-100 py-6 shadow-md rounded-lg w-full max-w-sm mt-6">
     <form method="POST" action="?/register" class="flex flex-col items-center space-y-2 w-full">
       <div class="form-control w-full max-w-xs">
-        <label for="name" class="label font-medium pb-1">
-          <span class="label-text">Name</span>
+        <label for="username" class="label font-medium pb-1">
+          <span class="label-text">Username</span>
         </label>
-        <input type="text" name="name" class="input input-bordered w-full max-w-xs" />
+        <input type="text" name="username" class="input input-bordered w-full max-w-xs" />
       </div>
       <div class="form-control w-full max-w-xs">
         <label for="email" class="label font-medium pb-1">

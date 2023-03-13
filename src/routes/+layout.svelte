@@ -2,10 +2,11 @@
   import Footer from "$lib/components/Footer.svelte";
   import Nav from "$lib/components/Nav.svelte";
   import "../app.css";
+  export let data
 </script>
 
 <div class="flex flex-col min-h-screen">
-  <Nav />
+  <Nav user={data.user}/>
 
   <div class="flex-1 w-full bg-lightOrange">
     <slot />
