@@ -1,4 +1,4 @@
-import { redirect } from "@sveltejs/kit";
+import { redirect, type ServerLoad } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
 type RegisterUser = {
@@ -7,6 +7,13 @@ type RegisterUser = {
   password: string;
   passwordConfirm: string;
 };
+
+export const load: ServerLoad = (async ({ locals }) => {
+  if (locals.pb.authStore.isValid) {
+    throw redirect(307, '/');
+  }
+  return {};
+});
 
 export const actions: Actions = {
   register: async ({ locals, request }) => {
