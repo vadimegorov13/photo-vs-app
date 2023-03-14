@@ -61,7 +61,6 @@ export const actions: Actions = {
 
     try {
       registerSchema.parse(data);
-      console.log(data);
 
       await locals.pb.collection("users").create(data);
       await locals.pb.collection("users").authWithPassword(data.email, data.password);
@@ -88,8 +87,6 @@ export const actions: Actions = {
       }
 
       const { fieldErrors: errors } = err.flatten();
-
-      console.log({ username, email }, errors);
 
       return {
         data: { username, email },
