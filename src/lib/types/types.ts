@@ -1,7 +1,7 @@
 type Basics = {
   id: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created: string;
+  updated: string;
 };
 
 export type Tournament = Basics & {
@@ -14,6 +14,7 @@ export type Tournament = Basics & {
   rounds: Round[];
   submissions: Submission[];
   status: string;
+  joinCode: string;
 };
 
 export type Round = Basics & {
@@ -36,8 +37,11 @@ export type Match = Basics & {
   submissionId2: string;
   submission2: Submission;
   winnerId: string;
-  winner: User;
   status: string;
+  votes1: number;
+  userVotes1: Vote[];
+  votes2: number;
+  userVotes2: Vote[];
 };
 
 export type Submission = Basics & {
@@ -47,13 +51,13 @@ export type Submission = Basics & {
   userId: string;
   user: User;
   imageUrl: string;
-  votes: number;
-  userVotes: Vote[];
 };
 
 export type User = Basics & {
   username: string;
   email: string;
+  avatar: string;
+  verified: boolean;
   submissions: Submission[];
   votes: Vote[];
   tournaments: Tournament[];

@@ -25,7 +25,7 @@
 
     <div class="hero-grid mt-20">
       <div class="hero-button-container">
-        <button class="hero-button bg-primary "> Create Tournament </button>
+        <a href="/tournament" class="hero-button bg-primary "> Create Tournament </a>
       </div>
 
       <div class="hero-button-container">
