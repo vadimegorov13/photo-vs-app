@@ -30,7 +30,7 @@
       </div>
       
 
-      <div class="w-full max-w-xs">
+      <div class="w-full max-w-xs pt-6">
         <button class="btn bg-primary w-full max-w-xs text-white hover:bg-purple-700 delay-100">
           Create Tournament
         </button>

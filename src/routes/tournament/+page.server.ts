@@ -21,27 +21,38 @@ export const actions: Actions = {
     const maxPlayers = parseInt(data?.maxPlayers, 10);
     const maxSubmissions = parseInt(data?.maxSubmissions, 10);
 
-    let id = ''
+    let tournamentId = "";
 
     try {
-      const organizerId: string | undefined = locals.pb.authStore.model?.id;
+      const userId: string | undefined = locals.pb.authStore.model?.id;
+
+      if (!userId){
+        throw new Error('no userId')
+    }
 
       const tournament = {
         title: data.title,
         description: data.description,
         maxPlayers,
         maxSubmissions,
-        organizerId,
+        organizer: userId,
         status: "pending",
-        joinCode: "123451",
-        registeredUsers: [organizerId]
+        joinCode: `${Math.floor(100000 + Math.random() * 900000)}`,
+        registeredUsers: [userId],
       };
 
-      console.log(tournament)
-
       const result = await locals.pb.collection("tournament").create(tournament);
-      id = result.id
-      
+      tournamentId = result.id;
+
+      if (userId) {
+        const user = await locals.pb.collection("users").getOne(userId);
+
+        await locals.pb
+          .collection("users")
+          .update(userId, { tournaments: [...user.tournaments, tournamentId] });
+      }
+
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.log(err);
@@ -50,6 +61,6 @@ export const actions: Actions = {
       };
     }
 
-    throw redirect(303, `/tournament/submission?id=${id}`);
+    throw redirect(303, `/tournament/submission/${tournamentId}`);
   },
 };
