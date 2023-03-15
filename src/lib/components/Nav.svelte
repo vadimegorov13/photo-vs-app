@@ -34,9 +34,9 @@
       </div>
     {:else}
       <div class="hidden md:block">
-          <form action="/logout" method="POST">
-            <button class="btn btn-outline" type="submit">Logout</button>
-          </form>
+        <form action="/logout" method="POST">
+          <button class="btn btn-outline" type="submit">Logout</button>
+        </form>
       </div>
     {/if}
     <div class="dropdown dropdown-end">
@@ -64,7 +64,7 @@
         {:else}
           <div>
             <form action="/logout" method="POST">
-              <button type="submit">Logout</button>
+              <li><button type="submit">Logout</button></li>
             </form>
           </div>
         {/if}

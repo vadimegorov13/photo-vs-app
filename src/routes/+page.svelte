@@ -1,7 +1,3 @@
-<script lang="ts">
-  export let data;
-</script>
-
 <svelte:head>
   <title>PhotoVS</title>
 </svelte:head>
@@ -9,9 +5,6 @@
 <div class="px-10 py-20">
   <div class="container mx-auto">
     <div class="hero-grid">
-      {#if data.user}
-        <h1>Welcome {data.user.username}</h1>
-      {/if}
       <h1 class="text-4xl text-primary ">
         Create and compete in photo tournaments with your friends!
       </h1>
@@ -29,7 +22,7 @@
       </div>
 
       <div class="hero-button-container">
-        <button class="hero-button bg-blue-600"> Join Tournament </button>
+        <a href="/tournament/join" class="hero-button bg-blue-600 "> Join Tournament  </a>
       </div>
     </div>
   </div>

@@ -26,9 +26,9 @@ export const actions: Actions = {
     try {
       const userId: string | undefined = locals.pb.authStore.model?.id;
 
-      if (!userId){
-        throw new Error('no userId')
-    }
+      if (!userId) {
+        throw new Error("no userId");
+      }
 
       const tournament = {
         title: data.title,
@@ -51,7 +51,6 @@ export const actions: Actions = {
           .collection("users")
           .update(userId, { tournaments: [...user.tournaments, tournamentId] });
       }
-
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
