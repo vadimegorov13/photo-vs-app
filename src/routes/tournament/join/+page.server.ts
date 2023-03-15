@@ -15,6 +15,7 @@ export const load: ServerLoad = async ({ locals }) => {
 export const actions: Actions = {
   join: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as Join;
+    let tournamentId;
 
     try {
       const userId = locals.pb.authStore.model?.id;
@@ -23,17 +24,16 @@ export const actions: Actions = {
         .getFirstListItem(`joinCode="${data.joinCode}"`);
 
       if (userId && tournament) {
+        tournamentId = tournament.id;
         const user = await locals.pb.collection("users").getOne(userId);
-
-        console.log('user: ', user)
 
         await locals.pb
           .collection("tournament")
-          .update(tournament.id, { registeredUsers: [...tournament.registeredUsers, userId] });
+          .update(tournamentId, { registeredUsers: [...tournament.registeredUsers, userId] });
 
         await locals.pb
           .collection("users")
-          .update(userId, { tournaments: [...user.tournaments, tournament.id] });
+          .update(userId, { tournaments: [...user.tournaments, tournamentId] });
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,6 +44,6 @@ export const actions: Actions = {
       };
     }
 
-    throw redirect(303, "/");
+    throw redirect(303, `/tournament/submission/${tournamentId}`);
   },
 };
