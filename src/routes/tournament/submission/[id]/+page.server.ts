@@ -1,5 +1,4 @@
-import { redirect, type ServerLoad } from "@sveltejs/kit";
-import type { Actions } from "./$types";
+import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 type SubmissionCreate = {
   title: string;
@@ -7,11 +6,18 @@ type SubmissionCreate = {
   tournamentId: string;
 };
 
-export const load: ServerLoad = async ({ locals }) => {
+export const load: ServerLoad = async ({ locals, params }) => {
   if (!locals.pb.authStore.isValid) {
     throw redirect(307, "/login");
   }
-  return {};
+
+  if (params.id) {
+    return {
+      id: params.id,
+    };
+  }
+
+  throw error(404, "Not Found");
 };
 
 export const actions: Actions = {
@@ -23,22 +29,12 @@ export const actions: Actions = {
       const submissionData = {
         title: data.title,
         imageUrl: data.imageUrl,
-        tournamentId: data.tournamentId,
         tournament: data.tournamentId,
-        userId,
         user: userId,
       };
-
-      console.log('submissionData:', submissionData);
-
-      const tournament = await locals.pb
-        .collection("tournament")
-        .getOne(data.tournamentId);
-
-      console.log('tournament', tournament)
-
+      const tournament = await locals.pb.collection("tournament").getOne(data.tournamentId);
       const submission = await locals.pb.collection("submission").create(submissionData);
-      
+
       await locals.pb
         .collection("tournament")
         .update(data.tournamentId, { submissions: [...tournament.submissions, submission.id] });
