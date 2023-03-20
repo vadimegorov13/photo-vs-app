@@ -1,6 +1,4 @@
 <div class="flex flex-col items-center h-full w-full pt-12">
-  <h2 class="mt-2 text-center text-3xl font-bold text-primary">Join</h2>
-
   <div class="bg-base-100 py-6 shadow-md rounded-lg w-full max-w-sm mt-6">
     <form method="POST" action="?/join" class="flex flex-col items-center space-y-2 w-full">
       <div class="form-control w-full max-w-xs">
@@ -12,7 +10,7 @@
 
       <div class="w-full max-w-xs">
         <button class="btn bg-primary w-full max-w-xs text-white hover:bg-purple-700 delay-100">
-          Submit
+          Join
         </button>
       </div>
     </form>

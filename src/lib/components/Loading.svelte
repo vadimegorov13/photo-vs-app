@@ -1,14 +1,5 @@
 <div class="flex flex-col items-center justify-center" style="height: 70vh">
   <div>
-    <img
-      src="./ameliavibe.gif"
-      alt="ameliavibe"
-      width="64"
-      height="64"
-      style="margin-bottom: 10px"
-    />
-  </div>
-  <div>
     <svg
       class="h-10 w-10 animate-spin text-purple-500"
       xmlns="http://www.w3.org/2000/svg"

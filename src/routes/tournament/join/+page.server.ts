@@ -38,7 +38,6 @@ export const actions: Actions = {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err);
       return {
         err,
       };
