@@ -1,8 +1,18 @@
+import { serializeNonPOJOs, validateTournamnet } from "$lib/helpers";
 import { redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
+import { z } from "zod";
 
 type Join = {
   joinCode: string;
 };
+
+const joinSchema = z.object({
+  joinCode: z
+    .string({ required_error: "Code is required" })
+    .min(6, { message: "Code is required" })
+    .max(6, { message: "Code must be 6 digits long" })
+    .trim(),
+});
 
 export const load: ServerLoad = async ({ locals }) => {
   if (!locals.pb.authStore.isValid) {
@@ -18,10 +28,13 @@ export const actions: Actions = {
     let tournamentId;
 
     try {
+      joinSchema.parse(data);
       const userId = locals.pb.authStore.model?.id;
       const tournament = await locals.pb
         .collection("tournament")
         .getFirstListItem(`joinCode="${data.joinCode}"`);
+
+      validateTournamnet(serializeNonPOJOs(tournament));
 
       if (userId && tournament) {
         tournamentId = tournament.id;
@@ -38,8 +51,31 @@ export const actions: Actions = {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      const { joinCode } = data;
+
+      if (err?.status === 404) {
+        const errors = { joinCode: ["Tournament doesn't exist"] };
+
+        return {
+          data: { joinCode },
+          errors,
+        };
+      }
+
+      if (err?.status === 409) {
+        const errors = { joinCode: [err.body.message] };
+
+        return {
+          data: { joinCode },
+          errors,
+        };
+      }
+
+      const { fieldErrors: errors } = err.flatten();
+
       return {
-        err,
+        data: { joinCode },
+        errors,
       };
     }
 

@@ -1,4 +1,4 @@
-import { serializeNonPOJOs } from "$lib/helpers";
+import { serializeNonPOJOs, validateTournamnet } from "$lib/helpers";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals, params }) => {
@@ -43,6 +43,7 @@ export const actions: Actions = {
     try {
       const userId = locals.pb.authStore.model?.id;
       const tournament = await locals.pb.collection("tournament").getOne(data.id);
+      validateTournamnet(serializeNonPOJOs(tournament))
 
       if (userId && tournament) {
         const user = await locals.pb.collection("users").getOne(userId);
@@ -59,7 +60,7 @@ export const actions: Actions = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return {
-        error: err,
+        error: serializeNonPOJOs(err)
       };
     }
 
