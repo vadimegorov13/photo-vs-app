@@ -13,11 +13,9 @@ export const load: ServerLoad = async ({ locals }) => {
       throw new Error("no userId");
     }
 
-    const user = await locals.pb
-      .collection("users")
-      .getFirstListItem(`id="${userId}"`, {
-        expand: "tournaments, tournaments.registeredUsers, tournaments.submissions",
-      });
+    const user = await locals.pb.collection("users").getFirstListItem(`id="${userId}"`, {
+      expand: "tournaments, tournaments.registeredUsers, tournaments.submissions",
+    });
 
     const tournaments = serializeNonPOJOs(user.expand.tournaments);
 

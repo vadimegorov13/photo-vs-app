@@ -36,5 +36,4 @@
       <p>{data.status}</p>
     </div>
   </div>
-
 </div>

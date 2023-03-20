@@ -43,7 +43,7 @@ export const actions: Actions = {
     try {
       const userId = locals.pb.authStore.model?.id;
       const tournament = await locals.pb.collection("tournament").getOne(data.id);
-      validateTournamnet(serializeNonPOJOs(tournament))
+      validateTournamnet(serializeNonPOJOs(tournament));
 
       if (userId && tournament) {
         const user = await locals.pb.collection("users").getOne(userId);
@@ -60,7 +60,7 @@ export const actions: Actions = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return {
-        error: serializeNonPOJOs(err)
+        error: serializeNonPOJOs(err),
       };
     }
 

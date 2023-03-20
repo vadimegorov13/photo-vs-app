@@ -5,7 +5,7 @@
 <div>
   {#each data.tournaments as tournament}
     <div>
-        Title: {tournament.title}
+      Title: {tournament.title}
     </div>
   {/each}
 </div>

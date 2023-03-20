@@ -22,7 +22,7 @@
       </div>
 
       <div class="hero-button-container">
-        <a href="/tournament/join" class="hero-button bg-blue-600 "> Join Tournament  </a>
+        <a href="/tournament/join" class="hero-button bg-blue-600 "> Join Tournament </a>
       </div>
     </div>
   </div>
