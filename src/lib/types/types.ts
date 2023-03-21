@@ -9,13 +9,19 @@ export type Tournament = Basics & {
   description: string;
   maxPlayers: number;
   maxSubmissions: number;
-  organizer: User;
-  registeredUsers: User[];
+  host: User;
+  registeredUsers: UserTournament[];
   rounds: Round[];
-  submissions: Submission[];
   status: string;
   joinCode: string;
 };
+
+export type UserTournament = Basics & {
+  user: User;
+  tournament: Tournament;
+  submissions: Submission[];
+  ready: boolean;
+}
 
 export type Round = Basics & {
   order: number;
@@ -35,19 +41,24 @@ export type Match = Basics & {
 };
 
 export type Submission = Basics & {
+  user: User
   title: string;
-  tournament: Tournament;
-  user: User;
+  description: string;
   imageUrl: string;
+  comments: UserComment;
 };
+
+export type UserComment = Basics & {
+  comment: string;
+  user: User[]
+}
 
 export type User = Basics & {
   username: string;
   email: string;
   avatar: string;
   verified: boolean;
-  tournaments: Tournament[];
-  submissions: Submission[];
+  tournaments: UserTournament[];
   votes: Vote[];
 };
 
