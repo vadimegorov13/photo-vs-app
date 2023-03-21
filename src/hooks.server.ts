@@ -1,3 +1,4 @@
+import { validateProtectedRoutes } from "$lib/validation/validateProtectedRoutes";
 import type { Handle } from "@sveltejs/kit";
 import PocketBase from "pocketbase";
 
@@ -22,12 +23,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   response.headers.append("set-cookie", event.locals.pb.authStore.exportToCookie());
 
   // validate protect routes
-  // validateProtectedRoutes(event);
-  // if (
-  //   event.url.pathname.startsWith('/login') &&
-  //   event.locals.pb.authStore.isValid
-  // ) {
-  // }
+  validateProtectedRoutes(event);
 
   return response;
 };
