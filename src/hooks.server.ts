@@ -1,4 +1,3 @@
-import { validateProtectedRoutes } from "$lib/validation/validateProtectedRoutes";
 import type { Handle } from "@sveltejs/kit";
 import PocketBase from "pocketbase";
 
@@ -20,10 +19,7 @@ export const handle: Handle = async ({ event, resolve }) => {
   const response = await resolve(event);
 
   // send back the default 'pb_auth' cookie to the client with the latest store state
-  response.headers.append("set-cookie", event.locals.pb.authStore.exportToCookie());
-
-  // validate protect routes
-  validateProtectedRoutes(event);
+  response.headers.append("set-cookie", event.locals.pb.authStore.exportToCookie())
 
   return response;
 };
