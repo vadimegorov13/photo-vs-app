@@ -1,4 +1,10 @@
-import { serializeNonPOJOs, validateTournamnet } from "$lib/helpers";
+import { serializeNonPOJOs } from "$lib/helpers/helpers";
+import {
+  createUserTournament,
+  updateTournamentRegisteredUsers,
+  updateUserTournaments,
+} from "$lib/helpers/tournamentHelpers";
+import { validateTournamentEntry } from "$lib/validation/validateTournamentEntry";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 type Join = {
@@ -6,10 +12,6 @@ type Join = {
 };
 
 export const load: ServerLoad = async ({ locals, params }) => {
-  if (!locals.pb.authStore.isValid) {
-    throw redirect(307, "/login");
-  }
-
   if (!params.id) {
     throw error(404, "Not Found");
   }
@@ -18,11 +20,9 @@ export const load: ServerLoad = async ({ locals, params }) => {
     const tournament = await locals.pb.collection("tournament").getOne(params.id, {
       expand: "registeredUsers, rounds, submissions, round.matches",
     });
-    if (tournament) {
-      return {
-        tournament: serializeNonPOJOs(tournament),
-      };
-    }
+    return {
+      tournament: serializeNonPOJOs(tournament),
+    };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
@@ -39,24 +39,27 @@ export const load: ServerLoad = async ({ locals, params }) => {
 export const actions: Actions = {
   join: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as Join;
+    const userId = locals.pb.authStore.model?.id;
 
     try {
-      const userId = locals.pb.authStore.model?.id;
-      const tournament = await locals.pb.collection("tournament").getOne(data.id);
-      validateTournamnet(serializeNonPOJOs(tournament));
-
-      if (userId && tournament) {
-        const user = await locals.pb.collection("users").getOne(userId);
-
-        await locals.pb
-          .collection("tournament")
-          .update(tournament.id, { registeredUsers: [...tournament.registeredUsers, userId] });
-
-        await locals.pb
-          .collection("users")
-          .update(userId, { tournaments: [...user.tournaments, tournament.id] });
+      if (!userId) {
+        throw error(404, "no userId");
       }
 
+      const tournament = await locals.pb.collection("tournament").getOne(data.id);
+      validateTournamentEntry(serializeNonPOJOs(tournament));
+
+      const userTournament = await createUserTournament(locals.pb, userId, tournament.id);
+
+      await updateTournamentRegisteredUsers(
+        locals.pb,
+        tournament.id,
+        tournament.registeredUsers,
+        userTournament.id
+      );
+
+      const user = await locals.pb.collection("users").getOne(userId);
+      await updateUserTournaments(locals.pb, userId, user.tournaments, userTournament.id);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return {

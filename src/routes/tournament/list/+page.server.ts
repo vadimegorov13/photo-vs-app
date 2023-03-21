@@ -1,5 +1,5 @@
-import { serializeNonPOJOs } from "$lib/helpers";
-import { redirect, type ServerLoad } from "@sveltejs/kit";
+import { serializeNonPOJOs } from "$lib/helpers/helpers";
+import { error, redirect, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals }) => {
   if (!locals.pb.authStore.isValid) {
@@ -10,19 +10,19 @@ export const load: ServerLoad = async ({ locals }) => {
     const userId = locals.pb.authStore.model?.id;
 
     if (!userId) {
-      throw new Error("no userId");
+      throw error(404, "no userId");
     }
 
     const user = await locals.pb.collection("users").getFirstListItem(`id="${userId}"`, {
-      expand: "tournaments, tournaments.registeredUsers, tournaments.submissions",
+      expand: "tournaments, tournaments.tournament, tournaments.submissions",
     });
-
     const tournaments = serializeNonPOJOs(user.expand.tournaments);
 
     return {
       tournaments,
     };
   } catch (err) {
-    return { err };
+    console.log(serializeNonPOJOs(err))
+    return serializeNonPOJOs(err);
   }
 };

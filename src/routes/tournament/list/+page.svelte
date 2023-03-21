@@ -3,9 +3,10 @@
 </script>
 
 <div>
-  {#each data.tournaments as tournament}
+  yo
+  <!-- {#each data.tournaments as tournament}
     <div>
       Title: {tournament.title}
     </div>
-  {/each}
+  {/each} -->
 </div>

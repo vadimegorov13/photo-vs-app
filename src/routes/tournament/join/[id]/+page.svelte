@@ -3,7 +3,7 @@
   export let data;
   export let form;
 
-  let full = data.tournament.registeredUsers.length / data.tournament.maxPlayers === 1;
+  let full = data.tournament?.registeredUsers?.length / data.tournament?.maxPlayers === 1;
 </script>
 
 <div>

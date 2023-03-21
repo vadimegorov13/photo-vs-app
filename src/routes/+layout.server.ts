@@ -1,4 +1,4 @@
-import { serializeNonPOJOs } from "$lib/helpers";
+import { serializeNonPOJOs } from "$lib/helpers/helpers";
 import { validateProtectedRoutes } from "$lib/validation/validateProtectedRoutes";
 import type { ServerLoad } from "@sveltejs/kit";
 

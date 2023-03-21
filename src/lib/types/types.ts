@@ -1,3 +1,5 @@
+export type PocketBase = import("pocketbase").default;
+
 type Basics = {
   id: string;
   created: string;
@@ -21,7 +23,7 @@ export type UserTournament = Basics & {
   tournament: Tournament;
   submissions: Submission[];
   ready: boolean;
-}
+};
 
 export type Round = Basics & {
   order: number;
@@ -41,7 +43,7 @@ export type Match = Basics & {
 };
 
 export type Submission = Basics & {
-  user: User
+  user: User;
   title: string;
   description: string;
   imageUrl: string;
@@ -50,8 +52,8 @@ export type Submission = Basics & {
 
 export type UserComment = Basics & {
   comment: string;
-  user: User[]
-}
+  user: User[];
+};
 
 export type User = Basics & {
   username: string;

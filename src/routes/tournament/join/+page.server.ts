@@ -1,51 +1,57 @@
-import { serializeNonPOJOs, validateTournamnet } from "$lib/helpers";
+import { serializeNonPOJOs } from "$lib/helpers/helpers";
+import {
+  createUserTournament,
+  updateTournamentRegisteredUsers,
+  updateUserTournaments,
+} from "$lib/helpers/tournamentHelpers";
+import { validateTournamentEntry } from "$lib/validation/validateTournamentEntry";
 import { joinSchema } from "$lib/validation/zodValidation";
-import { redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
+import { error, redirect, type Actions } from "@sveltejs/kit";
 
 type Join = {
   joinCode: string;
 };
 
-
-
-export const load: ServerLoad = async ({ locals }) => {
-  if (!locals.pb.authStore.isValid) {
-    throw redirect(307, "/login");
-  }
-
-  return {};
-};
-
 export const actions: Actions = {
   join: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as Join;
-    let tournamentId;
+    const userId = locals.pb.authStore.model?.id;
 
     try {
       joinSchema.parse(data);
-      const userId = locals.pb.authStore.model?.id;
+
+      if (!userId) {
+        throw error(404, "no userId");
+      }
+
       const tournament = await locals.pb
         .collection("tournament")
         .getFirstListItem(`joinCode="${data.joinCode}"`);
+      validateTournamentEntry(serializeNonPOJOs(tournament));
 
-      validateTournamnet(serializeNonPOJOs(tournament));
+      const userTournament = await createUserTournament(locals.pb, userId, tournament.id);
 
-      if (userId && tournament) {
-        tournamentId = tournament.id;
-        const user = await locals.pb.collection("users").getOne(userId);
+      await updateTournamentRegisteredUsers(
+        locals.pb,
+        tournament.id,
+        tournament.registeredUsers,
+        userTournament.id
+      );
 
-        await locals.pb
-          .collection("tournament")
-          .update(tournamentId, { registeredUsers: [...tournament.registeredUsers, userId] });
-
-        await locals.pb
-          .collection("users")
-          .update(userId, { tournaments: [...user.tournaments, tournamentId] });
-      }
-
+      const user = await locals.pb.collection("users").getOne(userId);
+      await updateUserTournaments(locals.pb, userId, user.tournaments, userTournament.id);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const { joinCode } = data;
+
+      if (err?.status === 400) {
+        const errors = { joinCode: ["Something went wrong"] };
+
+        return {
+          data: { joinCode },
+          errors,
+        };
+      }
 
       if (err?.status === 404) {
         const errors = { joinCode: ["Tournament doesn't exist"] };
@@ -73,6 +79,6 @@ export const actions: Actions = {
       };
     }
 
-    throw redirect(303, `/tournament/submission/${tournamentId}`);
+    throw redirect(303, `/tournament/list`);
   },
 };
