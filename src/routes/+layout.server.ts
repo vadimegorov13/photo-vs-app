@@ -1,4 +1,5 @@
 import { serializeNonPOJOs } from "$lib/helpers";
+import { validateProtectedRoutes } from "$lib/validation/validateProtectedRoutes";
 import type { ServerLoad } from "@sveltejs/kit";
 
 type User = {
@@ -8,8 +9,9 @@ type User = {
   avatar: string;
 };
 
-export const load: ServerLoad = ({ locals }) => {
-  const user = locals.pb.authStore.model;
+export const load: ServerLoad = (event) => {
+  const user = event.locals.pb.authStore.model;
+  validateProtectedRoutes(event);
 
   return {
     user: serializeNonPOJOs(user) as User,

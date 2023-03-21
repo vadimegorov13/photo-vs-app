@@ -1,6 +1,10 @@
 import { serializeNonPOJOs, validateTournamnet } from "$lib/helpers";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
+type Join = {
+  id: string;
+};
+
 export const load: ServerLoad = async ({ locals, params }) => {
   if (!locals.pb.authStore.isValid) {
     throw redirect(307, "/login");
@@ -30,10 +34,6 @@ export const load: ServerLoad = async ({ locals, params }) => {
       };
     }
   }
-};
-
-type Join = {
-  id: string;
 };
 
 export const actions: Actions = {

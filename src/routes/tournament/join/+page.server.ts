@@ -1,18 +1,12 @@
 import { serializeNonPOJOs, validateTournamnet } from "$lib/helpers";
+import { joinSchema } from "$lib/validation/zodValidation";
 import { redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
-import { z } from "zod";
 
 type Join = {
   joinCode: string;
 };
 
-const joinSchema = z.object({
-  joinCode: z
-    .string({ required_error: "Code is required" })
-    .min(6, { message: "Code is required" })
-    .max(6, { message: "Code must be 6 digits long" })
-    .trim(),
-});
+
 
 export const load: ServerLoad = async ({ locals }) => {
   if (!locals.pb.authStore.isValid) {
