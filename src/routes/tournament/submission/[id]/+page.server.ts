@@ -1,16 +1,7 @@
+import { serializeNonPOJOs } from "$lib/helpers/helpers";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
-type SubmissionCreate = {
-  title: string;
-  imageUrl: string;
-  tournamentId: string;
-};
-
-export const load: ServerLoad = async ({ locals, params }) => {
-  if (!locals.pb.authStore.isValid) {
-    throw redirect(307, "/login");
-  }
-
+export const load: ServerLoad = async ({ params }) => {
   if (params.id) {
     return {
       id: params.id,
@@ -20,30 +11,28 @@ export const load: ServerLoad = async ({ locals, params }) => {
   throw error(404, "Not Found");
 };
 
+type SubmissionCreate = {
+  title: string;
+  description: string;
+  tournamentId: string;
+  file: File;
+};
+
 export const actions: Actions = {
-  create: async ({ locals, request }) => {
+  upload: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as SubmissionCreate;
+    const userId: string | undefined = locals.pb.authStore.model?.id;
 
     try {
-      const userId: string | undefined = locals.pb.authStore.model?.id;
-      const submissionData = {
-        title: data.title,
-        imageUrl: data.imageUrl,
-        tournament: data.tournamentId,
-        user: userId,
-      };
-      const tournament = await locals.pb.collection("tournament").getOne(data.tournamentId);
-      const submission = await locals.pb.collection("submission").create(submissionData);
-
-      await locals.pb
-        .collection("tournament")
-        .update(data.tournamentId, { submissions: [...tournament.submissions, submission.id] });
+      if (!userId) {
+        throw error(404, "no userId");
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err);
-      return {
-        err,
-      };
+      const error = serializeNonPOJOs(err)
+
+      console.log(error.response.data.image)
+      return error;
     }
 
     throw redirect(303, "/");

@@ -2,7 +2,7 @@
   export let form;
 </script>
 
-<div class="flex flex-col items-center h-full w-full pt-12">
+<div class="flex flex-col items-center h-full w-full mt-12">
   <h2 class="mt-2 text-center text-3xl font-bold text-primary">Login to your account</h2>
   <p class="text-center mt-1 text-base-100">
     Or <a href="/register" class="text-primary font-medium hover:cursor-pointer">register</a> if you
@@ -40,6 +40,14 @@
             <span class="label-text-alt text-error">{form?.errors.password[0]}</span>
           {/if}
         </label>
+      </div>
+      <div class="form-control w-full max-w-xs">
+        <a
+          href="/reset-password"
+          class="font-medium hover:cursor-pointer hover:underline hover:text-primary"
+        >
+          Forgot Password?
+        </a>
       </div>
       <div class="w-full max-w-xs pt-3">
         <button class="btn bg-primary w-full max-w-xs text-white hover:bg-purple-700 delay-100"
