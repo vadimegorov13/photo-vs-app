@@ -6,10 +6,11 @@
   export let type = "text";
   export let disabled = false;
   export let required = false;
+  export let hidden = false;
 </script>
 
-<div class="form-control w-full max-w-lg mb-2">
-  <label for={id} class="label font-medium pb-1">
+<div class="form-control w-full max-w-lg mb-2 {hidden ? 'hidden' : 'block'}">
+  <label for={id} class="label font-medium pb-1" >
     <span class="label-text">{label}</span>
   </label>
   <input
@@ -21,5 +22,6 @@
     {placeholder}
     {disabled}
     {required}
+    {hidden}
   />
 </div>

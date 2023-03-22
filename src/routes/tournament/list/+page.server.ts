@@ -1,5 +1,5 @@
 import { serializeNonPOJOs } from "$lib/helpers/helpers";
-import { error, redirect, type ServerLoad } from "@sveltejs/kit";
+import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals }) => {
   if (!locals.pb.authStore.isValid) {
@@ -25,4 +25,25 @@ export const load: ServerLoad = async ({ locals }) => {
   } catch (err) {
     return serializeNonPOJOs(err);
   }
+};
+
+type DeleteTournament = {
+  id: string;
+};
+
+export const actions: Actions = {
+  delete: async ({ locals, request }) => {
+    const data = Object.fromEntries(await request.formData()) as DeleteTournament;
+
+    try {
+      await locals.pb.collection("tournament").delete(data.id);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.log(serializeNonPOJOs(err));
+    }
+
+    return {
+      success: true,
+    };
+  },
 };

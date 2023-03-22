@@ -1,7 +1,63 @@
 <script lang="ts">
+  import { Icon, Trash } from "svelte-hero-icons";
+  import { invalidateAll } from "$app/navigation";
+  import { enhance, applyAction } from "$app/forms";
+  import MyInput from "../MyInput.svelte";
+
   export let tournament: any;
-  console.log(tournament);
+  export let user: any;
+  let loading: boolean;
+  let deleteAlert: boolean = false;
+
+  $: loading = false;
+
+  const deleteTournament = async () => {
+    loading = true;
+    return async ({ result }: any) => {
+      switch (result.type) {
+        case "success":
+          await invalidateAll();
+          break;
+        case "error":
+          break;
+        default:
+          await applyAction(result);
+      }
+      loading = false;
+      handleAlert()
+    };
+  };
+
+  const handleAlert = () => {
+    deleteAlert = !deleteAlert;
+  };
 </script>
+
+{#if deleteAlert}
+  <div class="alert shadow-lg alert-error">
+    <div>
+      <Icon class="w-4 h-4" src={Trash} />
+      <span>Are you sure you want to delete this tournament?.</span>
+    </div>
+    <div class="flex-none">
+      <button on:click={handleAlert} disabled={loading} class="btn btn-sm btn-ghost">Cancel</button>
+      <form method="POST" action="?/delete" use:enhance={deleteTournament}>
+        <MyInput
+          id="id"
+          label="id"
+          value={tournament.expand.tournament.id}
+          disabled={loading}
+          hidden
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          class="btn btn-sm btn-primary">Delete</button
+        >
+      </form>
+    </div>
+  </div>
+{/if}
 
 <div class="card md:card-side bg-base-100 shadow-xl">
   <figure>
@@ -11,8 +67,19 @@
     />
   </figure>
   <div class="card-body">
-    <h2 class="card-title">{tournament.expand.tournament.title}</h2>
+    <div class="flex flex-row gap-8">
+      <h2 class="card-title">{tournament.expand.tournament.title}</h2>
+      {#if user.id === tournament.expand.tournament.host}
+        <div class="text-error hover:cursor-pointer">
+          <button on:click={handleAlert} disabled={loading}
+            ><Icon class="w-6 h-6" src={Trash} /></button
+          >
+        </div>
+      {/if}
+    </div>
+
     <p>{tournament.expand.tournament.description}</p>
+
     <p>
       Participants:
       <slug
