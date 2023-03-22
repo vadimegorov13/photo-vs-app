@@ -2,7 +2,7 @@
   <title>PhotoVS</title>
 </svelte:head>
 
-<div class="px-10 py-20">
+<div class="mx-10 my-20">
   <div class="container mx-auto">
     <div class="hero-grid">
       <h1 class="text-4xl text-primary ">

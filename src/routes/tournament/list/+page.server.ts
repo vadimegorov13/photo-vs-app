@@ -14,15 +14,15 @@ export const load: ServerLoad = async ({ locals }) => {
     }
 
     const user = await locals.pb.collection("users").getFirstListItem(`id="${userId}"`, {
-      expand: "tournaments, tournaments.tournament, tournaments.submissions",
+      expand:
+        "tournaments, tournaments.tournament, tournaments.tournament.registeredUsers, tournaments.tournament.host, tournaments.submissions",
     });
     const tournaments = serializeNonPOJOs(user.expand.tournaments);
 
-    return {
-      tournaments,
-    };
+    // console.log(tournaments[0].expand.tournament.title)
+
+    return { tournaments };
   } catch (err) {
-    console.log(serializeNonPOJOs(err))
     return serializeNonPOJOs(err);
   }
 };
