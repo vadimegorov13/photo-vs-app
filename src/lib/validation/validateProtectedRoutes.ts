@@ -12,4 +12,8 @@ export const validateProtectedRoutes = (event: RequestEvent) => {
   if (event.url.pathname.startsWith("/tournament") && !event.locals.pb.authStore.isValid){
     throw redirect(303, "/login");
   }
+
+  if (event.url.pathname.startsWith("/my") && !event.locals.pb.authStore.isValid){
+    throw redirect(303, "/login");
+  }
 };
