@@ -46,4 +46,18 @@ export const actions: Actions = {
       success: true,
     };
   },
+  leave: async ({ locals, request }) => {
+    const data = Object.fromEntries(await request.formData()) as DeleteTournament;
+
+    try {
+      await locals.pb.collection("userTournament").delete(data.id);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.log(serializeNonPOJOs(err));
+    }
+
+    return {
+      success: true,
+    };
+  },
 };

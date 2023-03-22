@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Icon, Trash } from "svelte-hero-icons";
+  import { Icon, Trash, UserMinus } from "svelte-hero-icons";
   import { invalidateAll } from "$app/navigation";
   import { enhance, applyAction } from "$app/forms";
   import MyInput from "../MyInput.svelte";
@@ -7,7 +7,7 @@
   export let tournament: any;
   export let user: any;
   let loading: boolean;
-  let deleteAlert: boolean = false;
+  let tournamentAlert: boolean = false;
 
   $: loading = false;
 
@@ -24,16 +24,16 @@
           await applyAction(result);
       }
       loading = false;
-      handleAlert()
+      handleAlert();
     };
   };
 
   const handleAlert = () => {
-    deleteAlert = !deleteAlert;
+    tournamentAlert = !tournamentAlert;
   };
 </script>
 
-{#if deleteAlert}
+{#if tournamentAlert && user.id === tournament.expand.tournament.host}
   <div class="alert shadow-lg alert-error">
     <div>
       <Icon class="w-4 h-4" src={Trash} />
@@ -49,11 +49,27 @@
           disabled={loading}
           hidden
         />
-        <button
-          type="submit"
+        <button type="submit" disabled={loading} class="btn btn-sm btn-primary">Delete</button>
+      </form>
+    </div>
+  </div>
+{:else if tournamentAlert && user.id !== tournament.expand.tournament.host}
+  <div class="alert shadow-lg alert-error">
+    <div>
+      <Icon class="w-4 h-4" src={UserMinus} />
+      <span>Are you sure you want to leave this tournament?.</span>
+    </div>
+    <div class="flex-none">
+      <button on:click={handleAlert} disabled={loading} class="btn btn-sm btn-ghost">Cancel</button>
+      <form method="POST" action="?/leave" use:enhance={deleteTournament}>
+        <MyInput
+          id="id"
+          label="id"
+          value={tournament.id}
           disabled={loading}
-          class="btn btn-sm btn-primary">Delete</button
-        >
+          hidden
+        />
+        <button type="submit" disabled={loading} class="btn btn-sm btn-primary">Leave</button>
       </form>
     </div>
   </div>
@@ -71,9 +87,15 @@
       <h2 class="card-title">{tournament.expand.tournament.title}</h2>
       {#if user.id === tournament.expand.tournament.host}
         <div class="text-error hover:cursor-pointer">
-          <button on:click={handleAlert} disabled={loading}
-            ><Icon class="w-6 h-6" src={Trash} /></button
-          >
+          <button on:click={handleAlert} disabled={loading}>
+            <Icon class="w-6 h-6" src={Trash} />
+          </button>
+        </div>
+      {:else}
+        <div class="text-error hover:cursor-pointer">
+          <button on:click={handleAlert} disabled={loading}>
+            <Icon class="w-6 h-6" src={UserMinus} />
+          </button>
         </div>
       {/if}
     </div>
