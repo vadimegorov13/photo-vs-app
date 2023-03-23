@@ -1,14 +1,10 @@
 <script lang="ts">
-  import { invalidateAll } from "$app/navigation";
-  import { enhance, applyAction } from "$app/forms";
-  import Input from "$lib/components/inputs/Input.svelte";
   import { getImageUrl } from "$lib/helpers/helpers";
   import { Icon, Pencil } from "svelte-hero-icons";
+  import ValidatedInput from "$lib/components/inputs/ValidatedInput.svelte";
 
   export let data;
-  let loading: boolean;
-
-  $: loading = false;
+  export let form;
 
   interface FormEventHandler<T> {
     target: EventTarget | null;
@@ -25,35 +21,20 @@
       if (preview) preview.src = src;
     }
   };
-
-  const submitUpdateProfile = async () => {
-    loading = true;
-    return async ({ result }: any) => {
-      switch (result.type) {
-        case "success":
-          await invalidateAll();
-          break;
-        case "error":
-          break;
-        default:
-          await applyAction(result);
-      }
-      loading = false;
-    };
-  };
 </script>
 
-<div class="flex flex-col w-full h-full">
+<div class="flex flex-col">
   <form
     method="POST"
     action="?/updateProfile"
-    class="flex flex-col items-center space-y-2 w-full"
+    class="flex flex-col w-full"
     enctype="multipart/form-data"
-    use:enhance={submitUpdateProfile}
   >
-    <h3 class="text-2xl font-medium">Update Profile</h3>
-    <div class="form-conrtol w-full max-w-lg">
-      <label for="avatar" class="label font-medium pb-1">
+    <div class="form-control flex flex-col items-center">
+      <h3 class="text-2xl font-medium">Update Profile</h3>
+      <div class="divider" />
+
+      <label for="avatar" class="label font-medium">
         <span class="label-text">Profile Picture</span>
       </label>
       <label for="avatar" class="avatar w-32 rounded-full hover:cursor-pointer">
@@ -80,25 +61,39 @@
         accept="image/*"
         hidden
         on:change={showPreview}
-        disabled={loading}
       />
     </div>
-    <Input
-      id="username"
-      label="Username"
-      value={data.user.username}
-      placeholder="Enter your username"
-      disabled={loading}
-      required
-    />
+    <div class="flex flex-col items-center">
+      <ValidatedInput
+        id="username"
+        value={form?.data?.username ?? data.user.username}
+        label="Username"
+        placeholder="Enter your username"
+        errors={form?.errors?.username}
+      />
 
-    <div class="w-full max-w-xs pt-3">
-      <button
-        class="btn bg-primary w-full max-w-xs text-white hover:bg-purple-700 delay-100"
-        disabled={loading}
-      >
-        Update Profile
-      </button>
+      <div class="w-full max-w-md pt-3">
+        <button class="btn btn-primary w-full">Update Profile</button>
+      </div>
+      {#if form?.success === true}
+        <div class="alert alert-success shadow-lg mt-6 max-w-md">
+          <div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="stroke-current flex-shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              ><path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              /></svg
+            >
+            <span>Your profile has been updated!</span>
+          </div>
+        </div>
+      {/if}
     </div>
   </form>
 </div>
