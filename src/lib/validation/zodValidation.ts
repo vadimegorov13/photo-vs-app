@@ -133,3 +133,16 @@ export const joinSchema = z.object({
     .max(6, { message: "Code must be 6 digits long" })
     .trim(),
 });
+
+export const submissionSchema = z.object({
+  title: z
+    .string({ required_error: "Title is required" })
+    .min(3, { message: "Title must be at least 3 characters long" })
+    .max(64, { message: "Title must be less than 64 characters" })
+    .trim(),
+  description: z
+    .string({ required_error: "Description is required" })
+    .min(3, { message: "Description must be at least 3 characters long" })
+    .max(256, { message: "Description must be less than 256 characters" })
+    .trim(),
+});

@@ -1,4 +1,4 @@
-import { serializeNonPOJOs } from "$lib/helpers/helpers";
+import { submissionSchema } from "$lib/validation/zodValidation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ params }) => {
@@ -11,30 +11,88 @@ export const load: ServerLoad = async ({ params }) => {
   throw error(404, "Not Found");
 };
 
-type SubmissionCreate = {
-  title: string;
-  description: string;
-  tournamentId: string;
-  file: File;
-};
-
 export const actions: Actions = {
   upload: async ({ locals, request }) => {
-    const data = Object.fromEntries(await request.formData()) as SubmissionCreate;
+    const data = await request.formData();
+
+    const title = data.get("title") as string;
+    const description = data.get("description") as string;
+    const tournamentId = data.get("tournamentId") as string;
+    const image = data.get("image");
+
     const userId: string | undefined = locals.pb.authStore.model?.id;
 
     try {
       if (!userId) {
-        throw error(404, "no userId");
+        throw redirect(303, "/login");
       }
+
+      if (!image) {
+        throw error(400, "Please upload an image");
+      }
+
+      submissionSchema.parse(Object.fromEntries(data));
+
+      const newFormData = new FormData();
+      newFormData.append("title", title);
+      newFormData.append("description", description);
+      newFormData.append("user", userId);
+      newFormData.append("image", image);
+
+      const submission = await locals.pb.collection("submission").create(newFormData);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const userTournament: any = await locals.pb
+        .collection("userTournament")
+        .getFirstListItem(`user="${userId}" && tournament="${tournamentId}"`, {
+          expand: "tournament",
+        });
+
+      if (userTournament.submissions.length >= userTournament.expand.tournament.maxSubmissions) {
+        throw error(406, "You've riched the limit of submissions");
+      }
+
+      await locals.pb
+        .collection("userTournament")
+        .update(userTournament.id, { submissions: [...userTournament.submissions, submission.id] });
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      const error = serializeNonPOJOs(err);
+      if (err?.response?.code === 400) {
+        const errors = { image: ["Something went wrong"] };
 
-      console.log(error.response.data.image);
-      return error;
+        return {
+          data: { title, description },
+          errors,
+        };
+      }
+
+      if (err?.status === 406) {
+        const errors = { image: [err.body.message] };
+
+        return {
+          data: { title, description },
+          errors,
+        };
+      }
+
+      if (err?.status === 400) {
+        const errors = { image: [err.body.message] };
+
+        return {
+          data: { title, description },
+          errors,
+        };
+      }
+
+      const { fieldErrors: errors } = err.flatten();
+
+      return {
+        data: { title, description },
+        errors,
+      };
     }
 
-    throw redirect(303, "/");
+    throw redirect(303, "/tournament/list");
   },
 };

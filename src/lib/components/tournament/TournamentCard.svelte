@@ -69,13 +69,7 @@
   </div>
 {/if}
 
-<div class="card md:card-side bg-base-100 shadow-xl">
-  <figure>
-    <img
-      src="https://cdn.pixabay.com/photo/2022/11/14/18/27/ai-generated-7592244_960_720.jpg"
-      alt="Movie"
-    />
-  </figure>
+<div class="card md:card-side bg-base-100 shadow-lg">
   <div class="card-body">
     <div class="flex flex-row gap-8">
       <h2 class="card-title">{tournament.expand.tournament.title}</h2>

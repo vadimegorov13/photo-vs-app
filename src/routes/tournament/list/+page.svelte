@@ -11,11 +11,13 @@
         You have no tournaments yet
       </div>
     {:else}
-      <div class="flex flex-col items-center text-black text-3xl my-10 font-semibold">
-        Your tournaments
+      <div class="flex flex-row mt-8">
+        <div class="text-2xl font-medium pl-4 pt-2">Your tournaments</div>
       </div>
 
-      <div class="flex flex-col items-center gap-8">
+      <div class="divider" />
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {#each data.tournaments as tournament}
           <TournamentCard {tournament} user={data.user} />
         {/each}
