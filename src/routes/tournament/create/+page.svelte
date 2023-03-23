@@ -1,50 +1,48 @@
-<div class="flex flex-col items-center h-full w-full pt-12">
-  <h2 class="mt-2 text-center text-3xl font-bold text-primary">Create tournament</h2>
+<script>
+  import ValidatedInput from "$lib/components/inputs/ValidatedInput.svelte";
 
-  <div class="bg-base-100 py-6 shadow-md rounded-lg w-full max-w-sm mt-6">
-    <form method="POST" action="?/create" class="flex flex-col items-center space-y-2 w-full">
-      <div class="form-control w-full max-w-xs">
-        <label for="title" class="label font-medium pb-1">
-          <span class="label-text">Title</span>
-        </label>
-        <input type="text" name="title" class="input input-bordered w-full max-w-xs" />
-      </div>
-      <div class="form-control w-full max-w-xs">
-        <label for="description" class="label font-medium pb-1">
-          <span class="label-text">Description</span>
-        </label>
-        <input type="text" name="description" class="input input-bordered w-full max-w-xs" />
-      </div>
-      <div class="form-control w-full max-w-xs">
-        <label for="maxPlayers" class="label font-medium pb-1">
-          <span class="label-text"># of Participants</span>
-        </label>
-        <input
-          type="number"
-          name="maxPlayers"
-          class="input input-bordered w-full max-w-xs"
-          min="2"
-          max="32"
-        />
-      </div>
+  export let form;
+</script>
 
-      <div class="form-control w-full max-w-xs">
-        <label for="maxSubmissions" class="label font-medium pb-1">
-          <span class="label-text"># of Submissions</span>
-        </label>
-        <input
-          type="number"
-          name="maxSubmissions"
-          class="input input-bordered w-full max-w-xs"
-          min="1"
-          max="32"
-        />
-      </div>
+<div class="flex flex-col items-center mx-10 sm:mx-20">
+  <div class="m-10">
+    <h2 class="text-primary text-center text-3xl font-bold">Create tournament</h2>
+  </div>
 
-      <div class="w-full max-w-xs pt-6">
-        <button class="btn bg-primary w-full max-w-xs text-white hover:bg-purple-700 delay-100">
-          Create Tournament
-        </button>
+  <div class="w-full">
+    <form method="POST" action="?/create" class="flex flex-col items-center">
+      <ValidatedInput
+        id="title"
+        value={form?.data?.title ?? ""}
+        label="Title"
+        errors={form?.errors?.title}
+      />
+
+      <ValidatedInput
+        id="description"
+        value={form?.data?.description ?? ""}
+        label="Description"
+        errors={form?.errors?.description}
+      />
+
+      <ValidatedInput
+        id="maxPlayers"
+        type="number"
+        value={form?.data?.maxPlayers ?? 0}
+        label="# of Participants"
+        errors={form?.errors?.maxPlayers}
+      />
+
+      <ValidatedInput
+        id="maxSubmissions"
+        type="number"
+        value={form?.data?.maxSubmissions ?? 0}
+        label="# of Submissions"
+        errors={form?.errors?.maxSubmissions}
+      />
+
+      <div class="w-full max-w-md mt-6">
+        <button class="btn btn-primary w-full">Create Tournament</button>
       </div>
     </form>
   </div>

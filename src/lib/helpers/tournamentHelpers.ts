@@ -35,3 +35,17 @@ export const updateUserTournaments = async (
     tournaments: [...userTournaments, userTournamentId],
   });
 };
+
+export const registerUserForTournament = async (
+  pb: PocketBase,
+  userId: string,
+  tournamentId: string,
+  registeredUsers: string[]
+) => {
+  const userTournament = await createUserTournament(pb, userId, tournamentId);
+
+  await updateTournamentRegisteredUsers(pb, tournamentId, registeredUsers, userTournament.id);
+
+  const user = await pb.collection("users").getOne(userId);
+  await updateUserTournaments(pb, userId, user.tournaments, userTournament.id);
+};

@@ -101,6 +101,31 @@ export const changePasswordSchema = z
     }
   });
 
+export const createTournamentSchema = z.object({
+  title: z
+    .string({ required_error: "Title is required" })
+    .min(3, { message: "Title must be at least 3 characters long" })
+    .max(64, { message: "Title must be less than 64 characters" })
+    .trim(),
+  description: z
+    .string({ required_error: "Description is required" })
+    .min(3, { message: "Description must be at least 3 characters long" })
+    .max(256, { message: "Description must be less than 256 characters" })
+    .trim(),
+  maxPlayers: z
+    .number({ required_error: "Number for the maximum amount of players is required" })
+    .min(2, { message: "There must be at least 2 players" })
+    .max(16, { message: "There can be a maximum of 10 players" })
+    .positive(),
+  maxSubmissions: z
+    .number({
+      required_error: "Number for the maximum amount of submissions is required",
+    })
+    .min(1, { message: "There must be at least 1 submission per player" })
+    .max(10, { message: "There can be a maximum of 10 submissions per player" })
+    .positive(),
+});
+
 export const joinSchema = z.object({
   joinCode: z
     .string({ required_error: "Code is required" })
