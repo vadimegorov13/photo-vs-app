@@ -6,7 +6,7 @@
   <title>PhotoVS</title>
 </svelte:head>
 
-  <div class="hero bg-base-200 my-10">
+  <div class="hero bg-base-200 mt-10">
     <div class="hero-content">
       <div class="max-w-xl">
         <h1 class="text-5xl font-bold text-primary">Create and compete in photo tournaments with your friends!</h1>
