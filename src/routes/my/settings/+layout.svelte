@@ -1,5 +1,7 @@
 <script>
   import { page } from "$app/stores";
+  import { Icon, Bars3BottomLeft } from "svelte-hero-icons";
+
   const navigaiton = [
     {
       title: "Profile",
@@ -16,23 +18,49 @@
   ];
 </script>
 
-<div class="w-full h-full px-2">
-  <h3 class="text-2xl font-medium">Settings</h3>
-  <div class="divider" />
-</div>
-<div class="flex w-full h-full space-x-4">
-  <ul class="menu bg-base-100 w-56 p-2 rounded-box">
-    {#each navigaiton as navItem}
-      <li>
-        <a
-          href={navItem.href}
-          class="font-medium {$page.url.pathname === navItem.href ? 'active' : ''}"
-          >{navItem.title}</a
-        >
-      </li>
-    {/each}
-  </ul>
-  <div class="w-full">
-    <slot />
+<div class="flex justify-center">
+  <div class="flex-1 max-w-3xl mx-10">
+    <div class="w-full">
+      <div class="flex flex-row mt-8">
+        <div class="text-2xl font-medium pl-4 pt-2">
+          Settings
+        </div>
+        <div class="dropdown dropdown-end sm:hidden ml-auto">
+          <button class="btn btn-ghost">
+            <Icon class="w-8 h-8" src={Bars3BottomLeft} />
+          </button>
+          <ul class="menu dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 gap-2">
+            {#each navigaiton as navItem}
+              <li>
+                <a
+                  href={navItem.href}
+                  class="font-medium {$page.url.pathname === navItem.href ? 'active' : ''}"
+                  >{navItem.title}</a
+                >
+              </li>
+            {/each}
+          </ul>
+        </div>
+      </div>
+
+      <div class="divider" />
+    </div>
+
+    <div class="flex">
+      <ul class="bg-base-100 w-56 p-2 rounded-box gap-2 hidden sm:menu">
+        {#each navigaiton as navItem}
+          <li>
+            <a
+              href={navItem.href}
+              class="font-medium {$page.url.pathname === navItem.href ? 'active' : ''}"
+              >{navItem.title}</a
+            >
+          </li>
+        {/each}
+      </ul>
+      <div class="w-full">
+        <slot />
+      </div>
+    </div>
   </div>
 </div>
