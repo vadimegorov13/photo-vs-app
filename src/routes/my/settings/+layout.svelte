@@ -22,9 +22,7 @@
   <div class="flex-1 max-w-3xl mx-10">
     <div class="w-full">
       <div class="flex flex-row mt-8">
-        <div class="text-2xl font-medium pl-4 pt-2">
-          Settings
-        </div>
+        <div class="text-2xl font-medium pl-4 pt-2">Settings</div>
         <div class="dropdown dropdown-end sm:hidden ml-auto">
           <button class="btn btn-ghost">
             <Icon class="w-8 h-8" src={Bars3BottomLeft} />

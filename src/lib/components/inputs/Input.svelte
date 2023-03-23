@@ -10,7 +10,7 @@
 </script>
 
 <div class="form-control w-full max-w-lg mb-2 {hidden ? 'hidden' : 'block'}">
-  <label for={id} class="label font-medium pb-1" >
+  <label for={id} class="label font-medium pb-1">
     <span class="label-text">{label}</span>
   </label>
   <input

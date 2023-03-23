@@ -27,7 +27,7 @@
                 ? getImageUrl(user.collectionId, user.id, user.avatar)
                 : `https://avatars.dicebear.com/api/jdenticon/${user.id}.svg`}
               alt="user avatar"
-              id="avatar-preview"
+              id="user-avatar"
             />
           </div>
         </button>
@@ -36,7 +36,7 @@
             <a class="justify-between" href="/tournament/list">My Tournaments</a>
           </li>
           <li><a href="/my/settings">Settings</a></li>
-          <div class="divider m-0"></div>
+          <div class="divider m-0" />
           <form action="/logout" method="POST">
             <li><button type="submit">Logout</button></li>
           </form>

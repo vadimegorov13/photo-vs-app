@@ -2,8 +2,7 @@
 module.exports = {
   content: ["./src/**/*.{html,js,svelte,ts}"],
   theme: {
-    extend: {
-    },
+    extend: {},
   },
   plugins: [require("daisyui")],
   daisyui: {
@@ -19,7 +18,7 @@ module.exports = {
       },
       "dark",
       "cupcake",
-      "fantasy"
+      "fantasy",
     ],
   },
 };

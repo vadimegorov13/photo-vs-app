@@ -10,11 +10,7 @@
     <p class="text-black">We'll send you an email with a link to reset your password.</p>
   </div>
 
-  <form
-    action="?/resetPassword"
-    method="POST"
-    class="flex flex-col items-center w-full max-w-md"
-  >
+  <form action="?/resetPassword" method="POST" class="flex flex-col items-center w-full max-w-md">
     <ValidatedInput
       id="email"
       type="email"

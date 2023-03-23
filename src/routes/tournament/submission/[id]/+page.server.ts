@@ -29,9 +29,9 @@ export const actions: Actions = {
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      const error = serializeNonPOJOs(err)
+      const error = serializeNonPOJOs(err);
 
-      console.log(error.response.data.image)
+      console.log(error.response.data.image);
       return error;
     }
 
