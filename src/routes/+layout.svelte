@@ -8,15 +8,9 @@
 <div class="flex flex-col min-h-screen">
   <Nav user={data.user} />
 
-  <div class="flex-1 w-full bg-lightOrange">
+  <div class="flex-1">
     <slot />
   </div>
 
   <Footer />
 </div>
-
-<style lang="postcss">
-  :global(html) {
-    background-color: theme(colors.gray.50);
-  }
-</style>

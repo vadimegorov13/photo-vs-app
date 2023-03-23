@@ -1,29 +1,29 @@
+<script>
+  import { redirect } from "@sveltejs/kit";
+</script>
+
 <svelte:head>
   <title>PhotoVS</title>
 </svelte:head>
 
-<div class="mx-10 my-20">
-  <div class="container mx-auto">
-    <div class="hero-grid">
-      <h1 class="text-4xl text-primary ">
-        Create and compete in photo tournaments with your friends!
-      </h1>
-
-      <div class="text-xl text-primary">
-        With customizable rules and multiple tournament modes, our platform offers an engaging and
-        user-friendly experience for photography enthusiasts. Join now and showcase your skills to
-        your friends!
-      </div>
-    </div>
-
-    <div class="hero-grid mt-20">
-      <div class="hero-button-container">
-        <a href="/tournament/create" class="hero-button bg-primary "> Create Tournament </a>
-      </div>
-
-      <div class="hero-button-container">
-        <a href="/tournament/join" class="hero-button bg-blue-600 "> Join Tournament </a>
+  <div class="hero bg-base-200 my-10">
+    <div class="hero-content">
+      <div class="max-w-xl">
+        <h1 class="text-5xl font-bold text-primary">Create and compete in photo tournaments with your friends!</h1>
+        <p class="py-6">
+          With customizable rules and multiple tournament modes, our platform offers an engaging and
+          user-friendly experience for photography enthusiasts. Join now and showcase your skills to
+          your friends!
+        </p>
+        <div class="grid sm:grid-cols-2 gap-8">
+          <button class="btn btn-primary" on:click={() => redirect(303, "/tournament/create")}
+            >Create Tournament</button
+          >
+          <button class="btn btn-secondary" on:click={() => redirect(303, "/tournament/join")}
+            >Join Tournament</button
+          >
+        </div>
       </div>
     </div>
   </div>
-</div>
+  

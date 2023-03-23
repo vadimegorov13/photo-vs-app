@@ -1,42 +1,50 @@
 <script lang="ts">
-  import IoMdPhotos from "svelte-icons/io/IoMdPhotos.svelte";
+  import { getImageUrl } from "$lib/helpers/helpers";
+  import { Icon, Photo } from "svelte-hero-icons";
 
-  type User = {
-    id: string;
-    username: string;
-    email: string;
-    avatar: string;
-  };
-
-  export let user: User;
+  export let user: any;
+  console.log(user);
 </script>
 
-<div class="navbar container mx-auto bg-base-100 px-4">
-  <div class="navbar-start">
-    <a href="/" class="h-12 w-12 text-xl text-base-100 hover:cursor-pointer bg-primary rounded-md">
-      <IoMdPhotos />
-    </a>
-    <a
-      href="/"
-      class="ml-2 text-xl md:text-3xl duration-300 hover:cursor-pointer hover:text-primary"
-      >Photo-VS
+<div class="navbar bg-red-100">
+  <div class="flex-1">
+    <a href="/" class="btn btn-ghost normal-case text-2xl px-2">
+      <Icon class="h-12 w-12 text-primary" src={Photo} />PhotoVS
     </a>
   </div>
 
-  <div class="navbar-end space-x-2">
+  <div class="flex-none">
     {#if !user}
       <div class="hidden md:block">
         <a href="/login" class="btn btn-outline">Login</a>
-        <a
-          href="/register"
-          class="btn btn-outline hover:bg-primary hover:text-white hover:border-primary">Register</a
-        >
+        <a href="/register" class="btn btn-primary">Register</a>
       </div>
     {:else}
       <div class="hidden md:block">
-        <form action="/logout" method="POST">
-          <button class="btn btn-outline" type="submit">Logout</button>
-        </form>
+        <div class="dropdown dropdown-end">
+          <button class="btn btn-ghost btn-circle avatar">
+            <div class="w-10 rounded-full">
+              <img
+                src={user.avatar
+                  ? getImageUrl(user.collectionId, user.id, user.avatar)
+                  : `https://avatars.dicebear.com/api/jdenticon/${user.id}.svg`}
+                alt="user avatar"
+                id="avatar-preview"
+              />
+            </div>
+          </button>
+          <ul
+            class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <li>
+              <a class="justify-between" href="/tournament/list">My Tournaments</a>
+            </li>
+            <li><a href="/my/settings">Settings</a></li>
+            <form action="/logout" method="POST">
+              <li><button type="submit">Logout</button></li>
+            </form>
+          </ul>
+        </div>
       </div>
     {/if}
     <div class="dropdown dropdown-end">

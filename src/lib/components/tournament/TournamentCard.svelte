@@ -120,7 +120,7 @@
       </p>
       <div class="card-actions justify-end">
         <a sapper:prefetch rel="external" href={`/tournament/submission/${tournament.tournament}`}>
-          <button class="btn btn-primary">Submit photo</button>
+          <button class="btn btn-primary">Submit Image</button>
         </a>
       </div>
     </div>
