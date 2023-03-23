@@ -33,14 +33,6 @@ export const actions: Actions = {
 
       submissionSchema.parse(Object.fromEntries(data));
 
-      const newFormData = new FormData();
-      newFormData.append("title", title);
-      newFormData.append("description", description);
-      newFormData.append("user", userId);
-      newFormData.append("image", image);
-
-      const submission = await locals.pb.collection("submission").create(newFormData);
-
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const userTournament: any = await locals.pb
         .collection("userTournament")
@@ -51,6 +43,15 @@ export const actions: Actions = {
       if (userTournament.submissions.length >= userTournament.expand.tournament.maxSubmissions) {
         throw error(406, "You've riched the limit of submissions");
       }
+
+      const newFormData = new FormData();
+      newFormData.append("title", title);
+      newFormData.append("description", description);
+      newFormData.append("user", userId);
+      newFormData.append("userTournament", userTournament.id);
+      newFormData.append("image", image);
+
+      const submission = await locals.pb.collection("submission").create(newFormData);
 
       await locals.pb
         .collection("userTournament")
