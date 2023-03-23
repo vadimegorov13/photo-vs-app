@@ -1,81 +1,64 @@
 <script lang="ts">
+  import ValidatedInput from "$lib/components/inputs/ValidatedInput.svelte";
+
   export let form;
 </script>
 
-<div class="flex flex-col items-center h-full w-full pt-12">
-  <h2 class="mt-2 text-center text-3xl font-bold text-primary">Register for an account</h2>
-  <p class="text-center mt-1 text-base-100">
-    Or <a href="/login" class="text-primary font-medium hover:cursor-pointer">login</a> if you already
-    have an account.
-  </p>
-  <div class="bg-base-100 py-6 shadow-md rounded-lg w-full max-w-sm mt-6">
-    <form method="POST" action="?/register" class="flex flex-col items-center space-y-2 w-full">
-      <div class="form-control w-full max-w-xs">
-        <label for="username" class="label font-medium pb-1">
-          <span class="label-text">Username</span>
-        </label>
-        <input
-          type="text"
-          name="username"
-          class="input {form?.errors?.username ? 'input-error' : 'input-bordered'} w-full max-w-xs"
-          value={form?.data?.username ?? ""}
-        />
-        <label for="username" class="label">
-          {#if form?.errors?.username}
-            <span class="label-text-alt text-error">{form?.errors.username[0]}</span>
-          {/if}
-        </label>
+<div class="flex flex-col items-center">
+  <div class="m-10">
+    <h2 class="text-primary text-center text-3xl font-bold">Register</h2>
+    <p class="text-black">
+      Or
+      <a href="/login" class="text-primary font-medium hover:cursor-pointer hover:underline">
+        login
+      </a>
+      if you already have an account.
+    </p>
+  </div>
+
+  <div class="shadow-lg rounded-lg p-8 max-w-md">
+    <form method="POST" action="?/register" class="flex flex-col">
+      <ValidatedInput
+        id="username"
+        value={form?.data?.username ?? ""}
+        label="Username"
+        errors={form?.errors?.username}
+      />
+
+      <ValidatedInput
+        id="email"
+        type="email"
+        value={form?.data?.email ?? ""}
+        label="Email"
+        errors={form?.errors?.email}
+      />
+
+      <div class="flex">
+        <div class="grid flex-grow">
+          <ValidatedInput
+            id="password"
+            type="password"
+            label="Password"
+            errors={form?.errors?.password}
+            customClass="w-full max-w-md"
+          />
+        </div>
+
+        <div class="divider divider-horizontal" />
+
+        <div class="grid flex-grow">
+          <ValidatedInput
+            id="passwordConfirm"
+            type="password"
+            label="Confirm Password"
+            errors={form?.errors?.passwordConfirm}
+            customClass="w-full max-w-md"
+          />
+        </div>
       </div>
-      <div class="form-control w-full max-w-xs">
-        <label for="email" class="label font-medium pb-1">
-          <span class="label-text">Email</span>
-        </label>
-        <input
-          type="email"
-          name="email"
-          class="input {form?.errors?.email ? 'input-error' : 'input-bordered'} w-full max-w-xs"
-          value={form?.data?.email ?? ""}
-        />
-        <label for="email" class="label">
-          {#if form?.errors?.email}
-            <span class="label-text-alt text-error">{form?.errors.email[0]}</span>
-          {/if}
-        </label>
-      </div>
-      <div class="form-control w-full max-w-xs">
-        <label for="password" class="label font-medium pb-1">
-          <span class="label-text">Password</span>
-        </label>
-        <input
-          type="password"
-          name="password"
-          class="input {form?.errors?.password ? 'input-error' : 'input-bordered'} w-full max-w-xs"
-        />
-        <label for="password" class="label">
-          {#if form?.errors?.password}
-            <span class="label-text-alt text-error">{form?.errors.password[0]}</span>
-          {/if}
-        </label>
-      </div>
-      <div class="form-control w-full max-w-xs">
-        <label for="passwordConfirm" class="label font-medium pb-1">
-          <span class="label-text">Confirm Password</span>
-        </label>
-        <input
-          type="password"
-          name="passwordConfirm"
-          class="input {form?.errors?.passwordConfirm
-            ? 'input-error'
-            : 'input-bordered'} w-full max-w-sm"
-        />
-        <label for="passwordConfirm" class="label">
-          {#if form?.errors?.passwordConfirm}
-            <span class="label-text-alt text-error">{form?.errors.passwordConfirm[0]}</span>
-          {/if}
-        </label>
-      </div>
-      <div class="form-control w-full max-w-xs">
-        <label class="label cursor-pointer justify-start space-x-4">
+
+      <div class="form-control">
+        <label class="label cursor-pointer justify-start space-x-2">
           <input
             type="checkbox"
             name="terms"
@@ -87,15 +70,12 @@
         </label>
         <label for="terms" class="label">
           {#if form?.errors?.terms}
-            <span class="label-text-alt text-error">{form?.errors.terms[0]}</span>
+            <span class="label-text-alt text-error mb-2">{form?.errors.terms[0]}</span>
           {/if}
         </label>
       </div>
-      <div class="w-full max-w-xs">
-        <button class="btn bg-primary w-full max-w-xs text-white hover:bg-purple-700 delay-100">
-          Register
-        </button>
-      </div>
+
+      <button class="btn btn-primary w-full max-w-md">Register</button>
     </form>
   </div>
 </div>

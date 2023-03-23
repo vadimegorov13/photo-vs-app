@@ -1,5 +1,5 @@
 <script>
-  import MyInput from "$lib/components/MyInput.svelte";
+  import Input from "$lib/components/inputs/Input.svelte";
 </script>
 
 <div class="flex flex-col w-full h-full">
@@ -7,9 +7,9 @@
     <form action="?/updatePassword" method="POST" class="flex flex-col space-y-2 w-full">
       <h3 class="text-2xl font-medium">Change Password</h3>
       <div class="divider" />
-      <MyInput id="oldPassword" label="Old Password" type="password" required />
-      <MyInput id="password" label="New Password" type="password" required />
-      <MyInput id="passwordConfirm" label="Confirm New Password" type="password" required />
+      <Input id="oldPassword" label="Old Password" type="password" required />
+      <Input id="password" label="New Password" type="password" required />
+      <Input id="passwordConfirm" label="Confirm New Password" type="password" required />
       <a href="/reset-password" class="text-primary hover:cursor-point hover:underline">
         I forgot my password</a
       >

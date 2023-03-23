@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { enhance, applyAction } from "$app/forms";
+  import { applyAction, enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
+  import Input from "$lib/components/inputs/Input.svelte";
   import Modal from "$lib/components/Modal.svelte";
-  import MyInput from "$lib/components/MyInput.svelte";
+
   export let data;
   let emailModalOpen: boolean;
   let usernameModalOpen: boolean;
@@ -37,7 +38,7 @@
       <span slot="trigger" class="btn btn-primary">Change Email</span>
       <h3 slot="heading">Change Your Email</h3>
       <form action="?/updateEmail" method="POST" class="space-y-2" use:enhance={submitUpdateEmail}>
-        <MyInput
+        <Input
           id="email"
           type="email"
           label="Enter your new email address"

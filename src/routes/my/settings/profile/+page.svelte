@@ -1,7 +1,7 @@
 <script lang="ts">
   import { invalidateAll } from "$app/navigation";
   import { enhance, applyAction } from "$app/forms";
-  import MyInput from "$lib/components/MyInput.svelte";
+  import Input from "$lib/components/inputs/Input.svelte";
   import { getImageUrl } from "$lib/helpers/helpers";
   import { Icon, Pencil } from "svelte-hero-icons";
 
@@ -83,7 +83,7 @@
         disabled={loading}
       />
     </div>
-    <MyInput
+    <Input
       id="username"
       label="Username"
       value={data.user.username}

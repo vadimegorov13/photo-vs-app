@@ -1,31 +1,29 @@
 <script>
+  import ValidatedInput from "$lib/components/inputs/ValidatedInput.svelte";
+
   export let form;
 </script>
 
-<div class="flex flex-col items-center h-full w-full mt-12">
-  <h2 class="mt-2 text-center text-3xl font-bold text-primary">Reset Your Password</h2>
-  <p class="text-center mt-1 text-base-100">
-    We'll send you an email with a link to reset your password.
-  </p>
+<div class="flex flex-col items-center">
+  <div class="mt-10 mb-4">
+    <h2 class="text-primary text-center text-3xl font-bold">Reset Your Password</h2>
+    <p class="text-black">We'll send you an email with a link to reset your password.</p>
+  </div>
+
   <form
     action="?/resetPassword"
     method="POST"
-    class="flex flex-col items-center space-y-2 w-full pt-4"
+    class="flex flex-col items-center w-full max-w-md"
   >
-    <div class="form-control w-full max-w-md">
-      <label for="email" class="label font-medium pb-1">
-        <span class="label-text">Email</span>
-      </label>
-      <input type="email" name="email" class="input input-bordered w-full max-w-md" />
-    </div>
-    <div class="w-full max-w-md pt-2">
-      <button
-        type="submit"
-        class="btn bg-primary w-full text-white hover:bg-purple-700 delay-100"
-      >
-        Request Password Reset
-      </button>
-    </div>
+    <ValidatedInput
+      id="email"
+      type="email"
+      value={form?.data?.email ?? ""}
+      label="Email"
+      errors={form?.errors?.email}
+    />
+    <button class="btn btn-primary w-full max-w-md">Request Password Reset</button>
+
     {#if form?.success}
       <div class="alert alert-success shadow-lg w-full max-w-md">
         <div>

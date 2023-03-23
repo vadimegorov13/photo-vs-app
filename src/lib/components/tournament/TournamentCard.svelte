@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { Icon, Trash, UserMinus } from "svelte-hero-icons";
+  import { applyAction, enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
-  import { enhance, applyAction } from "$app/forms";
-  import MyInput from "../MyInput.svelte";
+  import { Icon, Trash, UserMinus } from "svelte-hero-icons";
+  import Input from "../inputs/Input.svelte";
 
   export let tournament: any;
   export let user: any;
@@ -42,7 +42,7 @@
     <div class="flex-none">
       <button on:click={handleAlert} disabled={loading} class="btn btn-sm btn-ghost">Cancel</button>
       <form method="POST" action="?/delete" use:enhance={deleteTournament}>
-        <MyInput
+        <Input
           id="id"
           label="id"
           value={tournament.expand.tournament.id}
@@ -62,13 +62,7 @@
     <div class="flex-none">
       <button on:click={handleAlert} disabled={loading} class="btn btn-sm btn-ghost">Cancel</button>
       <form method="POST" action="?/leave" use:enhance={deleteTournament}>
-        <MyInput
-          id="id"
-          label="id"
-          value={tournament.id}
-          disabled={loading}
-          hidden
-        />
+        <Input id="id" label="id" value={tournament.id} disabled={loading} hidden />
         <button type="submit" disabled={loading} class="btn btn-sm btn-primary">Leave</button>
       </form>
     </div>
