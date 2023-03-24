@@ -10,8 +10,6 @@ export const load: ServerLoad = async ({ locals, params }) => {
         expand: "registeredUsers, registeredUsers.user, registeredUsers.submissions",
       });
 
-      console.log(tournament)
-
       return {
         tournament: serializeNonPOJOs(tournament),
       };

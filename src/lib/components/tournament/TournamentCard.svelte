@@ -153,10 +153,10 @@
     </div>
     {#if tournament.expand.tournament.host === user.id}
       <div class="card-actions">
-        <form method="POST" action="?/ready">
+        <form method="POST" action="?/start">
           <Input
-            id="tournamentId"
-            label="tournamentId"
+            id="id"
+            label="id"
             value={tournament.expand.tournament.id}
             disabled={loading}
             hidden

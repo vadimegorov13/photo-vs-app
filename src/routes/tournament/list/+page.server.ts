@@ -1,4 +1,5 @@
 import { serializeNonPOJOs } from "$lib/helpers/helpers";
+import type { UserTournament } from "$lib/types/types";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals }) => {
@@ -74,7 +75,49 @@ export const actions: Actions = {
       success: true,
     };
   },
+  start: async ({ locals, request }) => {
+    const data = await request.formData();
+    const id = data.get("id") as string;
+    const userId = locals.pb.authStore.model?.id;
 
+    try {
+      const tournament = await locals.pb
+        .collection("tournament")
+        .getOne(id, { expand: "registeredUsers" });
+
+      if (tournament.host !== userId) {
+        throw error(403, "Not authorized");
+      }
+
+      const allReady = tournament.expand.registeredUsers.every(
+        (userTournament: UserTournament) =>{ 
+          return userTournament.ready === true}
+      );
+
+      if (!allReady) {
+        return {
+          success: false,
+          errors: { message: ["Not all users are ready"] },
+        };
+      }
+
+      await locals.pb.collection("tournament").update(id, { status: "ongoing" });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+
+      console.log(serializeNonPOJOs(err))
+      if (err?.response?.code) {
+        const errors = { message: ["Something went wrong"] };
+
+        return {
+          success: false,
+          errors,
+        };
+      }
+    }
+
+    throw redirect(303, `/tournament/${id}`);
+  },
   ready: async ({ locals, request }) => {
     const data = await request.formData();
     const userTournamentId = data.get("userTournamentId") as string;
