@@ -6,10 +6,8 @@
   export let form;
 
   let emailModalOpen: boolean;
-  let usernameModalOpen: boolean;
 
   $: emailModalOpen = false;
-  $: usernameModalOpen = false;
 </script>
 
 <div class="flex flex-col w-full h-full space-y-12">

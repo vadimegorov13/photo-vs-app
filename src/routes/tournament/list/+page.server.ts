@@ -39,7 +39,14 @@ export const actions: Actions = {
       await locals.pb.collection("tournament").delete(data.id);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(serializeNonPOJOs(err));
+      if (err?.response?.code) {
+        const errors = { message: ["Something went wrong"] };
+
+        return {
+          success: false,
+          errors,
+        };
+      }
     }
 
     return {
@@ -53,7 +60,14 @@ export const actions: Actions = {
       await locals.pb.collection("userTournament").delete(data.id);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(serializeNonPOJOs(err));
+      if (err?.response?.code) {
+        const errors = { message: ["Something went wrong"] };
+
+        return {
+          success: false,
+          errors,
+        };
+      }
     }
 
     return {

@@ -14,7 +14,7 @@ export const actions = {
       if (data.email === locals.user.email) {
         return {
           data: { email: locals.user.email },
-          errors: { email: ["It's you current email bozo! PICK A NEW ONE!"] },
+          errors: { email: ["It's your current email bozo! PICK A NEW ONE!"] },
         };
       }
 

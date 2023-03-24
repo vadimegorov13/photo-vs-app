@@ -52,7 +52,7 @@
 <div class="card-normal shadow-lg">
   <div class="card-body">
     {#if tournamentAlert && user.id === tournament.expand.tournament.host}
-      <div class="alert shadow-lg alert-error">
+      <div class="alert alert-error">
         <div>
           <Icon class="w-16 h-16" src={Trash} />
           <span>Are you sure you want to delete this tournament?</span>
@@ -74,7 +74,7 @@
         </div>
       </div>
     {:else if tournamentAlert && user.id !== tournament.expand.tournament.host}
-      <div class="alert shadow-lg alert-error">
+      <div class="alert alert-error">
         <div>
           <Icon class="w-4 h-4" src={UserMinus} />
           <span>Are you sure you want to leave this tournament?</span>
@@ -127,13 +127,20 @@
       </div>
       <div id="clipboard" />
     </div>
-    <div class="flex flex-row">
-      <p>
-        You've submitted
-        <slug>{tournament.submissions.length}</slug> images
-      </p>
-      <div class="card-actions justify-end">
-        <a rel="external" href={`/tournament/submission/${tournament.tournament}`}>
+    <p>
+      You've submitted
+      <slug>{tournament.submissions.length}</slug>
+      {tournament.submissions.length === 1 ? "image" : "images"}
+    </p>
+
+    <div class="flex flex-row gap-8">
+      <div class="card-actions">
+        <a href={`/tournament/submission/list/${tournament.id}`}>
+          <button class="btn btn-secondary">Your submissions</button>
+        </a>
+      </div>
+      <div class="card-actions">
+        <a href={`/tournament/submission/${tournament.tournament}`}>
           <button class="btn btn-accent">Submit Image</button>
         </a>
       </div>
