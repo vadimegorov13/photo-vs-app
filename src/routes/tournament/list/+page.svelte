@@ -10,6 +10,14 @@
       <div class="flex flex-col items-center text-black text-3xl my-10 font-semibold">
         You have no tournaments yet
       </div>
+      <div class="grid sm:grid-cols-2 gap-8">
+        <a href="/tournament/create" class="flex flex-col w-full">
+          <button class="btn btn-primary"> Create Tournament </button>
+        </a>
+        <a href="/tournament/join" class="flex flex-col w-full">
+          <button class="btn btn-secondary"> Join Tournament </button>
+        </a>
+      </div>
     {:else}
       <div class="flex flex-row mt-8">
         <div class="text-2xl font-medium pl-4 pt-2">Your tournaments</div>

@@ -76,7 +76,7 @@
     {:else if tournamentAlert && user.id !== tournament.expand.tournament.host}
       <div class="alert alert-error">
         <div>
-          <Icon class="w-4 h-4" src={UserMinus} />
+          <Icon class="w-16 h-16" src={UserMinus} />
           <span>Are you sure you want to leave this tournament?</span>
         </div>
         <div class="flex flex-col">
