@@ -1,3 +1,4 @@
+import { serializeNonPOJOs } from "$lib/helpers/helpers";
 import { submissionSchema } from "$lib/validation/zodValidation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
@@ -59,7 +60,18 @@ export const actions: Actions = {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+
+      console.log(serializeNonPOJOs(err))
       if (err?.response?.code === 400) {
+        const errors = { image: ["Something went wrong"] };
+
+        return {
+          data: { title, description },
+          errors,
+        };
+      }
+
+      if (err?.response?.code === 404) {
         const errors = { image: ["Something went wrong"] };
 
         return {

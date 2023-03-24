@@ -4,17 +4,21 @@ import { redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals, params }) => {
   if (params.id) {
-    const userId: string | undefined = locals.pb.authStore.model?.id;
     const id = params.id;
+    const userId = locals.user.id;
 
-    const submissions = await locals.pb
-      .collection("submission")
-      .getList(1, 32, { filter: `user="${userId}" && userTournament="${id}"`, sort: "-created" });
-
-    return {
-      id,
-      submissions: serializeNonPOJOs(submissions.items),
-    };
+    try {
+      const userTournament = await locals.pb
+        .collection("userTournament")
+        .getFirstListItem(`user="${userId}" && id="${id}"`, { expand: "tournament, submissions" });
+      
+      return {
+        tournament: serializeNonPOJOs(userTournament.expand.tournament),
+        submissions: serializeNonPOJOs(userTournament.expand.submissions),
+      };
+    } catch (err) {
+      throw redirect(303, "/tournament/list");
+    }
   }
 
   throw redirect(303, "/tournament/list");
@@ -58,7 +62,7 @@ export const actions: Actions = {
       const submissionData = new FormData();
       submissionData.append("title", title);
       submissionData.append("description", description);
-      console.log(image)
+      console.log(image);
       if (image.size !== 0) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         submissionData.append("image", data.get("image") as any);
@@ -69,7 +73,6 @@ export const actions: Actions = {
       await locals.pb.collection("submission").update(id, submissionData);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-
       console.log(serializeNonPOJOs(err));
 
       if (err?.response?.code === 400) {

@@ -134,16 +134,21 @@
     </p>
 
     <div class="flex flex-row gap-8">
-      <div class="card-actions">
-        <a href={`/tournament/submission/list/${tournament.id}`}>
-          <button class="btn btn-secondary">Your submissions</button>
-        </a>
-      </div>
-      <div class="card-actions">
-        <a href={`/tournament/submission/${tournament.tournament}`}>
-          <button class="btn btn-accent">Submit Image</button>
-        </a>
-      </div>
+      {#if tournament.submissions.length}
+        <div class="card-actions">
+          <a href={`/tournament/submission/list/${tournament.id}`}>
+            <button class="btn btn-secondary">Your submissions</button>
+          </a>
+        </div>
+      {/if}
+
+      {#if tournament.submissions.length < tournament.expand.tournament.maxSubmissions}
+        <div class="card-actions">
+          <a href={`/tournament/submission/${tournament.expand.tournament.id}`}>
+            <button class="btn btn-accent">Submit Image</button>
+          </a>
+        </div>
+      {/if}
     </div>
   </div>
 </div>
