@@ -111,7 +111,7 @@
             <Icon class="w-6 h-6" src={Pencil} />
           </span>
           <h3 slot="heading">Edit your submission</h3>
-          <form action="?/edit" method="POST">
+          <form action="?/edit" method="POST" enctype="multipart/form-data">
             <Input id="id" label="id" value={submission.id} disabled={loading} hidden />
             <ValidatedInput
               id="title"
@@ -127,6 +127,27 @@
               value={submission.description}
               errors={form?.errors?.description}
             />
+            <div class="form-control w-full max-w-md">
+              <label for="image" class="label font-medium">
+                <span class="label-text">Photo</span>
+              </label>
+              <input
+                type="file"
+                name="image"
+                value=""
+                accept="image/*"
+                id="image"
+                class="file-input w-full {form?.errors?.image
+                  ? 'file-input-error'
+                  : 'file-input-bordered '}"
+              />
+              <label for="image" class="label">
+                {#if form?.errors?.image}
+                  <span class="label-text-alt text-error">{form?.errors?.image[0]}</span>
+                {/if}
+              </label>
+            </div>
+
             <button type="submit" class="btn btn-primary w-full">Update my submission</button>
           </form>
         </Modal>

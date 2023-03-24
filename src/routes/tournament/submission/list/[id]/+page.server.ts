@@ -24,12 +24,6 @@ type DeleteSubmission = {
   id: string;
 };
 
-type EditSubmission = {
-  id: string;
-  title: string;
-  description: string;
-};
-
 export const actions: Actions = {
   delete: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as DeleteSubmission;
@@ -53,22 +47,51 @@ export const actions: Actions = {
     };
   },
   edit: async ({ locals, request }) => {
-    const data = Object.fromEntries(await request.formData()) as EditSubmission;
+    const data = await request.formData();
+
+    const id = data.get("id") as string;
+    const title = data.get("title") as string;
+    const description = data.get("description") as string;
+    const image = data.get("image") as File;
 
     try {
-      submissionSchema.parse(data);
+      const submissionData = new FormData();
+      submissionData.append("title", title);
+      submissionData.append("description", description);
+      console.log(image)
+      if (image.size !== 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        submissionData.append("image", data.get("image") as any);
+      }
 
-      await locals.pb
-        .collection("submission")
-        .update(data.id, { title: data.title, description: data.description });
+      submissionSchema.parse(Object.fromEntries(data));
+
+      await locals.pb.collection("submission").update(id, submissionData);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      const { title, description } = data;
 
       console.log(serializeNonPOJOs(err));
 
       if (err?.response?.code === 400) {
         const errors = { title: ["Something went wrong"] };
+
+        return {
+          data: { title, description },
+          errors,
+        };
+      }
+
+      if (err?.status === 406) {
+        const errors = { image: [err.body.message] };
+
+        return {
+          data: { title, description },
+          errors,
+        };
+      }
+
+      if (err?.status === 400) {
+        const errors = { image: [err.body.message] };
 
         return {
           data: { title, description },
