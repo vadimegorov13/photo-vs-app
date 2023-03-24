@@ -9,6 +9,7 @@
   export let user: any;
   let loading: boolean;
   let tournamentAlert: boolean = false;
+  let readyAlert: boolean = false;
 
   $: loading = false;
 
@@ -25,11 +26,11 @@
           await applyAction(result);
       }
       loading = false;
-      handleAlert();
+      handleDeleteAlert();
     };
   };
 
-  const handleAlert = () => {
+  const handleDeleteAlert = () => {
     tournamentAlert = !tournamentAlert;
   };
 
@@ -58,7 +59,7 @@
           <span>Are you sure you want to delete this tournament?</span>
         </div>
         <div class="flex flex-col">
-          <button on:click={handleAlert} disabled={loading} class="btn btn-sm btn-ghost"
+          <button on:click={handleDeleteAlert} disabled={loading} class="btn btn-sm btn-ghost"
             >Cancel</button
           >
           <form method="POST" action="?/delete" use:enhance={deleteTournament}>
@@ -80,7 +81,7 @@
           <span>Are you sure you want to leave this tournament?</span>
         </div>
         <div class="flex flex-col">
-          <button on:click={handleAlert} disabled={loading} class="btn btn-sm btn-ghost"
+          <button on:click={handleDeleteAlert} disabled={loading} class="btn btn-sm btn-ghost"
             >Cancel</button
           >
           <form method="POST" action="?/leave" use:enhance={deleteTournament}>
@@ -93,7 +94,7 @@
     <div class="flex flex-row w-full">
       <h2 class="card-title">{tournament.expand.tournament.title}</h2>
       <div class="ml-auto text-error hover:cursor-pointer">
-        <button on:click={handleAlert} disabled={loading}>
+        <button on:click={handleDeleteAlert} disabled={loading}>
           <Icon
             class="w-6 h-6"
             src={user.id === tournament.expand.tournament.host ? Trash : UserMinus}
@@ -150,5 +151,39 @@
         </div>
       {/if}
     </div>
+    {#if tournament.expand.tournament.host === user.id}
+      <div class="card-actions">
+        <form method="POST" action="?/ready">
+          <Input
+            id="tournamentId"
+            label="tournamentId"
+            value={tournament.expand.tournament.id}
+            disabled={loading}
+            hidden
+          />
+          <button type="submit" disabled={loading} class="btn btn-primary">Start</button>
+        </form>
+      </div>
+    {:else}
+      <div class="card-actions">
+        <form method="POST" action="?/ready">
+          <Input
+            id="userTournamentId"
+            label="userTournamentId"
+            value={tournament.id}
+            disabled={loading}
+            hidden
+          />
+          <Input
+            id="tournamentId"
+            label="tournamentId"
+            value={tournament.expand.tournament.id}
+            disabled={loading}
+            hidden
+          />
+          <button type="submit" disabled={loading} class="btn btn-primary">Ready?</button>
+        </form>
+      </div>
+    {/if}
   </div>
 </div>

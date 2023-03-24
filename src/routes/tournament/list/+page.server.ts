@@ -74,4 +74,26 @@ export const actions: Actions = {
       success: true,
     };
   },
+
+  ready: async ({ locals, request }) => {
+    const data = await request.formData();
+    const userTournamentId = data.get("userTournamentId") as string;
+    const tournamentId = data.get("tournamentId") as string;
+
+    try {
+      await locals.pb.collection("userTournament").update(userTournamentId, { ready: true });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      if (err?.response?.code) {
+        const errors = { message: ["Something went wrong"] };
+
+        return {
+          success: false,
+          errors,
+        };
+      }
+    }
+
+    throw redirect(303, `/tournament/${tournamentId}`);
+  },
 };
