@@ -1,5 +1,5 @@
 import { changePasswordSchema } from "$lib/validation/zodValidation";
-import { redirect } from "@sveltejs/kit";
+import { redirect, type Actions, error } from "@sveltejs/kit";
 
 type PasswordChange = {
   oldPassword: string;
@@ -7,11 +7,13 @@ type PasswordChange = {
   passwordConfirm: string;
 };
 
-export const actions = {
+export const actions: Actions = {
   updatePassword: async ({ request, locals }) => {
     const data = Object.fromEntries(await request.formData()) as PasswordChange;
 
     try {
+      if (!locals.user) throw error(401, "Unauthorized");
+      
       changePasswordSchema.parse(data);
 
       await locals.pb.collection("users").update(locals.user.id, data);

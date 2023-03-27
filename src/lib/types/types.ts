@@ -32,6 +32,7 @@ export type TournamentState = Basics & {
   tournamentState: string;
   matchState: string;
   roundState: string;
+  bracket: string;
 
   expand: {
     tournament: Tournament;
@@ -79,7 +80,7 @@ export type Round = Basics & {
 };
 
 export type Match = Basics & {
-  round: Round;
+  round: string;
   submission1: string;
   submission2: string;
   winner: string;
@@ -97,7 +98,6 @@ export type Match = Basics & {
 };
 
 export type Submission = Basics & {
-  user: string;
   userTournament: string;
   title: string;
   description: string;
@@ -105,7 +105,6 @@ export type Submission = Basics & {
   comments: string[];
 
   expand: {
-    user: User;
     userTournament: UserTournament;
     comments: UserComment[];
   };
@@ -118,6 +117,7 @@ export type User = Basics & {
   verified: boolean;
   avatar: string;
   tournaments: string[];
+  name?: string;
 
   expand: {
     tournaments: UserTournament[];

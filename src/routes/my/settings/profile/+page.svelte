@@ -45,9 +45,9 @@
         </label>
         <div class="w-32 rounded-full">
           <img
-            src={data.user.avatar
+            src={data.user?.avatar
               ? getImageUrl(data.user.collectionId, data.user.id, data.user.avatar)
-              : `https://avatars.dicebear.com/api/jdenticon/${data.user.id}.svg`}
+              : `https://avatars.dicebear.com/api/jdenticon/${data.user?.id}.svg`}
             alt="user avatar"
             id="avatar-preview"
           />
@@ -66,7 +66,7 @@
     <div class="flex flex-col items-center">
       <ValidatedInput
         id="username"
-        value={form?.data?.username ?? data.user.username}
+        value={form?.data?.username ?? data.user?.username}
         label="Username"
         placeholder="Enter your username"
         errors={form?.errors?.username}

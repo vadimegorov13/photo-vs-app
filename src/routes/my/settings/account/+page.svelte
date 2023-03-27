@@ -24,7 +24,7 @@
           type="email"
           label="Enter your new email address"
           required={true}
-          value={data.user.email}
+          value={data.user?.email}
           errors={form?.errors?.username}
         />
         <button type="submit" class="btn btn-primary w-full">Change my email</button>

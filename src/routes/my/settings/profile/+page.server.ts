@@ -1,5 +1,6 @@
 import type { Actions } from "./$types";
 import { changeUsernameSchema } from "$lib/validation/zodValidation";
+import { error } from "@sveltejs/kit";
 
 export const actions: Actions = {
   updateProfile: async ({ locals, request }) => {
@@ -12,11 +13,11 @@ export const actions: Actions = {
     }
 
     try {
+      if (!locals.user) throw error(401, "Unauthorized");
+
       changeUsernameSchema.parse(Object.fromEntries(data));
 
-      const { username, avatar } = await locals.pb
-        .collection("users")
-        .update(locals?.user?.id, data);
+      const { username, avatar } = await locals.pb.collection("users").update(locals.user.id, data);
 
       locals.user.username = username;
       locals.user.avatar = avatar;

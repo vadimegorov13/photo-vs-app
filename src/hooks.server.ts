@@ -1,4 +1,5 @@
 import { serializeNonPOJOs } from "$lib/helpers/helpers";
+import type { User } from "$lib/types";
 import type { Handle } from "@sveltejs/kit";
 import PocketBase from "pocketbase";
 
@@ -12,8 +13,11 @@ export const handle: Handle = async ({ event, resolve }) => {
   try {
     // get an up-to-date auth store state by verifying and refreshing the loaded auth model (if any)
     if (event.locals.pb.authStore.isValid) {
-      await event.locals.pb.collection("users").authRefresh();
-      event.locals.user = serializeNonPOJOs(event.locals.pb.authStore.model);
+      const response = await event.locals.pb.collection("users").authRefresh();
+      const user = serializeNonPOJOs(response.record) as User;
+      delete user.name;
+
+      event.locals.user = user
     } else {
       event.locals.user = undefined;
     }

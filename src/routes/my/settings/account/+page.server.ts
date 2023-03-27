@@ -1,14 +1,17 @@
 import { resetPasswordSchema as changeEmailSchema } from "$lib/validation/zodValidation";
+import { error, type Actions } from "@sveltejs/kit";
 
 type ChangeEmail = {
   email: string;
 };
 
-export const actions = {
+export const actions: Actions = {
   updateEmail: async ({ request, locals }) => {
     const data = Object.fromEntries(await request.formData()) as ChangeEmail;
 
     try {
+      if (!locals.user) throw error(401, "Unauthorized");
+      
       changeEmailSchema.parse(data);
 
       if (data.email === locals.user.email) {

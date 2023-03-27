@@ -5,7 +5,7 @@ declare namespace App {
   // interface Error {}
   interface Locals {
     pb: import("pocketbase").default;
-    user: import("pocketbase").Model | undefined;
+    user: import("$lib/types").User | undefined;
   }
   // interface Session {}
   // interface PageData {}
