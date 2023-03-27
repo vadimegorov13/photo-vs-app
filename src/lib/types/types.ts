@@ -2,6 +2,8 @@ export type PocketBase = import("pocketbase").default;
 
 type Basics = {
   id: string;
+  collectionId: string;
+  collectionName: string;
   created: string;
   updated: string;
 };
@@ -9,63 +11,136 @@ type Basics = {
 export type Tournament = Basics & {
   title: string;
   description: string;
+  joinCode: string;
+  host: string;
+  registeredUsers: string[];
+  settings: string;
+  state: string;
+
+  expand: {
+    host: User;
+    registeredUsers: UserTournament[];
+    settings: TournamentSettings;
+    state: TournamentState;
+  };
+};
+
+export type TournamentState = Basics & {
+  tournament: string;
+  rounds: string[];
+  currentRound: string;
+  tournamentState: string;
+  matchState: string;
+  roundState: string;
+
+  expand: {
+    tournament: Tournament;
+    rounds: Round[];
+    currentRound: Round;
+  };
+};
+
+export type TournamentSettings = Basics & {
+  tournament: string;
   maxPlayers: number;
   maxSubmissions: number;
-  host: User;
-  registeredUsers: UserTournament[];
-  rounds: Round[];
-  status: string;
-  joinCode: string;
+  voteTime: number;
+  type: string;
+  auto: boolean;
+
+  expand: {
+    tournament: Tournament;
+  };
 };
 
 export type UserTournament = Basics & {
-  user: User;
-  tournament: Tournament;
-  submissions: Submission[];
+  user: string;
+  tournament: string;
+  submissions: string[];
   ready: boolean;
+
+  expand: {
+    user: User;
+    tournament: Tournament;
+    submissions: Submission[];
+  };
 };
 
 export type Round = Basics & {
-  order: number;
-  tournament: Tournament;
-  matches: Match[];
-  status: string;
+  tournament: string;
+  matches: string[];
+  currentMatch: string;
+
+  expand: {
+    tournament: Tournament;
+    matches: Match[];
+    currentMatch: Match;
+  };
 };
 
 export type Match = Basics & {
   round: Round;
-  submission1: Submission;
-  submission2: Submission;
-  winner: Submission;
-  status: string;
-  userVotes1: Vote[];
-  userVotes2: Vote[];
+  submission1: string;
+  submission2: string;
+  winner: string;
+  userVotes1: string[];
+  userVotes2: string[];
+
+  expand: {
+    round: Round;
+    submission1: Submission;
+    submission2: Submission;
+    winner: Submission;
+    userVotes1: UserVote[];
+    userVotes2: UserVote[];
+  };
 };
 
 export type Submission = Basics & {
-  user: User;
+  user: string;
+  userTournament: string;
   title: string;
   description: string;
-  imageUrl: string;
-  comments: UserComment;
-};
+  image: string;
+  comments: string[];
 
-export type UserComment = Basics & {
-  comment: string;
-  user: User[];
+  expand: {
+    user: User;
+    userTournament: UserTournament;
+    comments: UserComment[];
+  };
 };
 
 export type User = Basics & {
   username: string;
   email: string;
-  avatar: string;
+  emailVisibility: boolean;
   verified: boolean;
-  tournaments: UserTournament[];
-  votes: Vote[];
+  avatar: string;
+  tournaments: string[];
+
+  expand: {
+    tournaments: UserTournament[];
+  };
 };
 
-export type Vote = Basics & {
-  user: User;
-  tournament: Tournament;
-  submission: Submission;
+export type UserComment = Basics & {
+  author: string;
+  text: string;
+  submission: string;
+
+  expand: {
+    author: User;
+    submission: Submission;
+  };
+};
+
+export type UserVote = Basics & {
+  user: string;
+  match: string;
+
+  expand: {
+    user: User;
+    match: Match;
+  };
 };
