@@ -23,17 +23,17 @@
     </div>
     <div class="flex flex-col">
       <h2>Participants:</h2>
-      <p>{data.registeredUsers.length}/{data.maxPlayers}</p>
+      <p>{data.registeredUsers.length}/{data.expand.settings.maxPlayers}</p>
     </div>
     <div class="flex flex-col">
       <h2>Max submissions:</h2>
-      <p>{data.maxSubmissions}</p>
+      <p>{data.expand.settings.maxSubmissions}</p>
     </div>
   </div>
   <div class="flex flex-row gap-8">
     <div class="flex flex-col">
       <h2>Status:</h2>
-      <p>{data.status}</p>
+      <p>{data.expand.state.tournamentState}</p>
     </div>
   </div>
 </div>

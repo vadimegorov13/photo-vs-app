@@ -1,8 +1,7 @@
 <script lang="ts">
-    export let data: any
+  export let data: any;
 </script>
 
-
 <div>
-    {data.tournament.title}
+  {data.tournament.title}
 </div>

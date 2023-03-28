@@ -11,7 +11,7 @@ export const actions: Actions = {
 
     try {
       if (!locals.user) throw error(401, "Unauthorized");
-      
+
       changeEmailSchema.parse(data);
 
       if (data.email === locals.user.email) {

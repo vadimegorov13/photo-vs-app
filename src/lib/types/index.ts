@@ -1,4 +1,5 @@
 import type {
+  PocketBase,
   Tournament,
   TournamentState,
   TournamentSettings,
@@ -12,6 +13,7 @@ import type {
 } from "./types";
 
 export {
+  PocketBase,
   Tournament,
   TournamentState,
   TournamentSettings,

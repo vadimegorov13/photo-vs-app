@@ -1,20 +1,25 @@
 import { serializeNonPOJOs } from "$lib/helpers/helpers";
+import type { Submission, Tournament } from "$lib/types";
 import { submissionSchema } from "$lib/validation/zodValidation";
-import { redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
+import { redirect, type Actions, type ServerLoad, error } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals, params }) => {
   if (params.id) {
     const id = params.id;
-    const userId = locals.user.id;
+    const userId = locals.user?.id;
 
     try {
+      if (!userId) throw error(401, "Unauthorized");
+
       const userTournament = await locals.pb
         .collection("userTournament")
-        .getFirstListItem(`user="${userId}" && id="${id}"`, { expand: "tournament, submissions" });
-      
+        .getFirstListItem(`user="${userId}" && id="${id}"`, {
+          expand: "tournament, submissions, tournament.settings",
+        });
+
       return {
-        tournament: serializeNonPOJOs(userTournament.expand.tournament),
-        submissions: serializeNonPOJOs(userTournament.expand.submissions),
+        tournament: serializeNonPOJOs(userTournament.expand.tournament) as Tournament,
+        submissions: serializeNonPOJOs(userTournament.expand.submissions) as Submission[],
       };
     } catch (err) {
       throw redirect(303, "/tournament/list");
@@ -62,7 +67,7 @@ export const actions: Actions = {
       const submissionData = new FormData();
       submissionData.append("title", title);
       submissionData.append("description", description);
-      console.log(image);
+
       if (image.size !== 0) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         submissionData.append("image", data.get("image") as any);
@@ -73,8 +78,6 @@ export const actions: Actions = {
       await locals.pb.collection("submission").update(id, submissionData);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(serializeNonPOJOs(err));
-
       if (err?.response?.code === 400) {
         const errors = { title: ["Something went wrong"] };
 

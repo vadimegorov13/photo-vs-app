@@ -4,12 +4,12 @@
   import { Icon, Trash, UserMinus, Share } from "svelte-hero-icons";
   import Input from "../inputs/Input.svelte";
   import CopyClipBoard from "../CopyClipBoard.svelte";
+  import type { UserTournament, User } from "$lib/types";
 
-  export let tournament: any;
-  export let user: any;
+  export let tournament: UserTournament;
+  export let user: User;
   let loading: boolean;
   let tournamentAlert: boolean = false;
-  let readyAlert: boolean = false;
 
   $: loading = false;
 
@@ -108,13 +108,13 @@
     <p>
       Participants:
       <slug
-        >{tournament.expand.tournament.registeredUsers.length}/{tournament.expand.tournament
-          .maxPlayers}</slug
+        >{tournament.expand.tournament.registeredUsers.length}/{tournament.expand.tournament.expand
+          .settings.maxPlayers}</slug
       >
     </p>
     <p>
       Max submissions:
-      <slug>{tournament.expand.tournament.maxSubmissions}</slug>
+      <slug>{tournament.expand.tournament.expand.settings.maxSubmissions}</slug>
     </p>
     <div class="flex flex-row items-center">
       <p>
@@ -143,7 +143,7 @@
         </div>
       {/if}
 
-      {#if tournament.submissions.length < tournament.expand.tournament.maxSubmissions}
+      {#if tournament.submissions.length < tournament.expand.tournament.expand.settings.maxSubmissions}
         <div class="card-actions">
           <a href={`/tournament/submission/${tournament.expand.tournament.id}`}>
             <button class="btn btn-accent">Submit Image</button>

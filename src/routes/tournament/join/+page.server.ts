@@ -1,9 +1,6 @@
 import { serializeNonPOJOs } from "$lib/helpers/helpers";
-import {
-  createUserTournament,
-  updateTournamentRegisteredUsers,
-  updateUserTournaments,
-} from "$lib/helpers/tournamentHelpers";
+import { registerUserForTournament } from "$lib/helpers/tournamentHelpers";
+import type { Tournament } from "$lib/types";
 import { validateTournamentEntry } from "$lib/validation/validateTournamentEntry";
 import { joinSchema } from "$lib/validation/zodValidation";
 import { error, redirect, type Actions } from "@sveltejs/kit";
@@ -15,31 +12,20 @@ type Join = {
 export const actions: Actions = {
   join: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as Join;
-    const userId = locals.pb.authStore.model?.id;
+    const user = locals.user;
 
     try {
-      joinSchema.parse(data);
+      if (!user) throw error(401, "Unauthorized");
 
-      if (!userId) {
-        throw error(404, "no userId");
-      }
+      joinSchema.parse(data);
 
       const tournament = await locals.pb
         .collection("tournament")
-        .getFirstListItem(`joinCode="${data.joinCode}"`);
-      validateTournamentEntry(serializeNonPOJOs(tournament));
+        .getFirstListItem(`joinCode="${data.joinCode}"`, { expand: "settings, state" });
 
-      const userTournament = await createUserTournament(locals.pb, userId, tournament.id);
+      validateTournamentEntry(serializeNonPOJOs(tournament) as Tournament, user);
 
-      await updateTournamentRegisteredUsers(
-        locals.pb,
-        tournament.id,
-        tournament.registeredUsers,
-        userTournament.id
-      );
-
-      const user = await locals.pb.collection("users").getOne(userId);
-      await updateUserTournaments(locals.pb, userId, user.tournaments, userTournament.id);
+      await registerUserForTournament(locals.pb, user, tournament.id, tournament.registeredUsers);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const { joinCode } = data;

@@ -13,7 +13,7 @@ export const actions: Actions = {
 
     try {
       if (!locals.user) throw error(401, "Unauthorized");
-      
+
       changePasswordSchema.parse(data);
 
       await locals.pb.collection("users").update(locals.user.id, data);

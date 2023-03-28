@@ -1,4 +1,3 @@
-import { serializeNonPOJOs } from "$lib/helpers/helpers";
 import { submissionSchema } from "$lib/validation/zodValidation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
@@ -14,6 +13,7 @@ export const load: ServerLoad = async ({ params }) => {
 
 export const actions: Actions = {
   upload: async ({ locals, request }) => {
+    const userId: string | undefined = locals.user?.id;
     const data = await request.formData();
 
     const title = data.get("title") as string;
@@ -21,16 +21,10 @@ export const actions: Actions = {
     const tournamentId = data.get("tournamentId") as string;
     const image = data.get("image");
 
-    const userId: string | undefined = locals.pb.authStore.model?.id;
 
     try {
-      if (!userId) {
-        throw redirect(303, "/login");
-      }
-
-      if (!image) {
-        throw error(400, "Please upload an image");
-      }
+      if (!userId) throw error(401, "Unauthorized");
+      if (!image) throw error(400, "Please upload an image");
 
       submissionSchema.parse(Object.fromEntries(data));
 
@@ -42,7 +36,7 @@ export const actions: Actions = {
         });
 
       if (userTournament.submissions.length >= userTournament.expand.tournament.maxSubmissions) {
-        throw error(406, "You've riched the limit of submissions");
+        throw error(406, "You have reached the maximum amount of submissions");
       }
 
       const newFormData = new FormData();
@@ -60,18 +54,7 @@ export const actions: Actions = {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-
-      console.log(serializeNonPOJOs(err))
-      if (err?.response?.code === 400) {
-        const errors = { image: ["Something went wrong"] };
-
-        return {
-          data: { title, description },
-          errors,
-        };
-      }
-
-      if (err?.response?.code === 404) {
+      if (err?.response?.code === 404 || err?.response?.code === 400) {
         const errors = { image: ["Something went wrong"] };
 
         return {

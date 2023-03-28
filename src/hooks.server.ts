@@ -17,7 +17,7 @@ export const handle: Handle = async ({ event, resolve }) => {
       const user = serializeNonPOJOs(response.record) as User;
       delete user.name;
 
-      event.locals.user = user
+      event.locals.user = user;
     } else {
       event.locals.user = undefined;
     }

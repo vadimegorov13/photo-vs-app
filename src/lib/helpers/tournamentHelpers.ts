@@ -1,4 +1,4 @@
-import type { PocketBase } from "$lib/types/types";
+import type { PocketBase, User } from "$lib/types";
 
 export const createUserTournament = async (
   pb: PocketBase,
@@ -8,7 +8,7 @@ export const createUserTournament = async (
   const userTournamentData = {
     user: userId,
     tournament: tournamentId,
-    submissions: null,
+    submissions: [],
     ready: false,
   };
   return pb.collection("userTournament").create(userTournamentData);
@@ -38,14 +38,13 @@ export const updateUserTournaments = async (
 
 export const registerUserForTournament = async (
   pb: PocketBase,
-  userId: string,
+  user: User,
   tournamentId: string,
   registeredUsers: string[]
 ) => {
-  const userTournament = await createUserTournament(pb, userId, tournamentId);
+  const userTournament = await createUserTournament(pb, user.id, tournamentId);
 
   await updateTournamentRegisteredUsers(pb, tournamentId, registeredUsers, userTournament.id);
 
-  const user = await pb.collection("users").getOne(userId);
-  await updateUserTournaments(pb, userId, user.tournaments, userTournament.id);
+  await updateUserTournaments(pb, user.id, user.tournaments, userTournament.id);
 };

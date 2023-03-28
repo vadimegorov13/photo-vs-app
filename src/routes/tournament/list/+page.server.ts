@@ -3,26 +3,18 @@ import type { UserTournament } from "$lib/types/types";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals }) => {
-  if (!locals.pb.authStore.isValid) {
-    throw redirect(307, "/login");
-  }
-
   try {
-    const userId = locals.pb.authStore.model?.id;
+    const userId = locals.user?.id;
 
-    if (!userId) {
-      throw error(404, "no userId");
-    }
+    if (!userId) throw error(401, "Unauthorized");
 
     const user = await locals.pb.collection("users").getFirstListItem(`id="${userId}"`, {
       expand:
-        "tournaments, tournaments.tournament, tournaments.tournament.registeredUsers, tournaments.tournament.host, tournaments.submissions",
+        "tournaments, tournaments.tournament, tournaments.tournament.state, tournaments.tournament.settings, tournaments.tournament.registeredUsers, tournaments.tournament.host, tournaments.submissions",
     });
-    const tournaments = serializeNonPOJOs(user.expand.tournaments);
+    const tournaments = serializeNonPOJOs(user.expand.tournaments) as UserTournament[];
 
-    // console.log(tournaments[0].expand.tournament.title)
-
-    return { tournaments };
+    return { tournaments: tournaments };
   } catch (err) {
     return serializeNonPOJOs(err);
   }
@@ -89,10 +81,9 @@ export const actions: Actions = {
         throw error(403, "Not authorized");
       }
 
-      const allReady = tournament.expand.registeredUsers.every(
-        (userTournament: UserTournament) =>{ 
-          return userTournament.ready === true}
-      );
+      const allReady = tournament.expand.registeredUsers.every((userTournament: UserTournament) => {
+        return userTournament.ready === true;
+      });
 
       if (!allReady) {
         return {
@@ -104,8 +95,7 @@ export const actions: Actions = {
       await locals.pb.collection("tournament").update(id, { status: "ongoing" });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-
-      console.log(serializeNonPOJOs(err))
+      console.log(serializeNonPOJOs(err));
       if (err?.response?.code) {
         const errors = { message: ["Something went wrong"] };
 

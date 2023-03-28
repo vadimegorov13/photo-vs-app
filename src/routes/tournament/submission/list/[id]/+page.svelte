@@ -22,7 +22,7 @@
       {/each}
     </div>
 
-    {#if data.submissions.length < data.tournament.maxSubmissions}
+    {#if data.submissions.length < data.tournament.expand.settings.maxSubmissions}
       <div class="flex flex-col w-full items-center mt-10">
         <a href={`/tournament/submission/${tournamentId}`} class="btn btn-accent btn-circle">
           <Icon src={Plus} />

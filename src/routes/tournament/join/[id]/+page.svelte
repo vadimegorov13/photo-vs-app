@@ -3,7 +3,13 @@
   export let data;
   export let form;
 
-  let full = data.tournament?.registeredUsers?.length / data.tournament?.maxPlayers === 1;
+  let full = false;
+
+  if (data.tournament) {
+    full =
+      data.tournament?.registeredUsers?.length / data?.tournament?.expand?.settings?.maxPlayers ===
+      1;
+  }
 </script>
 
 <div>
@@ -16,15 +22,15 @@
         <input type="text" name="id" class="input" value={data.tournament.id} hidden />
 
         <button
-          class="btn {data.tournament.status !== 'pending' || full
+          class="btn {data.tournament.expand.state.tournamentState !== 'pending' || full
             ? 'btn-disabled'
-            : 'bg-primary'} w-full max-w-xs text-white hover:bg-purple-700 delay-100"
+            : 'btn-primary'} w-full max-w-sm"
         >
           Join
         </button>
         <div>
           {#if form?.error}
-            <div class="alert alert-error shadow-md p-6">
+            <div class="alert alert-error shadow-md p-6 max-w-sm">
               <div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
