@@ -1,7 +1,7 @@
+import { registerUserForTournament } from "$lib/helpers";
+import { createTournamentSchema } from "$lib/validation";
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "../$types";
-import { registerUserForTournament } from "$lib/helpers/tournamentHelpers";
-import { createTournamentSchema } from "$lib/validation/zodValidation";
 
 type TournamentCreate = {
   title: string;
@@ -61,7 +61,6 @@ export const actions: Actions = {
       await registerUserForTournament(locals.pb, user, tournament.id, tournament.registeredUsers);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err);
       const { title, description } = data;
 
       if (err?.response?.code === 400) {

@@ -1,6 +1,6 @@
-import type { Actions } from "./$types";
-import { changeUsernameSchema } from "$lib/validation/zodValidation";
+import { changeUsernameSchema } from "$lib/validation";
 import { error } from "@sveltejs/kit";
+import type { Actions } from "./$types";
 
 export const actions: Actions = {
   updateProfile: async ({ locals, request }) => {

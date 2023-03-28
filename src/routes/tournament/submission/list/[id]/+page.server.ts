@@ -1,7 +1,7 @@
-import { serializeNonPOJOs } from "$lib/helpers/helpers";
+import { serializeNonPOJOs } from "$lib/helpers";
 import type { Submission, Tournament } from "$lib/types";
-import { submissionSchema } from "$lib/validation/zodValidation";
-import { redirect, type Actions, type ServerLoad, error } from "@sveltejs/kit";
+import { submissionSchema } from "$lib/validation";
+import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals, params }) => {
   if (params.id) {

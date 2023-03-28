@@ -14,7 +14,7 @@ export const validateProtectedRoutes = (event: RequestEvent) => {
   }
 };
 
-export const handleLoginRedirect = (
+const handleLoginRedirect = (
   event: RequestEvent,
   message = "You must be logged in to access this page"
 ) => {

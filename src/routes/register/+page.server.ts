@@ -1,6 +1,5 @@
+import { redirectTo, registerSchema } from "$lib/validation";
 import type { Actions } from "./$types";
-import { registerSchema } from "$lib/validation/zodValidation";
-import { redirectTo } from "$lib/validation/validateProtectedRoutes";
 
 type RegisterUser = {
   username: string;

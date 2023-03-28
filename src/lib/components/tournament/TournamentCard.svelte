@@ -1,10 +1,9 @@
 <script lang="ts">
   import { applyAction, enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
-  import { Icon, Trash, UserMinus, Share } from "svelte-hero-icons";
-  import Input from "../inputs/Input.svelte";
-  import CopyClipBoard from "../CopyClipBoard.svelte";
-  import type { UserTournament, User } from "$lib/types";
+  import { CopyClipBoard } from "$lib/components";
+  import type { User, UserTournament } from "$lib/types";
+  import { Icon, Share, Trash, UserMinus } from "svelte-hero-icons";
 
   export let tournament: UserTournament;
   export let user: User;
@@ -63,13 +62,7 @@
             >Cancel</button
           >
           <form method="POST" action="?/delete" use:enhance={deleteTournament}>
-            <Input
-              id="id"
-              label="id"
-              value={tournament.expand.tournament.id}
-              disabled={loading}
-              hidden
-            />
+            <input id="id" value={tournament.expand.tournament.id} disabled={loading} hidden />
             <button type="submit" disabled={loading} class="btn btn-sm btn-primary">Delete</button>
           </form>
         </div>
@@ -85,7 +78,7 @@
             >Cancel</button
           >
           <form method="POST" action="?/leave" use:enhance={deleteTournament}>
-            <Input id="id" label="id" value={tournament.id} disabled={loading} hidden />
+            <input id="id" value={tournament.id} disabled={loading} hidden />
             <button type="submit" disabled={loading} class="btn btn-sm btn-primary">Leave</button>
           </form>
         </div>
@@ -122,9 +115,9 @@
         <slug>{tournament.expand.tournament.joinCode}</slug>
       </p>
       <div class="card-actions justify-end">
-        <button on:click={copy} class="btn btn-ghost btn-square"
-          ><Icon src={Share} class="w-6 h-6" /></button
-        >
+        <button on:click={copy} class="btn btn-ghost btn-square">
+          <Icon src={Share} class="w-6 h-6" />
+        </button>
       </div>
       <div id="clipboard" />
     </div>
@@ -154,29 +147,16 @@
     {#if tournament.expand.tournament.host === user.id}
       <div class="card-actions">
         <form method="POST" action="?/start">
-          <Input
-            id="id"
-            label="id"
-            value={tournament.expand.tournament.id}
-            disabled={loading}
-            hidden
-          />
+          <input id="id" value={tournament.expand.tournament.id} disabled={loading} hidden />
           <button type="submit" disabled={loading} class="btn btn-primary">Start</button>
         </form>
       </div>
     {:else}
       <div class="card-actions">
         <form method="POST" action="?/ready">
-          <Input
-            id="userTournamentId"
-            label="userTournamentId"
-            value={tournament.id}
-            disabled={loading}
-            hidden
-          />
-          <Input
+          <input id="userTournamentId" value={tournament.id} disabled={loading} hidden />
+          <input
             id="tournamentId"
-            label="tournamentId"
             value={tournament.expand.tournament.id}
             disabled={loading}
             hidden

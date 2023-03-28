@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ValidatedInput from "$lib/components/inputs/ValidatedInput.svelte";
+  import { ValidatedInput } from "$lib/components/inputs";
 
   export let data;
   export let form;

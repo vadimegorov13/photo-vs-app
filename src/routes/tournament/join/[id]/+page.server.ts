@@ -1,7 +1,6 @@
-import { serializeNonPOJOs } from "$lib/helpers/helpers";
-import { registerUserForTournament } from "$lib/helpers/tournamentHelpers";
+import { registerUserForTournament, serializeNonPOJOs } from "$lib/helpers";
 import type { Tournament } from "$lib/types";
-import { validateTournamentEntry } from "$lib/validation/validateTournamentEntry";
+import { validateTournamentEntry } from "$lib/validation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 type Join = {

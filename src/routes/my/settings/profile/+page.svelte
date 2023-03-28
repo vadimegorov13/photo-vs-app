@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { getImageUrl } from "$lib/helpers/helpers";
+  import { ValidatedInput } from "$lib/components/inputs";
+  import { getImageUrl } from "$lib/helpers";
   import { Icon, Pencil } from "svelte-hero-icons";
-  import ValidatedInput from "$lib/components/inputs/ValidatedInput.svelte";
 
   export let data;
   export let form;

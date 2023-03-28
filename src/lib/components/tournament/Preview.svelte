@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { Tournament } from "$lib/types/types";
+  import type { Tournament } from "$lib/types";
+
   export let data: Tournament;
 </script>
 

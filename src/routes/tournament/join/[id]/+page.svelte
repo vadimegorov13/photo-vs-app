@@ -1,5 +1,6 @@
 <script>
-  import Preview from "$lib/components/tournament/Preview.svelte";
+  import { Preview } from "$lib/components/tournament";
+
   export let data;
   export let form;
 

@@ -1,11 +1,10 @@
 <script lang="ts">
   import { applyAction, enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
-  import { Icon, Trash, Pencil } from "svelte-hero-icons";
-  import Input from "$lib/components/inputs/Input.svelte";
-  import { getImageUrl } from "$lib/helpers/helpers";
-  import Modal from "../Modal.svelte";
-  import ValidatedInput from "../inputs/ValidatedInput.svelte";
+  import { Modal } from "$lib/components";
+  import { ValidatedInput } from "$lib/components/inputs";
+  import { getImageUrl } from "$lib/helpers";
+  import { Icon, Pencil, Trash } from "svelte-hero-icons";
 
   export let submission: any;
   export let form: any;
@@ -52,7 +51,7 @@
             >Cancel</button
           >
           <form method="POST" action="?/delete" use:enhance={deleteSubmission}>
-            <Input id="id" label="id" value={submission.id} disabled={loading} hidden />
+            <input id="id" value={submission.id} disabled={loading} hidden />
             <button type="submit" disabled={loading} class="btn btn-sm btn-primary">Delete</button>
           </form>
         </div>
@@ -112,7 +111,7 @@
           </span>
           <h3 slot="heading">Edit your submission</h3>
           <form action="?/edit" method="POST" enctype="multipart/form-data">
-            <Input id="id" label="id" value={submission.id} disabled={loading} hidden />
+            <input id="id" value={submission.id} disabled={loading} hidden />
             <ValidatedInput
               id="title"
               label="Title"

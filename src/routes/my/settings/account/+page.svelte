@@ -1,6 +1,6 @@
 <script lang="ts">
-  import ValidatedInput from "$lib/components/inputs/ValidatedInput.svelte";
-  import Modal from "$lib/components/Modal.svelte";
+  import { Modal } from "$lib/components";
+  import { ValidatedInput } from "$lib/components/inputs";
 
   export let data;
   export let form;

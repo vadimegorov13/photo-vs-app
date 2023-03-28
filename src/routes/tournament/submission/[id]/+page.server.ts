@@ -21,7 +21,6 @@ export const actions: Actions = {
     const tournamentId = data.get("tournamentId") as string;
     const image = data.get("image");
 
-
     try {
       if (!userId) throw error(401, "Unauthorized");
       if (!image) throw error(400, "Please upload an image");

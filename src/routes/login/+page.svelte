@@ -1,6 +1,6 @@
 <script lang="ts">
-  import ValidatedInput from "$lib/components/inputs/ValidatedInput.svelte";
   import { page } from "$app/stores";
+  import { ValidatedInput } from "$lib/components/inputs";
 
   export let form;
   let message: string;
@@ -21,7 +21,10 @@
     <h2 class="text-primary text-center text-3xl font-bold">Login</h2>
     <p class="text-black">
       Or
-      <a href={`/register${search}`} class="text-primary font-medium hover:cursor-pointer hover:underline">
+      <a
+        href={`/register${search}`}
+        class="text-primary font-medium hover:cursor-pointer hover:underline"
+      >
         register
       </a>
       if you don't already have an account.

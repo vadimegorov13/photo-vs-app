@@ -1,5 +1,4 @@
-import { serializeNonPOJOs } from "$lib/helpers/helpers";
-import { registerUserForTournament } from "$lib/helpers/tournamentHelpers";
+import { registerUserForTournament, serializeNonPOJOs } from "$lib/helpers";
 import type { Tournament } from "$lib/types";
 import { validateTournamentEntry } from "$lib/validation/validateTournamentEntry";
 import { joinSchema } from "$lib/validation/zodValidation";

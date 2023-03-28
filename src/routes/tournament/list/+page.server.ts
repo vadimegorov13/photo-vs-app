@@ -1,5 +1,5 @@
-import { serializeNonPOJOs } from "$lib/helpers/helpers";
-import type { UserTournament } from "$lib/types/types";
+import { serializeNonPOJOs } from "$lib/helpers";
+import type { UserTournament } from "$lib/types";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals }) => {
@@ -95,7 +95,6 @@ export const actions: Actions = {
       await locals.pb.collection("tournament").update(id, { status: "ongoing" });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(serializeNonPOJOs(err));
       if (err?.response?.code) {
         const errors = { message: ["Something went wrong"] };
 

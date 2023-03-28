@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getImageUrl } from "$lib/helpers/helpers";
+  import { getImageUrl } from "$lib/helpers";
   import { Icon, Photo } from "svelte-hero-icons";
 
   export let user: any;

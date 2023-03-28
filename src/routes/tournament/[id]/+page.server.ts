@@ -1,4 +1,4 @@
-import { serializeNonPOJOs } from "$lib/helpers/helpers";
+import { serializeNonPOJOs } from "$lib/helpers";
 import { error, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals, params }) => {
@@ -14,8 +14,6 @@ export const load: ServerLoad = async ({ locals, params }) => {
         tournament: serializeNonPOJOs(tournament),
       };
     } catch (err) {
-      console.log(serializeNonPOJOs(err));
-
       return {
         errors: ["Something went wrong"],
       };

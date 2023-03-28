@@ -1,5 +1,4 @@
-import { redirectTo } from "$lib/validation/validateProtectedRoutes";
-import { loginSchema } from "$lib/validation/zodValidation";
+import { loginSchema, redirectTo } from "$lib/validation";
 import type { Actions } from "./$types";
 
 type LoginUser = {

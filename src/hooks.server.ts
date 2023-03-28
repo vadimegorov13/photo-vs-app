@@ -1,4 +1,4 @@
-import { serializeNonPOJOs } from "$lib/helpers/helpers";
+import { serializeNonPOJOs } from "$lib/helpers";
 import type { User } from "$lib/types";
 import type { Handle } from "@sveltejs/kit";
 import PocketBase from "pocketbase";
