@@ -17,7 +17,7 @@
   </div>
 
   <div class="shadow-lg rounded-lg p-8 max-w-md">
-    <form method="POST" action="?/register" class="flex flex-col">
+    <form method="POST" class="flex flex-col">
       <ValidatedInput
         id="username"
         value={form?.data?.username ?? ""}

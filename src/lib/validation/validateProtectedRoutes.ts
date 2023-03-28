@@ -2,18 +2,33 @@ import { redirect } from "@sveltejs/kit";
 import type { RequestEvent } from "@sveltejs/kit";
 
 export const validateProtectedRoutes = (event: RequestEvent) => {
-  if (
-    (event.url.pathname.startsWith("/login") || event.url.pathname.startsWith("/register")) &&
-    event.locals.pb.authStore.isValid
-  ) {
+  const urlStartsWith = (url: string) => event.url.pathname.startsWith(url);
+  const authorized = event.locals.pb.authStore.isValid;
+
+  if ((urlStartsWith("/login") || urlStartsWith("/register")) && authorized) {
     throw redirect(303, "/");
   }
 
-  if (event.url.pathname.startsWith("/tournament") && !event.locals.pb.authStore.isValid) {
-    throw redirect(303, "/login");
+  if ((urlStartsWith("/tournament") || urlStartsWith("/my")) && !authorized) {
+    throw redirect(303, handleLoginRedirect(event));
+  }
+};
+
+export const handleLoginRedirect = (
+  event: RequestEvent,
+  message = "You must be logged in to access this page"
+) => {
+  const redirectTo = event.url.pathname + event.url.search;
+  return `/login?redirectTo=${redirectTo}&message=${message}`;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const redirectTo = (url: any) => {
+  const redirectTo = url.searchParams.get("redirectTo");
+
+  if (redirectTo) {
+    throw redirect(303, `/${redirectTo.slice(1)}`);
   }
 
-  if (event.url.pathname.startsWith("/my") && !event.locals.pb.authStore.isValid) {
-    throw redirect(303, "/login");
-  }
+  throw redirect(303, "/");
 };

@@ -1,6 +1,6 @@
-import { redirect } from "@sveltejs/kit";
-import type { Actions } from "./$types";
+import { redirectTo } from "$lib/validation/validateProtectedRoutes";
 import { loginSchema } from "$lib/validation/zodValidation";
+import type { Actions } from "./$types";
 
 type LoginUser = {
   email: string;
@@ -8,7 +8,7 @@ type LoginUser = {
 };
 
 export const actions: Actions = {
-  login: async ({ locals, request }) => {
+  default: async ({ locals, request, url }) => {
     const data = Object.fromEntries(await request.formData()) as LoginUser;
 
     try {
@@ -35,6 +35,6 @@ export const actions: Actions = {
       };
     }
 
-    throw redirect(303, "/");
+    redirectTo(url);
   },
 };
