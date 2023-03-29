@@ -24,12 +24,7 @@
 </script>
 
 <div class="flex flex-col">
-  <form
-    method="POST"
-    action="?/updateProfile"
-    class="flex flex-col w-full"
-    enctype="multipart/form-data"
-  >
+  <form method="POST" class="flex flex-col w-full" enctype="multipart/form-data">
     <div class="form-control flex flex-col items-center">
       <h3 class="text-2xl font-medium">Update Profile</h3>
       <div class="divider" />

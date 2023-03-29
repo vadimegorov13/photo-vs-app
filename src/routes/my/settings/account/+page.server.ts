@@ -1,3 +1,4 @@
+import { handleError } from "$lib/validation";
 import { resetPasswordSchema as changeEmailSchema } from "$lib/validation/zodValidation";
 import { error, type Actions } from "@sveltejs/kit";
 
@@ -6,7 +7,7 @@ type ChangeEmail = {
 };
 
 export const actions: Actions = {
-  updateEmail: async ({ request, locals }) => {
+  default: async ({ request, locals }) => {
     const data = Object.fromEntries(await request.formData()) as ChangeEmail;
 
     try {
@@ -24,33 +25,18 @@ export const actions: Actions = {
       await locals.pb.collection("users").requestEmailChange(data.email);
 
       locals.user.email = data.email;
+
+      return {
+        success: true,
+      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const { email } = data;
 
-      if (err?.response?.code === 400) {
-        let errors = {};
-
-        if (err.response.data.newEmail) {
-          errors = { email: ["Email is already in use"] };
-        }
-
-        return {
-          data: { email },
-          errors,
-        };
-      }
-
-      const { fieldErrors: errors } = err.flatten();
-
       return {
         data: { email },
-        errors,
+        errors: handleError(err),
       };
     }
-
-    return {
-      success: true,
-    };
   },
 };

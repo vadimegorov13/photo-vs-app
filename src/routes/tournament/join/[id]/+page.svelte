@@ -19,7 +19,7 @@
   {:else}
     <Preview data={data.tournament} />
     <div class="mt-12">
-      <form method="POST" action="?/join" class="flex flex-col items-center space-y-2 w-full">
+      <form method="POST" class="flex flex-col items-center space-y-2 w-full">
         <input type="text" name="id" class="input" value={data.tournament.id} hidden />
 
         <button
@@ -45,7 +45,7 @@
                     d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
                   /></svg
                 >
-                <span>{form.error.body.message}</span>
+                <span>{form.error.message}</span>
               </div>
             </div>
           {/if}

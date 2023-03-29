@@ -1,6 +1,6 @@
 import { serializeNonPOJOs } from "$lib/helpers";
 import type { Submission, Tournament } from "$lib/types";
-import { submissionSchema } from "$lib/validation";
+import { handleError, submissionSchema } from "$lib/validation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals, params }) => {
@@ -29,16 +29,17 @@ export const load: ServerLoad = async ({ locals, params }) => {
   throw redirect(303, "/tournament/list");
 };
 
-type DeleteSubmission = {
-  id: string;
-};
-
 export const actions: Actions = {
   delete: async ({ locals, request }) => {
-    const data = Object.fromEntries(await request.formData()) as DeleteSubmission;
+    const data = await request.formData();
+    const id = data.get("id") as string;
 
     try {
-      await locals.pb.collection("submission").delete(data.id);
+      await locals.pb.collection("submission").delete(id);
+
+      return {
+        success: true,
+      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err?.response?.code) {
@@ -50,10 +51,6 @@ export const actions: Actions = {
         };
       }
     }
-
-    return {
-      success: true,
-    };
   },
   edit: async ({ locals, request }) => {
     const data = await request.formData();
@@ -76,45 +73,16 @@ export const actions: Actions = {
       submissionSchema.parse(Object.fromEntries(data));
 
       await locals.pb.collection("submission").update(id, submissionData);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      if (err?.response?.code === 400) {
-        const errors = { title: ["Something went wrong"] };
-
-        return {
-          data: { title, description },
-          errors,
-        };
-      }
-
-      if (err?.status === 406) {
-        const errors = { image: [err.body.message] };
-
-        return {
-          data: { title, description },
-          errors,
-        };
-      }
-
-      if (err?.status === 400) {
-        const errors = { image: [err.body.message] };
-
-        return {
-          data: { title, description },
-          errors,
-        };
-      }
-
-      const { fieldErrors: errors } = err.flatten();
 
       return {
+        success: true,
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      return {
         data: { title, description },
-        errors,
+        errors: handleError(err, "edit"),
       };
     }
-
-    return {
-      success: true,
-    };
   },
 };

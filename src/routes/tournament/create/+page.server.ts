@@ -1,5 +1,5 @@
 import { registerUserForTournament } from "$lib/helpers";
-import { createTournamentSchema } from "$lib/validation";
+import { createTournamentSchema, handleError } from "$lib/validation";
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "../$types";
 
@@ -11,7 +11,7 @@ type TournamentCreate = {
 };
 
 export const actions: Actions = {
-  create: async ({ locals, request }) => {
+  default: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as TournamentCreate;
     const user = locals.user;
     const maxPlayers = parseInt(data?.maxPlayers, 10);
@@ -63,20 +63,9 @@ export const actions: Actions = {
     } catch (err: any) {
       const { title, description } = data;
 
-      if (err?.response?.code === 400) {
-        const errors = { title: ["Something went wrong"] };
-
-        return {
-          data: { title, description, maxPlayers, maxSubmissions },
-          errors,
-        };
-      }
-
-      const { fieldErrors: errors } = err.flatten();
-
       return {
         data: { title, description, maxPlayers, maxSubmissions },
-        errors,
+        errors: handleError(err, "create"),
       };
     }
 

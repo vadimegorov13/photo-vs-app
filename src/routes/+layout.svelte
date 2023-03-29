@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Footer, Nav } from "$lib/components";
   import "../app.css";
+
   export let data;
 </script>
 

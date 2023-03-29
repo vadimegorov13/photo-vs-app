@@ -1,3 +1,4 @@
+import { handleError } from "$lib/validation";
 import { submissionSchema } from "$lib/validation/zodValidation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
@@ -12,18 +13,18 @@ export const load: ServerLoad = async ({ params }) => {
 };
 
 export const actions: Actions = {
-  upload: async ({ locals, request }) => {
+  default: async ({ locals, request }) => {
     const userId: string | undefined = locals.user?.id;
     const data = await request.formData();
 
     const title = data.get("title") as string;
     const description = data.get("description") as string;
     const tournamentId = data.get("tournamentId") as string;
-    const image = data.get("image");
+    const image = data.get("image") as File;
 
     try {
       if (!userId) throw error(401, "Unauthorized");
-      if (!image) throw error(400, "Please upload an image");
+      if (!image.size) throw error(400, "Please upload an image");
 
       submissionSchema.parse(Object.fromEntries(data));
 
@@ -53,38 +54,9 @@ export const actions: Actions = {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err?.response?.code === 404 || err?.response?.code === 400) {
-        const errors = { image: ["Something went wrong"] };
-
-        return {
-          data: { title, description },
-          errors,
-        };
-      }
-
-      if (err?.status === 406) {
-        const errors = { image: [err.body.message] };
-
-        return {
-          data: { title, description },
-          errors,
-        };
-      }
-
-      if (err?.status === 400) {
-        const errors = { image: [err.body.message] };
-
-        return {
-          data: { title, description },
-          errors,
-        };
-      }
-
-      const { fieldErrors: errors } = err.flatten();
-
       return {
         data: { title, description },
-        errors,
+        errors: handleError(err, "upload"),
       };
     }
 

@@ -11,12 +11,7 @@
   </div>
 
   <div class="w-full">
-    <form
-      method="POST"
-      action="?/upload"
-      class="flex flex-col items-center"
-      enctype="multipart/form-data"
-    >
+    <form method="POST" class="flex flex-col items-center" enctype="multipart/form-data">
       <ValidatedInput
         id="title"
         value={form?.data?.title ?? ""}

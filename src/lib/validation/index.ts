@@ -1,26 +1,28 @@
-import { validateProtectedRoutes, redirectTo } from "$lib/validation/validateProtectedRoutes";
+import { redirectTo, validateProtectedRoutes } from "$lib/validation/validateProtectedRoutes";
 import { validateTournamentEntry } from "$lib/validation/validateTournamentEntry";
 import {
-  loginSchema,
-  registerSchema,
-  resetPasswordSchema,
   changePasswordSchema,
   changeUsernameSchema,
   createTournamentSchema,
   joinSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
   submissionSchema,
 } from "$lib/validation/zodValidation";
+import { handleError } from "./handleError";
 
 export {
-  validateProtectedRoutes,
-  redirectTo,
-  validateTournamentEntry,
-  loginSchema,
-  registerSchema,
-  resetPasswordSchema,
   changePasswordSchema,
   changeUsernameSchema,
   createTournamentSchema,
+  handleError,
   joinSchema,
+  loginSchema,
+  redirectTo,
+  registerSchema,
+  resetPasswordSchema,
   submissionSchema,
+  validateProtectedRoutes,
+  validateTournamentEntry,
 };

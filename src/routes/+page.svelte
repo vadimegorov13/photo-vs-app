@@ -1,7 +1,3 @@
-<script>
-  import { redirect } from "@sveltejs/kit";
-</script>
-
 <svelte:head>
   <title>PhotoVS</title>
 </svelte:head>

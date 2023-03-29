@@ -10,7 +10,7 @@
   </div>
 
   <div class="w-full">
-    <form method="POST" action="?/create" class="flex flex-col items-center">
+    <form method="POST" class="flex flex-col items-center">
       <ValidatedInput
         id="title"
         value={form?.data?.title ?? ""}

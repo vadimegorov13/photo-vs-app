@@ -1,3 +1,4 @@
+import { handleError } from "$lib/validation";
 import { changePasswordSchema } from "$lib/validation/zodValidation";
 import { redirect, type Actions, error } from "@sveltejs/kit";
 
@@ -8,7 +9,7 @@ type PasswordChange = {
 };
 
 export const actions: Actions = {
-  updatePassword: async ({ request, locals }) => {
+  default: async ({ request, locals }) => {
     const data = Object.fromEntries(await request.formData()) as PasswordChange;
 
     try {
@@ -20,22 +21,8 @@ export const actions: Actions = {
       locals.pb.authStore.clear();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err?.response?.code === 400) {
-        let errors = {};
-
-        if (err.response.data.oldPassword) {
-          errors = { ...errors, oldPassword: ["Password did not match"] };
-        }
-
-        return {
-          errors,
-        };
-      }
-
-      const { fieldErrors: errors } = err.flatten();
-
       return {
-        errors,
+        errors: handleError(err),
       };
     }
 

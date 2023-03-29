@@ -6,7 +6,7 @@
 
 <div class="flex flex-col items-center mx-10 sm:mx-20">
   <div class="py-6 w-full max-w-md mt-6">
-    <form method="POST" action="?/join" class="flex flex-col items-center space-y-2 w-full">
+    <form method="POST" class="flex flex-col items-center space-y-2 w-full">
       <ValidatedInput
         id="joinCode"
         value={form?.data?.joinCode ?? ""}

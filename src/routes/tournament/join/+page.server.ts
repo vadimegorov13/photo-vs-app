@@ -1,5 +1,6 @@
 import { registerUserForTournament, serializeNonPOJOs } from "$lib/helpers";
 import type { Tournament } from "$lib/types";
+import { handleError } from "$lib/validation";
 import { validateTournamentEntry } from "$lib/validation/validateTournamentEntry";
 import { joinSchema } from "$lib/validation/zodValidation";
 import { error, redirect, type Actions } from "@sveltejs/kit";
@@ -9,7 +10,7 @@ type Join = {
 };
 
 export const actions: Actions = {
-  join: async ({ locals, request }) => {
+  default: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as Join;
     const user = locals.user;
 
@@ -29,38 +30,9 @@ export const actions: Actions = {
     } catch (err: any) {
       const { joinCode } = data;
 
-      if (err?.status === 400) {
-        const errors = { joinCode: ["Something went wrong"] };
-
-        return {
-          data: { joinCode },
-          errors,
-        };
-      }
-
-      if (err?.status === 404) {
-        const errors = { joinCode: ["Tournament doesn't exist"] };
-
-        return {
-          data: { joinCode },
-          errors,
-        };
-      }
-
-      if (err?.status === 409) {
-        const errors = { joinCode: [err.body.message] };
-
-        return {
-          data: { joinCode },
-          errors,
-        };
-      }
-
-      const { fieldErrors: errors } = err.flatten();
-
       return {
         data: { joinCode },
-        errors,
+        errors: handleError(err, "joinCode"),
       };
     }
 

@@ -47,11 +47,18 @@
           <span>Are you sure you want to delete this submission?</span>
         </div>
         <div class="flex flex-col">
-          <button on:click={handleAlert} disabled={loading} class="btn btn-sm btn-ghost"
-            >Cancel</button
-          >
+          <button on:click={handleAlert} disabled={loading} class="btn btn-sm btn-ghost">
+            Cancel
+          </button>
           <form method="POST" action="?/delete" use:enhance={deleteSubmission}>
-            <input id="id" value={submission.id} disabled={loading} hidden />
+            <ValidatedInput
+              id="id"
+              type="text"
+              label="id"
+              value={submission.id}
+              disabled={loading}
+              hidden
+            />
             <button type="submit" disabled={loading} class="btn btn-sm btn-primary">Delete</button>
           </form>
         </div>
@@ -59,47 +66,19 @@
     {/if}
     {#if form?.errors}
       <div class="alert alert-error shadow-lg mt-6 max-w-md">
-        <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="stroke-current flex-shrink-0 h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-            /></svg
-          >
-          <div class="flex flex-col gap-2">
-            {#if form?.errors?.title}
-              <p>{form?.errors?.title[0]}</p>
-            {/if}
-            {#if form?.errors?.description}
-              <p>{form?.errors?.description[0]}</p>
-            {/if}
-          </div>
+        <div class="flex flex-col gap-2">
+          {#if form?.errors?.title}
+            <p>{form?.errors?.title[0]}</p>
+          {/if}
+          {#if form?.errors?.description}
+            <p>{form?.errors?.description[0]}</p>
+          {/if}
         </div>
       </div>
     {/if}
     {#if form?.success === true}
       <div class="alert alert-success shadow-lg mt-6 max-w-md">
-        <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="stroke-current flex-shrink-0 h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            ><path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            /></svg
-          >
-          <span>Success</span>
-        </div>
+        <span>Success</span>
       </div>
     {/if}
     <div class="flex flex-row w-full">
@@ -111,7 +90,14 @@
           </span>
           <h3 slot="heading">Edit your submission</h3>
           <form action="?/edit" method="POST" enctype="multipart/form-data">
-            <input id="id" value={submission.id} disabled={loading} hidden />
+            <ValidatedInput
+              id="id"
+              type="text"
+              label="id"
+              value={submission.id}
+              disabled={loading}
+              hidden
+            />
             <ValidatedInput
               id="title"
               label="Title"

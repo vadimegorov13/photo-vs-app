@@ -1,3 +1,4 @@
+import { handleError } from "$lib/validation";
 import { resetPasswordSchema } from "$lib/validation/zodValidation";
 import type { Actions } from "@sveltejs/kit";
 
@@ -6,7 +7,7 @@ type ResetPassword = {
 };
 
 export const actions: Actions = {
-  resetPassword: async ({ request, locals }) => {
+  default: async ({ request, locals }) => {
     const data = Object.fromEntries(await request.formData()) as ResetPassword;
 
     try {
@@ -20,24 +21,9 @@ export const actions: Actions = {
     } catch (err: any) {
       const { email } = data;
 
-      if (err?.response?.code) {
-        let errors = {};
-
-        if (err.response.data.email) {
-          errors = { ...errors, email: ["Error processing password reset"] };
-        }
-
-        return {
-          data: { email },
-          errors,
-        };
-      }
-
-      const { fieldErrors: errors } = err.flatten();
-
       return {
         data: { email },
-        errors,
+        errors: handleError(err),
       };
     }
   },

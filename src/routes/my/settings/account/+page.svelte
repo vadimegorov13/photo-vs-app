@@ -18,7 +18,7 @@
     <Modal label="change-email" checked={emailModalOpen}>
       <span slot="trigger" class="btn btn-primary">Change Email</span>
       <h3 slot="heading">Change Your Email</h3>
-      <form action="?/updateEmail" method="POST" class="space-y-2">
+      <form method="POST" class="space-y-2">
         <ValidatedInput
           id="email"
           type="email"

@@ -1,4 +1,4 @@
-import { redirectTo, registerSchema } from "$lib/validation";
+import { handleError, redirectTo, registerSchema } from "$lib/validation";
 import type { Actions } from "./$types";
 
 type RegisterUser = {
@@ -23,27 +23,9 @@ export const actions: Actions = {
     } catch (err: any) {
       const { username, email } = data;
 
-      if (err?.response?.code === 400) {
-        let errors = {};
-
-        if (err.response.data.email) {
-          errors = { ...errors, email: ["Email is already in use"] };
-        }
-
-        if (err.response.data.username) {
-          errors = { ...errors, username: ["Username is already in use"] };
-        }
-        return {
-          data: { username, email },
-          errors,
-        };
-      }
-
-      const { fieldErrors: errors } = err.flatten();
-
       return {
         data: { username, email },
-        errors,
+        errors: handleError(err),
       };
     }
 

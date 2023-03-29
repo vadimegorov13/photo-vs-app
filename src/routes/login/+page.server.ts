@@ -1,4 +1,4 @@
-import { loginSchema, redirectTo } from "$lib/validation";
+import { handleError, loginSchema, redirectTo } from "$lib/validation";
 import type { Actions } from "./$types";
 
 type LoginUser = {
@@ -17,20 +17,9 @@ export const actions: Actions = {
     } catch (err: any) {
       const { email } = data;
 
-      if (err?.response?.code === 400) {
-        const errors = { password: ["Wrong email or password"] };
-
-        return {
-          data: { email },
-          errors,
-        };
-      }
-
-      const { fieldErrors: errors } = err.flatten();
-
       return {
         data: { email },
-        errors,
+        errors: handleError(err),
       };
     }
 

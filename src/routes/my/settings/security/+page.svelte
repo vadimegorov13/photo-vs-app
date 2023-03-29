@@ -5,7 +5,7 @@
 </script>
 
 <div class="flex flex-col justify-center">
-  <form action="?/updatePassword" method="POST" class="flex flex-col space-y-2 w-full">
+  <form method="POST" class="flex flex-col space-y-2 w-full">
     <div class="form-control flex flex-col items-center">
       <h3 class="text-2xl font-medium">Change Password</h3>
       <div class="divider" />

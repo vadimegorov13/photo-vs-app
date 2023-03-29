@@ -1,27 +1,29 @@
 import type {
-  PocketBase,
-  Tournament,
-  TournamentState,
-  TournamentSettings,
-  UserTournament,
-  Round,
   Match,
+  PocketBase,
+  Round,
   Submission,
+  Tournament,
+  TournamentSettings,
+  TournamentState,
   User,
   UserComment,
+  UserTournament,
   UserVote,
-} from "./types";
+} from "./dbSchema";
+import type { PbError } from "./errorTypes";
 
 export {
-  PocketBase,
-  Tournament,
-  TournamentState,
-  TournamentSettings,
-  UserTournament,
-  Round,
   Match,
+  PbError,
+  PocketBase,
+  Round,
   Submission,
+  Tournament,
+  TournamentSettings,
+  TournamentState,
   User,
   UserComment,
+  UserTournament,
   UserVote,
 };

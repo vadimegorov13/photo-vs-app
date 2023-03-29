@@ -1,5 +1,6 @@
 import { serializeNonPOJOs } from "$lib/helpers";
 import type { UserTournament } from "$lib/types";
+import { handleError } from "$lib/validation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals }) => {
@@ -20,16 +21,16 @@ export const load: ServerLoad = async ({ locals }) => {
   }
 };
 
-type DeleteTournament = {
-  id: string;
-};
-
 export const actions: Actions = {
   delete: async ({ locals, request }) => {
-    const data = Object.fromEntries(await request.formData()) as DeleteTournament;
+    const data = await request.formData();
+    const id = data.get("id") as string;
 
     try {
-      await locals.pb.collection("tournament").delete(data.id);
+      await locals.pb.collection("tournament").delete(id);
+      return {
+        success: true,
+      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err?.response?.code) {
@@ -41,16 +42,16 @@ export const actions: Actions = {
         };
       }
     }
-
-    return {
-      success: true,
-    };
   },
   leave: async ({ locals, request }) => {
-    const data = Object.fromEntries(await request.formData()) as DeleteTournament;
+    const data = await request.formData();
+    const id = data.get("id") as string;
 
     try {
-      await locals.pb.collection("userTournament").delete(data.id);
+      await locals.pb.collection("userTournament").delete(id);
+      return {
+        success: true,
+      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err?.response?.code) {
@@ -62,10 +63,6 @@ export const actions: Actions = {
         };
       }
     }
-
-    return {
-      success: true,
-    };
   },
   start: async ({ locals, request }) => {
     const data = await request.formData();
@@ -78,7 +75,7 @@ export const actions: Actions = {
         .getOne(id, { expand: "registeredUsers" });
 
       if (tournament.host !== userId) {
-        throw error(403, "Not authorized");
+        throw error(401, "Unauthorized");
       }
 
       const allReady = tournament.expand.registeredUsers.every((userTournament: UserTournament) => {
@@ -86,26 +83,19 @@ export const actions: Actions = {
       });
 
       if (!allReady) {
-        return {
-          success: false,
-          errors: { message: ["Not all users are ready"] },
-        };
+        throw error(400, "Not all users are ready");
       }
 
       await locals.pb.collection("tournament").update(id, { status: "ongoing" });
+
+      throw redirect(303, `/tournament/${id}`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err?.response?.code) {
-        const errors = { message: ["Something went wrong"] };
-
-        return {
-          success: false,
-          errors,
-        };
-      }
+      return {
+        success: false,
+        errors: handleError(err, "start"),
+      };
     }
-
-    throw redirect(303, `/tournament/${id}`);
   },
   ready: async ({ locals, request }) => {
     const data = await request.formData();
@@ -114,6 +104,7 @@ export const actions: Actions = {
 
     try {
       await locals.pb.collection("userTournament").update(userTournamentId, { ready: true });
+      throw redirect(303, `/tournament/${tournamentId}`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err?.response?.code) {
@@ -125,7 +116,5 @@ export const actions: Actions = {
         };
       }
     }
-
-    throw redirect(303, `/tournament/${tournamentId}`);
   },
 };

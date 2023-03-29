@@ -1,6 +1,6 @@
 import { registerUserForTournament, serializeNonPOJOs } from "$lib/helpers";
 import type { Tournament } from "$lib/types";
-import { validateTournamentEntry } from "$lib/validation";
+import { handleError, validateTournamentEntry } from "$lib/validation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 type Join = {
@@ -33,7 +33,7 @@ export const load: ServerLoad = async ({ locals, params }) => {
 };
 
 export const actions: Actions = {
-  join: async ({ locals, request }) => {
+  default: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as Join;
     const user = locals.user;
 
@@ -50,7 +50,7 @@ export const actions: Actions = {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return {
-        error: serializeNonPOJOs(err),
+        error: handleError(err, "join"),
       };
     }
 

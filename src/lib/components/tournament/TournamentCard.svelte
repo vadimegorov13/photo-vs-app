@@ -4,6 +4,7 @@
   import { CopyClipBoard } from "$lib/components";
   import type { User, UserTournament } from "$lib/types";
   import { Icon, Share, Trash, UserMinus } from "svelte-hero-icons";
+  import { ValidatedInput } from "$lib/components/inputs";
 
   export let tournament: UserTournament;
   export let user: User;
@@ -62,7 +63,14 @@
             >Cancel</button
           >
           <form method="POST" action="?/delete" use:enhance={deleteTournament}>
-            <input id="id" value={tournament.expand.tournament.id} disabled={loading} hidden />
+            <ValidatedInput
+              id="id"
+              type="text"
+              label="id"
+              value={tournament.expand.tournament.id}
+              disabled={loading}
+              hidden
+            />
             <button type="submit" disabled={loading} class="btn btn-sm btn-primary">Delete</button>
           </form>
         </div>
@@ -78,7 +86,14 @@
             >Cancel</button
           >
           <form method="POST" action="?/leave" use:enhance={deleteTournament}>
-            <input id="id" value={tournament.id} disabled={loading} hidden />
+            <ValidatedInput
+              id="id"
+              type="text"
+              label="id"
+              value={tournament.id}
+              disabled={loading}
+              hidden
+            />
             <button type="submit" disabled={loading} class="btn btn-sm btn-primary">Leave</button>
           </form>
         </div>
@@ -100,10 +115,10 @@
 
     <p>
       Participants:
-      <slug
-        >{tournament.expand.tournament.registeredUsers.length}/{tournament.expand.tournament.expand
-          .settings.maxPlayers}</slug
-      >
+      <slug>
+        {tournament.expand.tournament.registeredUsers.length}/
+        {tournament.expand.tournament.expand.settings.maxPlayers}
+      </slug>
     </p>
     <p>
       Max submissions:
@@ -147,16 +162,32 @@
     {#if tournament.expand.tournament.host === user.id}
       <div class="card-actions">
         <form method="POST" action="?/start">
-          <input id="id" value={tournament.expand.tournament.id} disabled={loading} hidden />
+          <ValidatedInput
+            id="id"
+            type="text"
+            label="id"
+            value={tournament.expand.tournament.id}
+            disabled={loading}
+            hidden
+          />
           <button type="submit" disabled={loading} class="btn btn-primary">Start</button>
         </form>
       </div>
     {:else}
       <div class="card-actions">
         <form method="POST" action="?/ready">
-          <input id="userTournamentId" value={tournament.id} disabled={loading} hidden />
-          <input
+          <ValidatedInput
+            id="userTournamentId"
+            type="text"
+            label="userTournamentId"
+            value={tournament.id}
+            disabled={loading}
+            hidden
+          />
+          <ValidatedInput
             id="tournamentId"
+            type="text"
+            label="tournamentId"
             value={tournament.expand.tournament.id}
             disabled={loading}
             hidden
