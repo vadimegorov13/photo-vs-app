@@ -13,11 +13,8 @@
     <div class="font-bold text-xl text-center">
       <slot name="heading" />
     </div>
-    <div class="my-2">
+    <div>
       <slot />
-    </div>
-    <div class="modal-action justify-center">
-      <slot name="actions" />
     </div>
   </label>
 </label>

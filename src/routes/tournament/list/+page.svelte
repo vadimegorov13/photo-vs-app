@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { TournamentCard } from "$lib/components/tournament";
+  import { TournamentCard } from "$lib/components";
 
   export let data;
 </script>

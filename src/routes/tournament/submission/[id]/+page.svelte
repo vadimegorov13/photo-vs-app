@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ValidatedInput } from "$lib/components/inputs";
+  import { ValidatedInput } from "$lib/components";;
 
   export let data;
   export let form;

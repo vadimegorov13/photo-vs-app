@@ -4,35 +4,10 @@
   import { CopyClipBoard } from "$lib/components";
   import type { User, UserTournament } from "$lib/types";
   import { Icon, Share, Trash, UserMinus } from "svelte-hero-icons";
-  import { ValidatedInput } from "$lib/components/inputs";
-
+  import { ValidatedInput } from "$lib/components";
+  import DeleteTournament from "./DeleteTournament.svelte";
   export let tournament: UserTournament;
   export let user: User;
-  let loading: boolean;
-  let tournamentAlert: boolean = false;
-
-  $: loading = false;
-
-  const deleteTournament = async () => {
-    loading = true;
-    return async ({ result }: any) => {
-      switch (result.type) {
-        case "success":
-          await invalidateAll();
-          break;
-        case "error":
-          break;
-        default:
-          await applyAction(result);
-      }
-      loading = false;
-      handleDeleteAlert();
-    };
-  };
-
-  const handleDeleteAlert = () => {
-    tournamentAlert = !tournamentAlert;
-  };
 
   const copy = () => {
     const app = new CopyClipBoard({
@@ -52,7 +27,7 @@
 
 <div class="card-normal shadow-lg">
   <div class="card-body">
-    {#if tournamentAlert && user.id === tournament.expand.tournament.host}
+    <!-- {#if tournamentAlert && user.id === tournament.expand.tournament.host}
       <div class="alert alert-error">
         <div>
           <Icon class="w-16 h-16" src={Trash} />
@@ -98,16 +73,20 @@
           </form>
         </div>
       </div>
-    {/if}
-    <div class="flex flex-row w-full">
+    {/if} -->
+    <div class="flex flex-row">
       <h2 class="card-title">{tournament.expand.tournament.title}</h2>
-      <div class="ml-auto text-error hover:cursor-pointer">
-        <button on:click={handleDeleteAlert} disabled={loading}>
-          <Icon
-            class="w-6 h-6"
-            src={user.id === tournament.expand.tournament.host ? Trash : UserMinus}
+      <div class="flex flex-row ml-auto">
+        {#if user.id === tournament.expand.tournament.host}
+          <DeleteTournament id={tournament.expand.tournament.id} />
+        {:else}
+          <DeleteTournament
+            id={tournament.id}
+            label="leave-tournament"
+            title="Leave this tournament?"
+            action="/tournament/list?/leave"
           />
-        </button>
+        {/if}
       </div>
     </div>
 
@@ -159,6 +138,7 @@
         </div>
       {/if}
     </div>
+
     {#if tournament.expand.tournament.host === user.id}
       <div class="card-actions">
         <form method="POST" action="?/start">
@@ -167,10 +147,9 @@
             type="text"
             label="id"
             value={tournament.expand.tournament.id}
-            disabled={loading}
             hidden
           />
-          <button type="submit" disabled={loading} class="btn btn-primary">Start</button>
+          <button type="submit" class="btn btn-primary">Start</button>
         </form>
       </div>
     {:else}
@@ -181,7 +160,6 @@
             type="text"
             label="userTournamentId"
             value={tournament.id}
-            disabled={loading}
             hidden
           />
           <ValidatedInput
@@ -189,10 +167,9 @@
             type="text"
             label="tournamentId"
             value={tournament.expand.tournament.id}
-            disabled={loading}
             hidden
           />
-          <button type="submit" disabled={loading} class="btn btn-primary">Ready?</button>
+          <button type="submit" class="btn btn-primary">Ready?</button>
         </form>
       </div>
     {/if}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SubmissionCard } from "$lib/components/tournament";
+  import { SubmissionCard } from "$lib/components";
   import { Icon, Plus } from "svelte-hero-icons";
 
   export let data;

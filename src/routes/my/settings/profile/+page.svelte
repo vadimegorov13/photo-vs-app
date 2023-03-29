@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ValidatedInput } from "$lib/components/inputs";
+  import { Alert, ValidatedInput } from "$lib/components";
   import { getImageUrl } from "$lib/helpers";
   import { Icon, Pencil } from "svelte-hero-icons";
 
@@ -71,23 +71,7 @@
         <button class="btn btn-primary w-full">Update Profile</button>
       </div>
       {#if form?.success === true}
-        <div class="alert alert-success shadow-lg mt-6 max-w-md">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="stroke-current flex-shrink-0 h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              ><path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              /></svg
-            >
-            <span>Your profile has been updated!</span>
-          </div>
-        </div>
+        <Alert alertType="success" customClass="max-w-md">Your profile has been updated!</Alert>
       {/if}
     </div>
   </form>

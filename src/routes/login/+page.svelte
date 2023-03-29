@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { ValidatedInput } from "$lib/components/inputs";
+  import { ValidatedInput } from "$lib/components";;
 
   export let form;
   let message: string;
