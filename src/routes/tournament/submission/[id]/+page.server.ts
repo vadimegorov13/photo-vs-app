@@ -60,61 +60,6 @@ export const actions: Actions = {
       };
     }
 
-    throw redirect(303, "/tournament/list");
-  },
-  delete: async ({ locals, request }) => {
-    const data = await request.formData();
-    const id = data.get("id") as string;
-
-    try {
-      await locals.pb.collection("submission").delete(id);
-
-      return {
-        success: true,
-      };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      if (err?.response?.code) {
-        const errors = { message: ["Something went wrong"] };
-
-        return {
-          success: false,
-          errors,
-        };
-      }
-    }
-  },
-  edit: async ({ locals, request }) => {
-    const data = await request.formData();
-
-    const id = data.get("id") as string;
-    const title = data.get("title") as string;
-    const description = data.get("description") as string;
-    const image = data.get("image") as File;
-
-    try {
-      const submissionData = new FormData();
-      submissionData.append("title", title);
-      submissionData.append("description", description);
-
-      if (image.size !== 0) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        submissionData.append("image", data.get("image") as any);
-      }
-
-      submissionSchema.parse(Object.fromEntries(data));
-
-      await locals.pb.collection("submission").update(id, submissionData);
-
-      return {
-        success: true,
-      };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      return {
-        data: { title, description },
-        errors: handleError(err, "edit"),
-      };
-    }
+    throw redirect(303, `/tournament/${tournamentId}`);
   },
 };
