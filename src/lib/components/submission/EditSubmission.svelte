@@ -4,13 +4,12 @@
   import { Icon, Pencil } from "svelte-hero-icons";
 
   export let submission: Submission;
-  export let tournamentId: string;
 
   let editModalOpen: boolean;
   $: editModalOpen = false;
 </script>
 
-<Modal label="edit-submission" checked={editModalOpen}>
+<Modal label="edit-submission-{submission.id}" checked={editModalOpen}>
   <span slot="trigger" class="btn btn-ghost rounded-sm text-xs lowercase px-2 w-12">
     <div class="flex flex-col">
       <Icon src={Pencil} class="w-8 h-8 mx-auto" />
@@ -20,13 +19,6 @@
   <h3 slot="heading">Edit your submission</h3>
   <form action="?/editSubmission" method="POST" enctype="multipart/form-data">
     <ValidatedInput id="id" type="text" label="id" value={submission.id} hidden />
-    <ValidatedInput
-      id="tournamentId"
-      type="text"
-      label="tournamentId"
-      value={tournamentId}
-      hidden
-    />
     <ValidatedInput id="title" label="Title" required={true} value={submission.title} />
     <ValidatedInput
       id="description"

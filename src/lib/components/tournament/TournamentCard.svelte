@@ -1,130 +1,52 @@
 <script lang="ts">
-  import { CopyClipBoard, ValidatedInput } from "$lib/components";
-  import type { User, UserTournament } from "$lib/types";
-  import { Icon, Share } from "svelte-hero-icons";
-  import DeleteTournament from "./DeleteTournament.svelte";
+  import { ActionButtons } from "$lib/components";
+  import type { Tournament, UserTournament } from "$lib/types";
 
-  export let tournament: UserTournament;
-  export let user: User;
+  export let tournament: Tournament;
+  export let userTournament: UserTournament | undefined;
 
-  const copy = () => {
-    const app = new CopyClipBoard({
-      target: document.getElementById("clipboard") as any,
-      props: {
-        link: `http://127.0.0.1:5173/tournament/join/${tournament.expand.tournament.id}`,
-      },
-    });
-    app.$destroy();
-    handleSuccessfullyCopied();
-  };
-
-  const handleSuccessfullyCopied = () => {
-    alert(`Copide an invite link to your clipboard`);
-  };
+  let state = tournament.expand.state.tournamentState;
+  let ready = tournament.expand.registeredUsers.every((userTournament) => userTournament.ready);
 </script>
 
-<div class="card-normal shadow-lg">
-  <div class="card-body">
-    <div class="flex flex-row">
-      <h2 class="card-title">{tournament.expand.tournament.title}</h2>
-      <div class="flex flex-row ml-auto">
-        {#if user.id === tournament.expand.tournament.host}
-          <DeleteTournament id={tournament.expand.tournament.id} />
-        {:else}
-          <DeleteTournament
-            id={tournament.id}
-            label="leave-tournament"
-            title="Leave this tournament?"
-            action="/tournament/list?/leave"
-          />
-        {/if}
-      </div>
-    </div>
+<div class="rounded-sm shadow-lg p-4 border-t-8 border-primary w-full space-y-2">
+  <div class="flex flex-row">
+    <h1 class="text-3xl font-semibold">{tournament.title}</h1>
 
-    <div>
-      <p>{tournament.expand.tournament.description}</p>
-
-      <p>
-        Participants:
-        <slug>
-          {tournament.expand.tournament.registeredUsers.length}/
-          {tournament.expand.tournament.expand.settings.maxPlayers}
-        </slug>
-      </p>
-      <p>
-        Max submissions:
-        <slug>{tournament.expand.tournament.expand.settings.maxSubmissions}</slug>
-      </p>
-      <div class="flex flex-row items-center">
-        <p>
-          Join code:
-          <slug>{tournament.expand.tournament.joinCode}</slug>
-        </p>
-        <div class="card-actions justify-end">
-          <button on:click={copy} class="btn btn-ghost btn-square">
-            <Icon src={Share} class="w-6 h-6" />
-          </button>
-        </div>
-        <div id="clipboard" />
-      </div>
-      <p>
-        You've submitted
-        <slug>{tournament.submissions.length}</slug>
-        {tournament.submissions.length === 1 ? "image" : "images"}
-      </p>
-    </div>
-
-    <div class="flex flex-row gap-8">
-      {#if tournament.submissions.length}
-        <div class="card-actions">
-          <a href={`/tournament/submission/list/${tournament.id}`}>
-            <button class="btn btn-secondary">Your submissions</button>
-          </a>
-        </div>
+    {#if state === "NOT_STARTED"}
+      {#if ready}
+        <p class="badge badge-success my-auto ml-2">ready to start</p>
+      {:else}
+        <p class="badge badge-warning my-auto ml-2">waiting for players</p>
       {/if}
-
-      {#if tournament.submissions.length < tournament.expand.tournament.expand.settings.maxSubmissions}
-        <div class="card-actions">
-          <a href={`/tournament/submission/${tournament.expand.tournament.id}`}>
-            <button class="btn btn-accent">Submit Image</button>
-          </a>
-        </div>
-      {/if}
-    </div>
-
-    {#if tournament.expand.tournament.host === user.id}
-      <div class="card-actions">
-        <form method="POST" action="?/start">
-          <ValidatedInput
-            id="userTournamentId"
-            type="text"
-            label="userTournamentId"
-            value={tournament.id}
-            hidden
-          />
-          <ValidatedInput
-            id="tournamentId"
-            type="text"
-            label="tournamentId"
-            value={tournament.expand.tournament.id}
-            hidden
-          />
-          <button type="submit" class="btn btn-primary">Start</button>
-        </form>
-      </div>
-    {:else}
-      <div class="card-actions">
-        <form method="POST" action="?/ready">
-          <ValidatedInput
-            id="userTournamentId"
-            type="text"
-            label="userTournamentId"
-            value={tournament.id}
-            hidden
-          />
-          <button type="submit" class="btn btn-primary">Ready?</button>
-        </form>
-      </div>
+    {:else if state === "FINISHED"}
+      <p class="badge my-auto ml-2">finished</p>
+    {:else if state === "IN_PROGRESS"}
+      <p class="badge badge-success my-auto ml-2">in progress</p>
     {/if}
   </div>
+  <p class="text-md text-gray-500">{tournament.description}</p>
+  <div class="divider m-0" />
+  <div>
+    <h2 class="text-center mb-2 font-semibold">Settings</h2>
+    <div class="grid grid-cols-2">
+      <p class="badge badge-lg badge-outline w-44 mx-auto my-2">
+        Max Participants: {tournament.expand.settings.maxPlayers}
+      </p>
+      <p class="badge badge-lg badge-outline w-44 mx-auto my-2">
+        Max Submissions: {tournament.expand.settings.maxSubmissions}
+      </p>
+      <p class="badge badge-lg badge-outline w-44 mx-auto my-2">
+        Voting Time: {tournament.expand.settings.voteTime}s
+      </p>
+      {#if userTournament}
+        <p class="badge badge-lg badge-outline w-44 mx-auto my-2">
+          Join Code: {tournament.joinCode}
+        </p>
+      {/if}
+    </div>
+  </div>
+  <div class="divider m-0" />
+
+  <ActionButtons {tournament} {userTournament} />
 </div>

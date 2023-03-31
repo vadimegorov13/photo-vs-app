@@ -3,6 +3,7 @@
   import type { User, UserTournament } from "$lib/types";
 
   export let userTournament: UserTournament;
+  export let state: string;
 
   let user: User = userTournament.expand.user;
 </script>
@@ -27,10 +28,12 @@
           Submitted {userTournament.submissions.length}
           {userTournament.submissions.length === 1 ? "photo" : "photos"}
         </p>
-        {#if userTournament.ready}
-          <span class="badge badge-success text-sm">Ready</span>
-        {:else}
-          <span class="badge badge-error">Not Ready</span>
+        {#if state === "NOT_STARTED"}
+          {#if userTournament.ready}
+            <span class="badge badge-success text-sm">Ready</span>
+          {:else}
+            <span class="badge badge-error">Not Ready</span>
+          {/if}
         {/if}
       </div>
     </div>

@@ -15,12 +15,10 @@
 
   export let userTournament: UserTournament | undefined;
   export let tournament: Tournament;
-  export let userId: string;
   export let showPhotos: boolean = false;
 
-  let readyUsersNumber = tournament.expand.registeredUsers.filter(
-    (userTournament) => userTournament.ready
-  ).length;
+  let state = tournament.expand.state.tournamentState;
+  let ready = tournament.expand.registeredUsers.every((userTournament) => userTournament.ready);
 </script>
 
 <div class="flex flex-row">
@@ -37,11 +35,11 @@
 
   <div class="divider divider-horizontal mx-auto" />
 
-  {#if userTournament}
+  {#if userTournament && state === "NOT_STARTED"}
     <div class="mx-auto">
       <div class="flex flex-row">
         {#if !userTournament.ready}
-          <form method="POST" action="?/ready">
+          <form method="POST" action="/tournament/{tournament.id}?/ready">
             <ValidatedInput
               id="userTournamentId"
               type="text"
@@ -57,7 +55,7 @@
             </button>
           </form>
         {:else}
-          <form method="POST" action="?/unready">
+          <form method="POST" action="/tournament/{tournament.id}?/unready">
             <ValidatedInput
               id="userTournamentId"
               type="text"
@@ -94,8 +92,15 @@
             </button>
           </a>
         {/if}
-        {#if userId === tournament.host}
-          <form method="POST" action="?/start">
+        {#if tournament.host === userTournament.user}
+          <form method="POST" action="/tournament/{tournament.id}?/start">
+            <ValidatedInput
+              id="tournamentId"
+              type="text"
+              label="tournamentId"
+              value={tournament.id}
+              hidden
+            />
             <ValidatedInput
               id="userTournamentId"
               type="text"
@@ -106,9 +111,7 @@
             <button
               type="submit"
               class="btn rounded-sm text-xs lowercase px-2 w-12
-              {readyUsersNumber === tournament.expand.registeredUsers.length
-                ? 'btn-success'
-                : 'btn-disabled'}"
+              {ready ? 'btn-success' : 'btn-disabled'}"
             >
               <div class="flex flex-col">
                 <Icon src={Play} class="w-8 h-8 mx-auto" />
@@ -123,19 +126,18 @@
     <div class="divider divider-horizontal mx-auto" />
   {/if}
 
-  {#if userTournament}
-    {#if tournament.host === userId}
+  {#if userTournament && (state === "NOT_STARTED" || state === "FINISHED")}
+    {#if tournament.host === userTournament.user}
       <DeleteTournament id={tournament.id} />
     {:else}
       <DeleteTournament
         id={userTournament.id}
         label="leave-tournament"
         title="Leave this tournament?"
-        action="?/leave"
-        tournamentId={tournament.id}
+        action="/tournament/{tournament.id}?/leave"
       />
     {/if}
-  {:else}
+  {:else if state === "NOT_STARTED"}
     <form method="POST" action="/tournament/{tournament.id}?/join">
       <input type="text" name="id" class="input" value={tournament.id} hidden />
       <button class="btn btn-ghost rounded-sm text-xs lowercase px-2 w-12">

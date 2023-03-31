@@ -16,16 +16,23 @@ export const load: ServerLoad = async ({ locals, params }) => {
         "registeredUsers, registeredUsers.user, state, settings, host, registeredUsers.submissions",
     });
 
+    const userTournament: UserTournament | undefined = serializeNonPOJOs(
+      tournament
+    ).expand.registeredUsers.find(
+      (userTournament: UserTournament) => userTournament.expand.user.id === userId
+    );
+
     return {
-      tournament: serializeNonPOJOs(tournament),
-      tournamentId: id,
-      userId,
-      serverUrl: "http://127.0.0.1:8090"
+      success: true,
+      props: {
+        tournament: serializeNonPOJOs(tournament),
+        userTournament,
+      },
     };
   } catch (err) {
-    console.log(err)
     return {
-      errors: ["Something went wrong"],
+      success: false,
+      errors: handleError(err, "load"),
     };
   }
 };
@@ -37,40 +44,50 @@ export const actions: Actions = {
 
     try {
       await locals.pb.collection("tournament").delete(id);
+
+      return {
+        action: "tournament",
+        success: true,
+        message: "Deleted tournament",
+      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err?.response?.code) {
         const errors = { message: ["Something went wrong"] };
 
         return {
+          action: "tournament",
           success: false,
           errors,
         };
       }
     }
-
     throw redirect(303, `/tournament/list`);
   },
   leave: async ({ locals, request }) => {
     const data = await request.formData();
     const id = data.get("id") as string;
-    const tournamentId = data.get("tournamentId") as string;
 
     try {
       await locals.pb.collection("userTournament").delete(id);
+
+      return {
+        action: "tournament",
+        success: true,
+        message: "Left tournament",
+      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err?.response?.code) {
         const errors = { message: ["Something went wrong"] };
 
         return {
+          action: "tournament",
           success: false,
           errors,
         };
       }
     }
-
-    throw redirect(303, `/tournament/${tournamentId}`);
   },
   start: async ({ locals, request }) => {
     const data = await request.formData();
@@ -101,36 +118,50 @@ export const actions: Actions = {
         .collection("tournamentState")
         .update(tournament.expand.state.id, { tournamentState: "IN_PROGRESS" });
 
+      return {
+        action: "tournament",
+        success: true,
+        message: "Started tournament",
+      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return {
+        action: "tournament",
         success: false,
         errors: handleError(err, "start"),
       };
     }
-
-    throw redirect(303, `/tournament/${tournamentId}`);
   },
   ready: async ({ locals, request }) => {
     const data = await request.formData();
     const userTournamentId = data.get("userTournamentId") as string;
 
     try {
+      const userTournament = await locals.pb.collection("userTournament").getOne(userTournamentId);
+
+      if (userTournament.submissions.length === 0) {
+        throw error(400, "No submissions");
+      }
       await locals.pb.collection("userTournament").update(userTournamentId, { ready: true });
 
       return {
+        action: "tournament",
         success: true,
+        message: "Ready",
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err?.response?.code) {
-        const errors = { message: ["Something went wrong"] };
+      let errors = { message: "" };
 
-        return {
-          success: false,
-          errors,
-        };
+      if (err?.status === 400) {
+        errors = { message: "Please make at least one submission" };
       }
+
+      return {
+        action: "tournament",
+        success: false,
+        errors,
+      };
     }
   },
   unready: async ({ locals, request }) => {
@@ -141,7 +172,9 @@ export const actions: Actions = {
       await locals.pb.collection("userTournament").update(userTournamentId, { ready: false });
 
       return {
+        action: "tournament",
         success: true,
+        message: "Not ready",
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -149,6 +182,7 @@ export const actions: Actions = {
         const errors = { message: ["Something went wrong"] };
 
         return {
+          action: "tournament",
           success: false,
           errors,
         };
@@ -171,40 +205,43 @@ export const actions: Actions = {
 
       await registerUserForTournament(locals.pb, user, tournament.id, tournament.registeredUsers);
 
+      return {
+        action: "tournament",
+        success: true,
+        message: "Joined tournament",
+      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return {
+        action: "tournament",
+        success: false,
         error: handleError(err, "join"),
       };
     }
-    throw redirect(303, `/tournament/${id}`);
   },
   deleteSubmission: async ({ locals, request }) => {
     const data = await request.formData();
     const id = data.get("id") as string;
-    const tournamentId = data.get("tournamentId") as string;
 
     try {
       await locals.pb.collection("submission").delete(id);
       return {
-        type: "submission",
+        action: "submission",
         success: true,
         message: "Submission deleted",
       };
-
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err?.response?.code) {
         const errors = { message: ["Something went wrong"] };
 
         return {
+          action: "submission",
           success: false,
           errors,
         };
       }
     }
-
-    throw redirect(303, `/tournament/${tournamentId}`);
   },
   editSubmission: async ({ locals, request }) => {
     const data = await request.formData();
@@ -229,13 +266,14 @@ export const actions: Actions = {
       await locals.pb.collection("submission").update(id, submissionData);
 
       return {
-        type: "submission",
+        action: "submission",
         success: true,
         message: "Submission updated successfully",
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return {
+        action: "submission",
         data: { title, description },
         errors: handleError(err, "edit"),
       };

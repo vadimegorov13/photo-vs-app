@@ -3,7 +3,6 @@
   import { Icon, Trash, ArrowRightOnRectangle } from "svelte-hero-icons";
 
   export let id: string;
-  export let tournamentId: string = "";
   export let label: string = "delete-tournament";
   export let title: string = "Delete this tournament?";
   export let action: string = "/tournament/[id]?/delete";
@@ -27,15 +26,6 @@
     <label for={label} class="btn btn-ghost"> No </label>
     <form method="POST" {action}>
       <ValidatedInput id="id" type="text" label="id" value={id} hidden />
-      {#if label.includes("leave")}
-        <ValidatedInput
-          id="tournamentId"
-          type="text"
-          label="tournamentId"
-          value={tournamentId}
-          hidden
-        />
-      {/if}
       <label for={label}>
         <button type="submit" class="btn btn-error"> Yes </button>
       </label>

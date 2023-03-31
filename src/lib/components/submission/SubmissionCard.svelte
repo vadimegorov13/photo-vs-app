@@ -1,20 +1,26 @@
 <script lang="ts">
-  import { Alert, EditSubmission } from "$lib/components";
+  import { EditSubmission } from "$lib/components";
   import { getImageUrl } from "$lib/helpers";
   import type { Submission } from "$lib/types";
   import DeleteSubmission from "./DeleteSubmission.svelte";
 
   export let submission: Submission;
-  export let tournamentId: string;
+  export let state: string;
 </script>
 
 <div class="border rounded-sm">
   <div class="flex flex-col">
     <div class="relative border-b">
       <div class="border-t border-l absolute -bottom-0 -right-0 bg-base-100 rounded-sm">
-        <EditSubmission {submission} {tournamentId} />
-        <DeleteSubmission submissionId={submission.id} {tournamentId} />
+        {#if state === "NOT_STARTED"}
+          <EditSubmission {submission} />
+          <DeleteSubmission submissionId={submission.id} />
+        {/if}
+        {#if state === "FINISHED"}
+          <DeleteSubmission submissionId={submission.id} />
+        {/if}
       </div>
+
       <img
         src={getImageUrl(submission.collectionId, submission.id, submission.image)}
         alt="submission"

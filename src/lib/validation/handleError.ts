@@ -34,6 +34,15 @@ const handlePocketBaseError = (err: PbError, action: string | null = null) => {
     }
   }
 
+  if (action === "load") {
+    if (err.status === 400) {
+      return { message: ["Something went wrong"] };
+    }
+    if (err.status === 404) {
+      return { message: ["Tournament doesn't exist"] };
+    }
+  }
+
   if (action === "upload") {
     if (err.response.code === 404 || err.response.code === 400) {
       return { image: ["Something went wrong"] };
