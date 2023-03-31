@@ -1,32 +1,12 @@
 <script lang="ts">
-  import { applyAction, enhance } from "$app/forms";
-  import { invalidateAll } from "$app/navigation";
   import { Modal, ValidatedInput } from "$lib/components";
   import { Icon, Trash } from "svelte-hero-icons";
 
   export let submissionId: string;
-
+  export let tournamentId: string;
   let deleteModalOpen: boolean;
-  let loading: boolean;
 
   $: deleteModalOpen = false;
-  $: loading = false;
-
-  const deleteSubmission = async () => {
-    loading = true;
-    return async ({ result }: any) => {
-      switch (result.type) {
-        case "success":
-          await invalidateAll();
-          break;
-        case "error":
-          break;
-        default:
-          await applyAction(result);
-      }
-      loading = false;
-    };
-  };
 </script>
 
 <Modal label="delete-submission" checked={deleteModalOpen}>
@@ -39,16 +19,18 @@
   <h3 slot="heading">Delete this submission?</h3>
   <div class="flex flex-row justify-center space-x-2 mt-4">
     <label for="delete-submission" class="btn btn-ghost"> No </label>
-    <form method="POST" action="/tournament/submission/[id]?/delete" use:enhance={deleteSubmission}>
+    <form method="POST" action="?/deleteSubmission">
+      <ValidatedInput id="id" type="text" label="id" value={submissionId} hidden />
       <ValidatedInput
-        id="id"
+        id="tournamentId"
         type="text"
-        label="id"
-        value={submissionId}
-        disabled={loading}
+        label="tournamentId"
+        value={tournamentId}
         hidden
       />
-      <button type="submit" disabled={loading} class="btn btn-error">Yes</button>
+      <label for="delete-submission">
+        <button type="submit" class="btn btn-error">Yes</button>
+      </label>
     </form>
   </div>
 </Modal>

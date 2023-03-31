@@ -1,36 +1,15 @@
 <script lang="ts">
-  import { applyAction, enhance } from "$app/forms";
-  import { invalidateAll } from "$app/navigation";
   import { Modal, ValidatedInput } from "$lib/components";
   import { Icon, Trash, ArrowRightOnRectangle } from "svelte-hero-icons";
 
   export let id: string;
+  export let tournamentId: string = "";
   export let label: string = "delete-tournament";
   export let title: string = "Delete this tournament?";
   export let action: string = "/tournament/[id]?/delete";
-  export let enhanceForm: boolean = true;
 
   let modalOpen: boolean;
-  let loading: boolean;
-
   $: modalOpen = false;
-  $: loading = false;
-
-  const deleteEnhance = async () => {
-    loading = true;
-    return async ({ result }: any) => {
-      switch (result.type) {
-        case "success":
-          await invalidateAll();
-          break;
-        case "error":
-          break;
-        default:
-          await applyAction(result);
-      }
-      loading = false;
-    };
-  };
 </script>
 
 <Modal {label} checked={modalOpen}>
@@ -46,9 +25,20 @@
   <h3 slot="heading">{title}</h3>
   <div class="flex flex-row justify-center space-x-2 mt-4">
     <label for={label} class="btn btn-ghost"> No </label>
-    <form method="POST" {action} use:enhance={enhanceForm ? deleteEnhance : undefined}>
-      <ValidatedInput id="id" type="text" label="id" value={id} disabled={loading} hidden />
-      <button type="submit" disabled={loading} class="btn btn-error">Yes</button>
+    <form method="POST" {action}>
+      <ValidatedInput id="id" type="text" label="id" value={id} hidden />
+      {#if label.includes("leave")}
+        <ValidatedInput
+          id="tournamentId"
+          type="text"
+          label="tournamentId"
+          value={tournamentId}
+          hidden
+        />
+      {/if}
+      <label for={label}>
+        <button type="submit" class="btn btn-error"> Yes </button>
+      </label>
     </form>
   </div>
 </Modal>

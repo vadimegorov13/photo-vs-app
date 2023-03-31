@@ -4,7 +4,8 @@
   import { Icon, Pencil } from "svelte-hero-icons";
 
   export let submission: Submission;
-  export let form: any;
+  export let tournamentId: string;
+
   let editModalOpen: boolean;
   $: editModalOpen = false;
 </script>
@@ -17,21 +18,21 @@
     </div>
   </span>
   <h3 slot="heading">Edit your submission</h3>
-  <form action="/tournament/submission/[id]?/edit" method="POST" enctype="multipart/form-data">
+  <form action="?/editSubmission" method="POST" enctype="multipart/form-data">
     <ValidatedInput id="id" type="text" label="id" value={submission.id} hidden />
     <ValidatedInput
-      id="title"
-      label="Title"
-      required={true}
-      value={submission.title}
-      errors={form?.errors?.title}
+      id="tournamentId"
+      type="text"
+      label="tournamentId"
+      value={tournamentId}
+      hidden
     />
+    <ValidatedInput id="title" label="Title" required={true} value={submission.title} />
     <ValidatedInput
       id="description"
       label="Description"
       required={true}
       value={submission.description}
-      errors={form?.errors?.description}
     />
     <div class="form-control w-full max-w-md">
       <label for="image" class="label font-medium">
@@ -43,17 +44,10 @@
         value=""
         accept="image/*"
         id="image"
-        class="file-input w-full {form?.errors?.image
-          ? 'file-input-error'
-          : 'file-input-bordered '}"
+        class="file-input w-full file-input-bordered"
       />
-      <label for="image" class="label">
-        {#if form?.errors?.image}
-          <span class="label-text-alt text-error">{form?.errors?.image[0]}</span>
-        {/if}
-      </label>
     </div>
 
-    <button type="submit" class="btn btn-primary w-full max-w-md">Update my submission</button>
+    <button type="submit" class="btn btn-primary w-full max-w-md mt-6">Update my submission</button>
   </form>
 </Modal>
