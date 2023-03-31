@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  export let inviteLink: string;
+  export let link: string;
 
   let textarea: any;
 
@@ -11,4 +11,4 @@
   });
 </script>
 
-<textarea bind:value={inviteLink} bind:this={textarea} />
+<textarea bind:value={link} bind:this={textarea} />

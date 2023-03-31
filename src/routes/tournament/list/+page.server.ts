@@ -1,6 +1,6 @@
-import { serializeNonPOJOs } from "$lib/helpers";
-import type { UserTournament } from "$lib/types";
-import { handleError } from "$lib/validation";
+import { registerUserForTournament, serializeNonPOJOs } from "$lib/helpers";
+import type { Tournament, UserTournament } from "$lib/types";
+import { handleError, validateTournamentEntry } from "$lib/validation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ locals }) => {
@@ -54,8 +54,6 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err)
-
       if (err?.response?.code) {
         const errors = { message: ["Something went wrong"] };
 
@@ -68,13 +66,16 @@ export const actions: Actions = {
   },
   start: async ({ locals, request }) => {
     const data = await request.formData();
-    const id = data.get("id") as string;
+    const tournamentId = data.get("tournamentId") as string;
+    const userTournamentId = data.get("userTournamentId") as string;
     const userId = locals.pb.authStore.model?.id;
 
     try {
-      const tournament = await locals.pb
+      await locals.pb.collection("userTournament").update(userTournamentId, { ready: true });
+
+      const tournament: Tournament = await locals.pb
         .collection("tournament")
-        .getOne(id, { expand: "registeredUsers" });
+        .getOne(tournamentId, { expand: "registeredUsers, settings, state" });
 
       if (tournament.host !== userId) {
         throw error(401, "Unauthorized");
@@ -88,9 +89,10 @@ export const actions: Actions = {
         throw error(400, "Not all users are ready");
       }
 
-      await locals.pb.collection("tournament").update(id, { status: "ongoing" });
+      await locals.pb
+        .collection("tournamentState")
+        .update(tournament.expand.state.id, { tournamentState: "IN_PROGRESS" });
 
-      throw redirect(303, `/tournament/${id}`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       return {
@@ -98,15 +100,18 @@ export const actions: Actions = {
         errors: handleError(err, "start"),
       };
     }
+    throw redirect(303, `/tournament/${tournamentId}`);
   },
   ready: async ({ locals, request }) => {
     const data = await request.formData();
     const userTournamentId = data.get("userTournamentId") as string;
-    const tournamentId = data.get("tournamentId") as string;
 
     try {
       await locals.pb.collection("userTournament").update(userTournamentId, { ready: true });
-      throw redirect(303, `/tournament/${tournamentId}`);
+
+      return {
+        success: true,
+      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err?.response?.code) {
@@ -118,5 +123,29 @@ export const actions: Actions = {
         };
       }
     }
+  },
+  join: async ({ locals, request }) => {
+    const data = await request.formData();
+    const user = locals.user;
+    const id = data.get("id") as string;
+
+    try {
+      if (!user) throw error(401, "Unauthorized");
+
+      const tournament = await locals.pb
+        .collection("tournament")
+        .getFirstListItem(`id="${id}"`, { expand: "settings, state" });
+
+      validateTournamentEntry(serializeNonPOJOs(tournament) as Tournament, user);
+
+      await registerUserForTournament(locals.pb, user, tournament.id, tournament.registeredUsers);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      return {
+        error: handleError(err, "join"),
+      };
+    }
+
+    throw redirect(303, "/tournament/list");
   },
 };

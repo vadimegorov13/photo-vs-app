@@ -35,9 +35,9 @@ export const actions: Actions = {
       });
 
       const tournamentState = await locals.pb.collection("tournamentState").create({
-        tournamentState: "pending",
-        matchState: "pending",
-        roundState: "pending",
+        tournamentState: "NOT_STARTED",
+        matchState: "NOT_STARTED",
+        roundState: "NOT_STARTED",
       });
 
       const tournamentData = {

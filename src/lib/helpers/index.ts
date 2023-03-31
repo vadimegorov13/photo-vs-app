@@ -1,4 +1,4 @@
-import { serializeNonPOJOs, getImageUrl } from "$lib/helpers/helpers";
+import { serializeNonPOJOs, getImageUrl, copyToClipBoard } from "$lib/helpers/helpers";
 import { registerUserForTournament } from "$lib/helpers/tournamentHelpers";
 
-export { serializeNonPOJOs, getImageUrl, registerUserForTournament };
+export { serializeNonPOJOs, getImageUrl, registerUserForTournament, copyToClipBoard };

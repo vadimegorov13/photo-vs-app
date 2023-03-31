@@ -5,7 +5,7 @@ export const validateTournamentEntry = (tournament: Tournament, user: User) => {
   if (tournament.registeredUsers.length / tournament.expand.settings.maxPlayers === 1) {
     throw error(409, "The tournament is full");
   }
-  if (tournament.expand.state.tournamentState !== "pending") {
+  if (tournament.expand.state.tournamentState !== "NOT_STARTED") {
     throw error(409, "The tournament has already started");
   }
 

@@ -1,0 +1,38 @@
+<script lang="ts">
+  import { getImageUrl } from "$lib/helpers";
+  import type { User, UserTournament } from "$lib/types";
+
+  export let userTournament: UserTournament;
+
+  let user: User = userTournament.expand.user;
+</script>
+
+<div class="mx-2 p-2">
+  <div class="flex flex-row space-x-2">
+    <div class="avatar">
+      <div class="w-16 h-16 rounded-full">
+        <img
+          src={user?.avatar
+            ? getImageUrl(user.collectionId, user.id, user.avatar)
+            : `https://avatars.dicebear.com/api/jdenticon/${user.id}.svg`}
+          alt="user avatar"
+          id="avatar-{user.id}"
+        />
+      </div>
+    </div>
+    <div class="flex flex-col space-y-2">
+      <div>
+        <h1 class="text-md">{user.username}</h1>
+        <p class="text-xs text-gray-500">
+          Submitted {userTournament.submissions.length}
+          {userTournament.submissions.length === 1 ? "photo" : "photos"}
+        </p>
+        {#if userTournament.ready}
+          <span class="badge badge-success text-sm">Ready</span>
+        {:else}
+          <span class="badge badge-error">Not Ready</span>
+        {/if}
+      </div>
+    </div>
+  </div>
+</div>

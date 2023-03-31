@@ -10,11 +10,14 @@
 </script>
 
 <Modal label="edit-submission" checked={editModalOpen}>
-  <span slot="trigger" class="btn btn-ghost text-secondary hover:cursor-pointer">
-    <Icon class="w-6 h-6" src={Pencil} />
+  <span slot="trigger" class="btn btn-ghost rounded-sm text-xs lowercase px-2 w-12">
+    <div class="flex flex-col">
+      <Icon src={Pencil} class="w-8 h-8 mx-auto" />
+      edit
+    </div>
   </span>
   <h3 slot="heading">Edit your submission</h3>
-  <form action="?/edit" method="POST" enctype="multipart/form-data">
+  <form action="/tournament/submission/[id]?/edit" method="POST" enctype="multipart/form-data">
     <ValidatedInput id="id" type="text" label="id" value={submission.id} hidden />
     <ValidatedInput
       id="title"
