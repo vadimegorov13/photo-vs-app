@@ -22,7 +22,7 @@
     <p class="text-black">
       Or
       <a
-        href={`/register${search}`}
+        href="/register{search}"
         class="text-primary font-medium hover:cursor-pointer hover:underline"
       >
         register

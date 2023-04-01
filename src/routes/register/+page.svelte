@@ -1,7 +1,12 @@
 <script lang="ts">
+  import { page } from "$app/stores";
   import { ValidatedInput } from "$lib/components";;
 
   export let form;
+
+  let search: string;
+
+  $: search = $page.url.search ?? "";
 </script>
 
 <div class="flex flex-col items-center">
@@ -9,7 +14,7 @@
     <h2 class="text-primary text-center text-3xl font-bold">Register</h2>
     <p class="text-black">
       Or
-      <a href="/login" class="text-primary font-medium hover:cursor-pointer hover:underline">
+      <a href="/login{search}" class="text-primary font-medium hover:cursor-pointer hover:underline">
         login
       </a>
       if you already have an account.
