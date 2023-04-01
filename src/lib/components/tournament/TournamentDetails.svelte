@@ -1,16 +1,18 @@
 <script lang="ts">
+  import { ActionButtons } from "$lib/components";
   import type { Tournament, UserTournament } from "$lib/types";
 
   export let tournament: Tournament;
   export let userTournament: UserTournament | undefined;
+  export let showPhotosButton: boolean = false;
 
   let state = tournament.expand.state.tournamentState;
   let ready = tournament.expand.registeredUsers.every((userTournament) => userTournament.ready);
 </script>
 
 <div class="rounded-sm shadow-lg p-4 border-t-8 border-primary w-full space-y-2">
-  <h1 class="text-2xl font-semibold prevent-overflow">
-    {tournament.title.length > 32 ? tournament.title.slice(0, 32) + "..." : tournament.title}
+  <h1 class="text-3xl font-semibold prevent-overflow md:max-w-[22rem] lg:max-w-[30rem]">
+    {tournament.title}
   </h1>
   {#if state === "NOT_STARTED"}
     {#if ready}
@@ -25,11 +27,7 @@
   {/if}
   <div class="divider m-0" />
   <div>
-    <p class="text-md text-gray-600 prevent-overflow">
-      {tournament.description.length > 32
-        ? tournament.description.slice(0, 32) + "..."
-        : tournament.description}
-    </p>
+    <p class="text-md text-gray-600">{tournament.description}</p>
     <div class="text-sm">
       <p class="badge badge-lg badge-outline mx-auto mt-2 text-sm">
         max participants: {tournament.expand.settings.maxPlayers}
@@ -47,11 +45,14 @@
       {/if}
     </div>
   </div>
+  <div class="divider m-0" />
+
+  <ActionButtons {tournament} {userTournament} showPhotos={showPhotosButton} />
 </div>
 
 <style>
   .prevent-overflow {
     overflow-wrap: break-word;
-    max-width: 100%;
+    white-space: normal;
   }
 </style>

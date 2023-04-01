@@ -45,11 +45,6 @@ export const actions: Actions = {
     try {
       await locals.pb.collection("tournament").delete(id);
 
-      return {
-        action: "tournament",
-        success: true,
-        message: "Deleted tournament",
-      };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err?.response?.code) {

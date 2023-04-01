@@ -83,7 +83,7 @@
           </a>
         {/if}
         {#if userTournament.submissions.length > 0 && showPhotos}
-          <a href="/tournament/submission/list/{userTournament.id}">
+          <a href="/tournament/{tournament.id}">
             <button class="btn btn-ghost rounded-sm text-xs lowercase px-2 w-12">
               <div class="flex flex-col">
                 <Icon src={Folder} class="w-8 h-8 mx-auto" />

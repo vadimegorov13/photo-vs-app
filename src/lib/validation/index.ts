@@ -1,3 +1,4 @@
+import { handleError } from "$lib/validation/handleError";
 import { redirectTo, validateProtectedRoutes } from "$lib/validation/validateProtectedRoutes";
 import { validateTournamentEntry } from "$lib/validation/validateTournamentEntry";
 import {
@@ -10,7 +11,6 @@ import {
   resetPasswordSchema,
   submissionSchema,
 } from "$lib/validation/zodValidation";
-import { handleError } from "./handleError";
 
 export {
   changePasswordSchema,

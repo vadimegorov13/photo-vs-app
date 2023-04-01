@@ -7,16 +7,6 @@
   export let data: any;
   export let form;
 
-  let tournament: Tournament | undefined;
-  let userTournament: UserTournament | undefined;
-
-  onMount(async () => {
-    if (data.success) {
-      tournament = data.tournament;
-      userTournament = data.userTournament;
-    }
-  });
-
   // let unsubscribe: () => void;
 
   // onMount(async () => {
@@ -32,12 +22,20 @@
 </script>
 
 <div class="mx-2 md:mx-10">
-  {#if data.success && tournament}
-    {#if tournament.expand.state.tournamentState === "IN_PROGRESS" && userTournament}
-      <Preview {tournament} {userTournament} {form} />
+  {#if data.success && data.props.tournament}
+    {#if data.props.tournament.expand.state.tournamentState === "IN_PROGRESS" && data.props.userTournament}
+      <Preview
+        tournament={data.props.tournament}
+        userTournament={data.props.userTournament}
+        {form}
+      />
       yo
     {:else}
-      <Preview {tournament} {userTournament} {form} />
+      <Preview
+        tournament={data.props.tournament}
+        userTournament={data.props.userTournament}
+        {form}
+      />
     {/if}
   {:else}
     <div class="flex flex-col items-center text-black text-3xl my-10 font-semibold">

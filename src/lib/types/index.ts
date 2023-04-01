@@ -10,8 +10,8 @@ import type {
   UserComment,
   UserTournament,
   UserVote,
-} from "./dbSchema";
-import type { PbError } from "./errorTypes";
+} from "$lib/types/dbSchema";
+import type { PbError } from "$lib/types/errorTypes";
 
 export {
   Match,

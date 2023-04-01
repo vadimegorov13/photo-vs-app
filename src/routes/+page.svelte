@@ -15,10 +15,10 @@
       </p>
       <div class="grid sm:grid-cols-2 gap-8">
         <a href="/tournament/create" class="flex flex-col w-full">
-          <button class="btn btn-primary"> Create Tournament </button>
+          <button class="btn btn-primary rounded-sm"> Create Tournament </button>
         </a>
         <a href="/tournament/join" class="flex flex-col w-full">
-          <button class="btn btn-secondary"> Join Tournament </button>
+          <button class="btn btn-secondary rounded-sm"> Join Tournament </button>
         </a>
       </div>
     </div>

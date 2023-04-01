@@ -11,6 +11,7 @@ import ActionButtons from "$lib/components/tournament/ActionButtons.svelte";
 import DeleteTournament from "$lib/components/tournament/DeleteTournament.svelte";
 import Preview from "$lib/components/tournament/Preview.svelte";
 import TournamentCard from "$lib/components/tournament/TournamentCard.svelte";
+import TournamentDetails from "$lib/components/tournament/TournamentDetails.svelte";
 import UserCard from "$lib/components/tournament/UserCard.svelte";
 
 export {
@@ -26,6 +27,7 @@ export {
   Preview,
   SubmissionCard,
   TournamentCard,
+  TournamentDetails,
   UserCard,
   ValidatedInput,
 };

@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { EditSubmission } from "$lib/components";
+  import { DeleteSubmission, EditSubmission } from "$lib/components";
   import { getImageUrl } from "$lib/helpers";
   import type { Submission } from "$lib/types";
-  import DeleteSubmission from "./DeleteSubmission.svelte";
 
   export let submission: Submission;
   export let state: string;

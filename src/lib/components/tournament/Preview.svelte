@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Alert, SubmissionCard, TournamentCard, UserCard } from "$lib/components";
+  import { Alert, SubmissionCard, TournamentDetails, UserCard } from "$lib/components";
   import type { Tournament, UserTournament } from "$lib/types";
   import { Folder, Icon, UserGroup } from "svelte-hero-icons";
 
@@ -39,7 +39,7 @@
   {/if}
 
   <div class="flex flex-col space-x-0 space-y-4 md:flex-row md:space-x-4 md:space-y-0">
-    <TournamentCard {tournament} {userTournament} />
+    <TournamentDetails {tournament} {userTournament} />
 
     <div class="rounded-sm shadow-lg p-4 border-t-8 border-primary w-full md:w-3/5">
       <div class="pb-2 flex place-content-center">
@@ -81,7 +81,7 @@
         {userTournament.submissions.length === 1 ? "photo" : "photos"}
       </p>
       {#if userTournament.expand.submissions}
-        <div class="grid grid-cols-1 md:grid-cols-2 space-y-4 space-x-0 md:space-x-4 md:space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {#each userTournament.expand.submissions as submission}
             <SubmissionCard {submission} {state}/>
           {/each}

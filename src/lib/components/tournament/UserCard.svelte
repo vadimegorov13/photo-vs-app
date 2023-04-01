@@ -22,20 +22,25 @@
       </div>
     </div>
     <div class="flex flex-col space-y-2">
-      <div>
-        <h1 class="text-md">{user.username}</h1>
-        <p class="text-xs text-gray-500">
-          Submitted {userTournament.submissions.length}
-          {userTournament.submissions.length === 1 ? "photo" : "photos"}
-        </p>
-        {#if state === "NOT_STARTED"}
-          {#if userTournament.ready}
-            <span class="badge badge-success text-sm">Ready</span>
-          {:else}
-            <span class="badge badge-error">Not Ready</span>
-          {/if}
+      <h1 class="text-md break-word max-w-[16rem] sm:max-w-[16rem] md:max-w-[9rem]">{user.username}</h1>
+      <p class="text-xs text-gray-500">
+        Submitted {userTournament.submissions.length}
+        {userTournament.submissions.length === 1 ? "photo" : "photos"}
+      </p>
+      {#if state === "NOT_STARTED"}
+        {#if userTournament.ready}
+          <span class="badge badge-success text-sm">Ready</span>
+        {:else}
+          <span class="badge badge-error">Not Ready</span>
         {/if}
-      </div>
+      {/if}
     </div>
   </div>
 </div>
+
+<style>
+  .break-word {
+    word-wrap: break-word;
+    white-space: normal;
+  }
+</style>
