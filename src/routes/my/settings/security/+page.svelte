@@ -30,11 +30,8 @@
         errors={form?.errors?.passwordConfirm}
         value=""
       />
-      <a href="/reset-password" class="text-primary hover:cursor-point hover:underline">
-        I forgot my password</a
-      >
-      <div class="w-full max-w-md pt-3">
-        <button type="submit" class="btn btn-primary w-full max-w-md"> Update Password </button>
+      <div class="w-full max-w-md mt-4">
+        <button type="submit" class="btn btn-primary w-full max-w-md rounded-sm"> Update Password </button>
       </div>
     </div>
   </form>

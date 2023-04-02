@@ -28,10 +28,11 @@
     <div class="form-control flex flex-col items-center">
       <h3 class="text-2xl font-medium">Update Profile</h3>
       <div class="divider" />
-
+      
       <label for="avatar" class="label font-medium">
         <span class="label-text">Profile Picture</span>
       </label>
+
       <label for="avatar" class="avatar w-32 rounded-full hover:cursor-pointer">
         <label for="avatar" class="absolute -bottom-0.5 -right-0.5 hover:cursor-pointer">
           <span class="btn btn-circle btn-small btn-secondary">
@@ -67,12 +68,16 @@
         errors={form?.errors?.username}
       />
 
-      <div class="w-full max-w-md pt-3">
-        <button class="btn btn-primary w-full">Update Profile</button>
+      <div class="w-full max-w-md mb-4">
+        <button class="btn btn-primary w-full rounded-sm mt-4">Update Profile</button>
       </div>
-      {#if form?.success === true}
-        <Alert alertType="success" customClass="max-w-md">Your profile has been updated!</Alert>
+      <div class="w-full max-w-md">
+        {#if form?.success === true}
+        <Alert alertType="success" customClass="max-w-md w-full">Your profile has been updated!</Alert>
       {/if}
+      </div>
     </div>
+    
   </form>
+  
 </div>

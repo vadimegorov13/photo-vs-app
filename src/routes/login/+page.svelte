@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { ValidatedInput } from "$lib/components";;
-
+  import { ValidatedInput } from "$lib/components";
+  import Alert from "$lib/components/Alert.svelte";
   export let form;
   let message: string;
   let search: string;
@@ -11,15 +11,10 @@
   $: message = $page.url.searchParams.get("message") ?? "";
 </script>
 
-<div class="flex flex-col items-center w-full">
-  <div class="m-10">
-    {#if message}
-      <p class="alert alert-error mb-4">
-        {message}
-      </p>
-    {/if}
+<div class="flex flex-col mx-10 items-center">
+  <div class="my-10 w-full">
     <h2 class="text-primary text-center text-3xl font-bold">Login</h2>
-    <p class="text-black">
+    <p class="text-black text-center">
       Or
       <a
         href="/register{search}"
@@ -31,7 +26,7 @@
     </p>
   </div>
 
-  <div class="shadow-lg rounded-lg p-8 max-w-md min-w-[24.5rem]">
+  <div class="max-w-md w-full">
     <form method="POST" class="flex flex-col">
       <ValidatedInput
         id="email"
@@ -48,11 +43,18 @@
       />
       <a
         href="/reset-password"
-        class="font-medium hover:cursor-pointer hover:underline hover:text-primary mb-4"
+        class="font-medium text-sm hover:cursor-pointer hover:underline hover:text-primary my-4"
       >
         Forgot Password?
       </a>
-      <button class="btn btn-primary w-full max-w-md">Login</button>
+      <button class="btn btn-primary w-full max-w-md rounded-sm">Login</button>
     </form>
+    <div class="mx-auto mt-4">
+      {#if message}
+        <Alert>
+          {message}
+        </Alert>
+      {/if}
+    </div>
   </div>
 </div>

@@ -4,7 +4,7 @@
   export let form;
 </script>
 
-<div class="flex flex-col items-center mx-10 sm:mx-20">
+<div class="flex flex-col items-center mx-10">
   <div class="m-10">
     <h2 class="text-primary text-center text-3xl font-bold">Create tournament</h2>
   </div>
@@ -41,8 +41,8 @@
         errors={form?.errors?.maxSubmissions}
       />
 
-      <div class="w-full max-w-md mt-6">
-        <button class="btn btn-primary w-full">Create Tournament</button>
+      <div class="w-full max-w-md mt-4">
+        <button class="btn btn-primary w-full rounded-sm">Create Tournament</button>
       </div>
     </form>
   </div>

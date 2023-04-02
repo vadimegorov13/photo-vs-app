@@ -5,8 +5,8 @@
 </script>
 
 <div class="flex flex-col items-center mx-10 sm:mx-20">
-  <div class="py-6 w-full max-w-md mt-6">
-    <form method="POST" class="flex flex-col items-center space-y-2 w-full">
+  <div class="py-6 w-full max-w-md">
+    <form method="POST" class="flex flex-col items-center space-y-4 w-full">
       <ValidatedInput
         id="joinCode"
         value={form?.data?.joinCode ?? ""}
@@ -14,8 +14,8 @@
         errors={form?.errors?.joinCode}
       />
 
-      <div class="w-full max-w-md mt-6">
-        <button class="btn btn-primary w-full">Join</button>
+      <div class="w-full max-w-md">
+        <button class="btn btn-primary w-full rounded-sm">Join</button>
       </div>
     </form>
   </div>

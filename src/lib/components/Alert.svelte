@@ -19,7 +19,7 @@
 
 {#if isVisible}
   <div
-    class="transition-opacity duration-1000"
+    class="transition-opacity duration-1000 w-full"
     class:opacity-100={isHighOpacity}
     class:opacity-0={!isHighOpacity}
   >

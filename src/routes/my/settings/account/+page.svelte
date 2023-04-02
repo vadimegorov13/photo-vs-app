@@ -7,15 +7,17 @@
   $: emailModalOpen = false;
 </script>
 
-<div class="flex flex-col w-full h-full space-y-12">
+<div class="flex flex-col w-full h-full space-y-4">
   <div class="w-full flex flex-col items-center">
     <h3 class="text-2xl font-medium">Change Email</h3>
     <div class="divider" />
 
     <Modal label="change-email" checked={emailModalOpen}>
-      <span slot="trigger" class="btn btn-primary">Change Email</span>
+      <span slot="trigger"><div class="btn btn-primary rounded-sm">
+        Change Email
+      </div></span>
       <h3 slot="heading">Change Your Email</h3>
-      <form method="POST" class="space-y-2">
+      <form method="POST" class="max-w-md mx-auto">
         <ValidatedInput
           id="email"
           type="email"
@@ -24,10 +26,11 @@
           value={data.user?.email}
           errors={form?.errors?.username}
         />
-        <button type="submit" class="btn btn-primary w-full">Change my email</button>
+        <button type="submit" class="btn btn-primary w-full rounded-sm mt-4">Change my email</button>
       </form>
     </Modal>
-
+  </div>
+  <div class="max-w-md mx-auto w-full">
     {#if form?.errors?.email}
       <Alert>{form?.errors?.email[0]}</Alert>
     {/if}

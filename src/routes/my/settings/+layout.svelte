@@ -24,18 +24,21 @@
       <div class="flex flex-row mt-8">
         <div class="text-2xl font-medium pl-4 pt-2">Settings</div>
         <div class="dropdown dropdown-end sm:hidden ml-auto">
-          <button class="btn btn-ghost">
-            <Icon class="w-8 h-8" src={Bars3BottomLeft} />
+          <button class="btn btn-ghost rounded-sm">
+            <Icon class="w-6 h-8" src={Bars3BottomLeft} />
           </button>
-          <ul class="menu dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52 gap-2">
+          <ul class="menu dropdown-content mt-3 p-2 shadow bg-base-100 rounded-sm w-52 gap-2">
             {#each navigaiton as navItem}
-              <li>
-                <a
-                  href={navItem.href}
-                  class="font-medium {$page.url.pathname === navItem.href ? 'active' : ''}"
-                  >{navItem.title}</a
+              <a href={navItem.href}>
+                <button
+                  class="btn btn-primary rounded-sm w-full font-medium {$page.url.pathname ===
+                  navItem.href
+                    ? 'active '
+                    : 'btn-ghost'}"
                 >
-              </li>
+                  {navItem.title}
+                </button>
+              </a>
             {/each}
           </ul>
         </div>
@@ -47,13 +50,16 @@
     <div class="flex">
       <ul class="bg-base-100 w-56 p-2 rounded-box gap-2 hidden sm:menu">
         {#each navigaiton as navItem}
-          <li>
-            <a
-              href={navItem.href}
-              class="font-medium {$page.url.pathname === navItem.href ? 'active' : ''}"
-              >{navItem.title}</a
-            >
-          </li>
+        <a href={navItem.href}>
+          <button
+            class="btn btn-primary rounded-sm w-full font-medium {$page.url.pathname ===
+            navItem.href
+              ? 'active '
+              : 'btn-ghost'}"
+          >
+            {navItem.title}
+          </button>
+        </a>
         {/each}
       </ul>
       <div class="w-full">

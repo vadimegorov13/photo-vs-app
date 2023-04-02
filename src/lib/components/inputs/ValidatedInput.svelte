@@ -16,7 +16,7 @@
     <span class="label-text">{label}</span>
   </label>
   <input
-    class="input {errors ? 'input-error' : 'input-bordered'} {customClass}"
+    class="input rounded-sm {errors ? 'input-error' : 'input-bordered'} {customClass}"
     {id}
     name={id}
     {value}
@@ -26,9 +26,9 @@
     {required}
     {hidden}
   />
-  <label for={id} class="label">
-    {#if errors}
+  {#if errors}
+    <label for={id} class="label">
       <span class="label-text-alt text-error">{errors[0]}</span>
-    {/if}
-  </label>
+    </label>
+  {/if}
 </div>

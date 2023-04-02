@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { ValidatedInput } from "$lib/components";;
+  import { ValidatedInput } from "$lib/components";
 
   export let form;
 
@@ -9,19 +9,22 @@
   $: search = $page.url.search ?? "";
 </script>
 
-<div class="flex flex-col items-center">
+<div class="flex flex-col items-center mx-10">
   <div class="m-10">
     <h2 class="text-primary text-center text-3xl font-bold">Register</h2>
     <p class="text-black">
       Or
-      <a href="/login{search}" class="text-primary font-medium hover:cursor-pointer hover:underline">
+      <a
+        href="/login{search}"
+        class="text-primary font-medium hover:cursor-pointer hover:underline"
+      >
         login
       </a>
       if you already have an account.
     </p>
   </div>
 
-  <div class="shadow-lg rounded-lg p-8 max-w-md">
+  <div class="max-w-md">
     <form method="POST" class="flex flex-col">
       <ValidatedInput
         id="username"
@@ -38,8 +41,8 @@
         errors={form?.errors?.email}
       />
 
-      <div class="flex">
-        <div class="grid flex-grow">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
           <ValidatedInput
             id="password"
             type="password"
@@ -49,9 +52,7 @@
           />
         </div>
 
-        <div class="divider divider-horizontal" />
-
-        <div class="grid flex-grow">
+        <div>
           <ValidatedInput
             id="passwordConfirm"
             type="password"
@@ -62,25 +63,25 @@
         </div>
       </div>
 
-      <div class="form-control">
+      <div class="form-control my-2">
         <label class="label cursor-pointer justify-start space-x-2">
           <input
             type="checkbox"
             name="terms"
-            class="checkbox checkbox-primary {form?.errors?.terms
+            class="checkbox checkbox-primary rounded-sm {form?.errors?.terms
               ? 'border-error'
               : 'border-primary'}"
           />
           <span class="label-text">I accept the terms and conditions</span>
         </label>
-        <label for="terms" class="label">
-          {#if form?.errors?.terms}
-            <span class="label-text-alt text-error mb-2">{form?.errors.terms[0]}</span>
-          {/if}
-        </label>
+        {#if form?.errors?.terms}
+          <label for="terms" class="label">
+            <span class="label-text-alt text-error">{form?.errors.terms[0]}</span>
+          </label>
+        {/if}
       </div>
 
-      <button class="btn btn-primary w-full max-w-md">Register</button>
+      <button class="btn btn-primary w-full max-w-md rounded-sm">Register</button>
     </form>
   </div>
 </div>
