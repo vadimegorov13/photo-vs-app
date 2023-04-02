@@ -13,7 +13,7 @@
     {tournament.title.length > 32 ? tournament.title.slice(0, 32) + "..." : tournament.title}
   </h1>
   {#if state === "NOT_STARTED"}
-    {#if ready}
+    {#if ready && tournament.expand.registeredUsers.length > 1}
       <p class="badge badge-success my-auto">ready to start</p>
     {:else}
       <p class="badge badge-warning my-auto">waiting for players</p>

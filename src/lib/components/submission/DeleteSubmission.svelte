@@ -17,11 +17,11 @@
   </span>
   <h3 slot="heading">Delete this submission?</h3>
   <div class="flex flex-row justify-center space-x-2 mt-4">
-    <label for="delete-submission" class="btn btn-ghost"> No </label>
+    <label for="delete-submission-{submissionId}" class="btn btn-ghost rounded-sm"> No </label>
     <form method="POST" action="?/deleteSubmission">
       <ValidatedInput id="id" type="text" label="id" value={submissionId} hidden />
-      <label for="delete-submission">
-        <button type="submit" class="btn btn-error">Yes</button>
+      <label for="delete-submission-{submissionId}">
+        <button type="submit" class="btn btn-error rounded-sm">Yes</button>
       </label>
     </form>
   </div>

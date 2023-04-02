@@ -23,11 +23,11 @@
   </span>
   <h3 slot="heading">{title}</h3>
   <div class="flex flex-row justify-center space-x-2 mt-4">
-    <label for={label} class="btn btn-ghost"> No </label>
+    <label for={label} class="btn btn-ghost rounded-sm"> No </label>
     <form method="POST" {action}>
       <ValidatedInput id="id" type="text" label="id" value={id} hidden />
       <label for={label}>
-        <button type="submit" class="btn btn-error"> Yes </button>
+        <button type="submit" class="btn btn-error rounded-sm"> Yes </button>
       </label>
     </form>
   </div>

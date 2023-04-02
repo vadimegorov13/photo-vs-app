@@ -7,7 +7,7 @@
 
 <nav class="navbar bg-red-100">
   <div class="flex-1">
-    <a href="/" class="btn btn-ghost normal-case text-2xl px-2">
+    <a href="/" class="btn btn-ghost normal-case text-2xl px-2 rounded-sm">
       <Icon class="h-12 w-12 text-primary" src={Photo} />PhotoVS
     </a>
   </div>
@@ -15,8 +15,8 @@
   <div class="flex-none">
     {#if !user}
       <div>
-        <a href="/login" class="btn btn-outline">Login</a>
-        <a href="/register" class="btn btn-primary">Register</a>
+        <a href="/login" class="btn btn-outline rounded-sm ">Login</a>
+        <a href="/register" class="btn btn-primary rounded-sm ">Register</a>
       </div>
     {:else}
       <div class="dropdown dropdown-end">
@@ -31,14 +31,25 @@
             />
           </div>
         </button>
-        <ul class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-          <li>
-            <a class="justify-between" href="/tournament/list">My Tournaments</a>
-          </li>
-          <li><a href="/my/settings">Settings</a></li>
-          <div class="divider m-0" />
+        <ul class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-sm w-52">
+          <a class="justify-between mb-2" href="/tournament/list">
+            <button class="btn btn-ghost rounded-sm w-full font-medium hover:btn-primary">
+              My Tournaments
+            </button>
+          </a>
+          <a href="/my/settings">
+            <button class="btn btn-ghost rounded-sm w-full font-medium hover:btn-primary">
+              Settings
+            </button>
+          </a>
+          <div class="divider my-1" />
           <form action="/logout" method="POST">
-            <li><button type="submit">Logout</button></li>
+            <button
+              type="submit"
+              class="btn btn-ghost rounded-sm w-full font-medium hover:btn-primary"
+            >
+              Logout
+            </button>
           </form>
         </ul>
       </div>

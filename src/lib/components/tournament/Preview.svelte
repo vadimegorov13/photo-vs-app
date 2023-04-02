@@ -15,34 +15,11 @@
 </script>
 
 <div class="flex flex-col mt-8 mx-auto max-w-4xl">
-  {#if form}
-    <div class="mb-2">
-      {#if form?.errors}
-        <Alert>
-          {#if form.errors?.title}
-            {form.errors?.title[0]}
-          {/if}
-          {#if form.errors?.description}
-            {form.errors?.description[0]}
-          {/if}
-          {#if form.errors?.message}
-            {form.errors.message}
-          {/if}
-        </Alert>
-      {/if}
-      {#if form?.success === true}
-        <Alert alertType="success">
-          {form.message}
-        </Alert>
-      {/if}
-    </div>
-  {/if}
-
   <div class="flex flex-col space-x-0 space-y-4 md:flex-row md:space-x-4 md:space-y-0">
     <TournamentDetails {tournament} {userTournament} />
 
     <div class="rounded-sm shadow-lg p-4 border-t-8 border-primary w-full md:w-3/5">
-      <div class="pb-2 flex place-content-center">
+      <div class="flex place-content-center">
         <span class="text-xl pt-2">Participants</span>
         <span>
           <Icon class="w-8 ml-2" src={UserGroup} />
@@ -50,17 +27,20 @@
       </div>
       {#if state === "NOT_STARTED"}
         <p
-          class="text-xs text-center {readyUsersNumber === tournament.expand.registeredUsers.length
+          class="text-xs text-center {readyUsersNumber ===
+            tournament.expand.registeredUsers.length && tournament.expand.registeredUsers.length > 1
             ? 'text-success'
-            : 'text-gray-500'}"
+            : 'text-warning'}"
         >
           {readyUsersNumber} out of {tournament.expand.registeredUsers.length} are ready
         </p>
       {/if}
-
-      {#each tournament.expand.registeredUsers as userTournament}
-        <div class="divider m-0" />
-        <UserCard {userTournament} {state}/>
+      <div class="divider mt-2 mb-0" />
+      {#each tournament.expand.registeredUsers as userTournament, id}
+        {#if id !== 0}
+          <div class="divider my-0" />
+        {/if}
+        <UserCard {userTournament} {state} />
       {/each}
     </div>
   </div>
@@ -68,8 +48,8 @@
 
 {#if userTournament}
   <div class="flex flex-col mt-4 mx-auto max-w-4xl">
-    <div class="rounded-sm shadow-lg p-4 border-t-8 border-primary space-y-2">
-      <div class="pb-2 flex place-content-center">
+    <div class="rounded-sm shadow-lg p-4 border-t-8 border-primary">
+      <div class="flex place-content-center">
         <span class="text-xl pt-2">Your Submissions</span>
         <span>
           <Icon class="w-8 ml-2" src={Folder} />
@@ -81,12 +61,34 @@
         {userTournament.submissions.length === 1 ? "photo" : "photos"}
       </p>
       {#if userTournament.expand.submissions}
+        <div class="divider my-2" />
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {#each userTournament.expand.submissions as submission}
-            <SubmissionCard {submission} {state}/>
+            <SubmissionCard {submission} {state} />
           {/each}
         </div>
       {/if}
     </div>
   </div>
+{/if}
+
+{#if form}
+  {#if form?.errors}
+    <Alert>
+      {#if form.errors?.title}
+        {form.errors?.title[0]}
+      {/if}
+      {#if form.errors?.description}
+        {form.errors?.description[0]}
+      {/if}
+      {#if form.errors?.message}
+        {form.errors.message}
+      {/if}
+    </Alert>
+  {/if}
+  {#if form?.success === true}
+    <Alert alertType="success">
+      {form.message}
+    </Alert>
+  {/if}
 {/if}

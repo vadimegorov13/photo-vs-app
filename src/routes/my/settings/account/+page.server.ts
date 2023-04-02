@@ -18,7 +18,7 @@ export const actions: Actions = {
       if (data.email === locals.user.email) {
         return {
           data: { email: locals.user.email },
-          errors: { email: ["It's your current email bozo! PICK A NEW ONE!"] },
+          errors: { email: ["It's your current email bozo!"] },
         };
       }
 
@@ -35,7 +35,7 @@ export const actions: Actions = {
 
       return {
         data: { email },
-        errors: handleError(err),
+        errors: handleError(err, "changeEmail"),
       };
     }
   },

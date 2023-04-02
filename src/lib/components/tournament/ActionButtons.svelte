@@ -33,7 +33,7 @@
     <div id="clipboard" />
   </button>
 
-  <div class="divider divider-horizontal mx-auto" />
+  <div class="divider divider-horizontal mx-auto {state === "IN_PROGRESS" ? "hidden" : ""}" />
 
   {#if userTournament && state === "NOT_STARTED"}
     <div class="mx-auto">
@@ -111,7 +111,7 @@
             <button
               type="submit"
               class="btn rounded-sm text-xs lowercase px-2 w-12
-              {ready ? 'btn-success' : 'btn-disabled'}"
+              {ready && tournament.registeredUsers.length > 1 ? 'btn-success' : 'btn-disabled'}"
             >
               <div class="flex flex-col">
                 <Icon src={Play} class="w-8 h-8 mx-auto" />

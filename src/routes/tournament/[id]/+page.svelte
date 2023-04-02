@@ -29,7 +29,6 @@
         userTournament={data.props.userTournament}
         {form}
       />
-      yo
     {:else}
       <Preview
         tournament={data.props.tournament}

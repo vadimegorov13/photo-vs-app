@@ -12,7 +12,7 @@
 </script>
 
 <div class="flex flex-col mx-10 items-center">
-  <div class="my-10 w-full">
+  <div class="m-10 w-full">
     <h2 class="text-primary text-center text-3xl font-bold">Login</h2>
     <p class="text-black text-center">
       Or
@@ -28,18 +28,27 @@
 
   <div class="max-w-md w-full">
     <form method="POST" class="flex flex-col">
+      {#if message}
+        <div class="max-w-md">
+          <Alert>
+            {message}
+          </Alert>
+        </div>
+      {/if}
       <ValidatedInput
         id="email"
         type="email"
         value={form?.data?.email ?? ""}
         label="Email"
         errors={form?.errors?.email}
+        autocomplete="email"
       />
       <ValidatedInput
         id="password"
         type="password"
         label="Password"
         errors={form?.errors?.password}
+        autocomplete="current-password"
       />
       <a
         href="/reset-password"
@@ -49,12 +58,5 @@
       </a>
       <button class="btn btn-primary w-full max-w-md rounded-sm">Login</button>
     </form>
-    <div class="mx-auto mt-4">
-      {#if message}
-        <Alert>
-          {message}
-        </Alert>
-      {/if}
-    </div>
   </div>
 </div>

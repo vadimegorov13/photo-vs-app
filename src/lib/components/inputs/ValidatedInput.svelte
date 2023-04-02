@@ -9,6 +9,7 @@
   export let hidden = false;
   export let errors: string[] | null = null;
   export let customClass: string = "";
+  export let autocomplete: string = "";
 </script>
 
 <div class="form-control w-full max-w-md {hidden ? 'hidden' : 'form-control'}">
@@ -25,6 +26,7 @@
     {disabled}
     {required}
     {hidden}
+    autocomplete={autocomplete ? autocomplete : null}
   />
   {#if errors}
     <label for={id} class="label">

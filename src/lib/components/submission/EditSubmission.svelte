@@ -36,10 +36,10 @@
         value=""
         accept="image/*"
         id="image"
-        class="file-input w-full file-input-bordered"
+        class="file-input w-full file-input-bordered rounded-sm"
       />
     </div>
 
-    <button type="submit" class="btn btn-primary w-full max-w-md mt-6">Update my submission</button>
+    <button type="submit" class="btn btn-primary w-full max-w-md rounded-sm mt-4">Update my submission</button>
   </form>
 </Modal>

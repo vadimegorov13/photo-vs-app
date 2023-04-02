@@ -9,7 +9,6 @@ type LoginUser = {
 export const actions: Actions = {
   default: async ({ locals, request, url }) => {
     const data = Object.fromEntries(await request.formData()) as LoginUser;
-
     try {
       loginSchema.parse(data);
       await locals.pb.collection("users").authWithPassword(data.email, data.password);

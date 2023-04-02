@@ -36,7 +36,7 @@
           value=""
           accept="image/*"
           id="image"
-          class="file-input w-full {form?.errors?.image
+          class="file-input w-full rounded-sm {form?.errors?.image
             ? 'file-input-error'
             : 'file-input-bordered '}"
         />
@@ -49,7 +49,7 @@
 
       <input type="text" name="tournamentId" value={data.id} hidden />
 
-      <div class="w-full max-w-md mt-6">
+      <div class="w-full max-w-md ">
         <button class="btn btn-primary w-full">Submit</button>
       </div>
     </form>

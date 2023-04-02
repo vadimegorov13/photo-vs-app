@@ -61,6 +61,12 @@ const handlePocketBaseError = (err: PbError, action: string | null = null) => {
     }
   }
 
+  if (action === "changeEmail") {
+    if (err.response.code === 400) {
+      return { email: ["This email is already in use"] };
+    }
+  }
+
   return errors;
 };
 

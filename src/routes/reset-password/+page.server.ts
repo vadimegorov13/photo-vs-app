@@ -15,6 +15,7 @@ export const actions: Actions = {
       await locals.pb.collection("users").requestPasswordReset(data.email);
 
       return {
+        data: { email: data.email },
         success: true,
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -28,8 +28,8 @@
       />
     </div>
     <div class="p-4">
-      <h1 class="text-xl font-semibold">{submission.title}</h1>
-      <p class="text-lg text-gray-500">
+      <h1 class="text-lg font-semibold">{submission.title}</h1>
+      <p class="text-md text-gray-500">
         {submission.description}
       </p>
     </div>

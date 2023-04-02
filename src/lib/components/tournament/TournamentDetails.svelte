@@ -10,12 +10,12 @@
   let ready = tournament.expand.registeredUsers.every((userTournament) => userTournament.ready);
 </script>
 
-<div class="rounded-sm shadow-lg p-4 border-t-8 border-primary w-full space-y-2">
+<div class="flex flex-col rounded-sm shadow-lg p-4 border-t-8 border-primary w-full space-y-2">
   <h1 class="text-3xl font-semibold prevent-overflow md:max-w-[22rem] lg:max-w-[30rem]">
     {tournament.title}
   </h1>
   {#if state === "NOT_STARTED"}
-    {#if ready}
+    {#if ready && tournament.registeredUsers.length > 1}
       <p class="badge badge-success my-auto">ready to start</p>
     {:else}
       <p class="badge badge-warning my-auto">waiting for players</p>
@@ -45,8 +45,11 @@
       {/if}
     </div>
   </div>
-  <div class="divider m-0" />
+  <div class="w-full grow">
 
+  </div>
+
+  <div class="divider m-0" />
   <ActionButtons {tournament} {userTournament} showPhotos={showPhotosButton} />
 </div>
 

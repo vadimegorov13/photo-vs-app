@@ -31,6 +31,7 @@
         value={form?.data?.username ?? ""}
         label="Username"
         errors={form?.errors?.username}
+        autocomplete="username"
       />
 
       <ValidatedInput
@@ -39,6 +40,7 @@
         value={form?.data?.email ?? ""}
         label="Email"
         errors={form?.errors?.email}
+        autocomplete="email"
       />
 
       <div class="grid grid-cols-2 gap-4">
@@ -49,6 +51,7 @@
             label="Password"
             errors={form?.errors?.password}
             customClass="w-full max-w-md"
+            autocomplete="current-password"
           />
         </div>
 
@@ -59,6 +62,7 @@
             label="Confirm Password"
             errors={form?.errors?.passwordConfirm}
             customClass="w-full max-w-md"
+            autocomplete="current-password"
           />
         </div>
       </div>
