@@ -5,6 +5,7 @@
 
   const handleUpdate = (updatedData: any) => {
     data.props.tournament = updatedData;
+    console.log(data.props.tournament.expand.state)
   };
 </script>
 
@@ -13,6 +14,14 @@
     <RealtimeSubscriber
       collectionName="tournament"
       id={data.props.tournament.id}
+      expand="registeredUsers, registeredUsers.user, state, settings, host, registeredUsers.submissions"
+      onUpdate={handleUpdate}
+    />
+    <RealtimeSubscriber
+      collectionName="tournamentState"
+      id={data.props.tournament.state}
+      relationName="tournament"
+      relationId={data.props.tournament.id}
       expand="registeredUsers, registeredUsers.user, state, settings, host, registeredUsers.submissions"
       onUpdate={handleUpdate}
     />

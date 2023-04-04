@@ -2,7 +2,6 @@
   import { onDestroy, onMount } from "svelte";
   import { client } from "$lib/pocketbase";
   import { serializeNonPOJOs } from "$lib/helpers";
-  import type { Tournament } from "$lib/types";
 
   export let collectionName: string;
   export let id: string;
@@ -14,7 +13,6 @@
   let unsubscribe: () => void;
 
   const subscribeToRecord = async () => {
-    console.log(relationName);
     try {
       // Subscribe to realtime updates
       unsubscribe = await client
