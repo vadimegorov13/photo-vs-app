@@ -1,6 +1,6 @@
-export type PocketBase = import("pocketbase").default;
+export type PocketBaseClient = import("pocketbase").default;
 
-type Basics = {
+export type BaseFields = {
   id: string;
   collectionId: string;
   collectionName: string;
@@ -8,7 +8,7 @@ type Basics = {
   updated: string;
 };
 
-export type Tournament = Basics & {
+export type Tournament = BaseFields & {
   title: string;
   description: string;
   joinCode: string;
@@ -25,7 +25,7 @@ export type Tournament = Basics & {
   };
 };
 
-export type TournamentState = Basics & {
+export type TournamentState = BaseFields & {
   tournament: string;
   rounds: string[];
   currentRound: string;
@@ -41,7 +41,7 @@ export type TournamentState = Basics & {
   };
 };
 
-export type TournamentSettings = Basics & {
+export type TournamentSettings = BaseFields & {
   tournament: string;
   maxPlayers: number;
   maxSubmissions: number;
@@ -54,7 +54,7 @@ export type TournamentSettings = Basics & {
   };
 };
 
-export type UserTournament = Basics & {
+export type UserTournament = BaseFields & {
   user: string;
   tournament: string;
   submissions: string[];
@@ -67,7 +67,7 @@ export type UserTournament = Basics & {
   };
 };
 
-export type Round = Basics & {
+export type Round = BaseFields & {
   tournament: string;
   matches: string[];
   currentMatch: string;
@@ -79,7 +79,7 @@ export type Round = Basics & {
   };
 };
 
-export type Match = Basics & {
+export type Match = BaseFields & {
   round: string;
   submission1: string;
   submission2: string;
@@ -97,7 +97,7 @@ export type Match = Basics & {
   };
 };
 
-export type Submission = Basics & {
+export type Submission = BaseFields & {
   userTournament: string;
   title: string;
   description: string;
@@ -110,7 +110,7 @@ export type Submission = Basics & {
   };
 };
 
-export type User = Basics & {
+export type User = BaseFields & {
   username: string;
   email: string;
   emailVisibility: boolean;
@@ -124,7 +124,7 @@ export type User = Basics & {
   };
 };
 
-export type UserComment = Basics & {
+export type UserComment = BaseFields & {
   author: string;
   text: string;
   submission: string;
@@ -135,7 +135,7 @@ export type UserComment = Basics & {
   };
 };
 
-export type UserVote = Basics & {
+export type UserVote = BaseFields & {
   user: string;
   match: string;
 

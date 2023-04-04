@@ -16,9 +16,6 @@
   export let userTournament: UserTournament | undefined;
   export let tournament: Tournament;
   export let showPhotos: boolean = false;
-
-  let state = tournament.expand.state.tournamentState;
-  let ready = tournament.expand.registeredUsers.every((userTournament) => userTournament.ready);
 </script>
 
 <div class="flex flex-row">
@@ -33,9 +30,9 @@
     <div id="clipboard" />
   </button>
 
-  <div class="divider divider-horizontal mx-auto {state === "IN_PROGRESS" ? "hidden" : ""}" />
+  <div class="divider divider-horizontal mx-auto {tournament.expand.state.tournamentState === "IN_PROGRESS" ? "hidden" : ""}" />
 
-  {#if userTournament && state === "NOT_STARTED"}
+  {#if userTournament && tournament.expand.state.tournamentState === "NOT_STARTED"}
     <div class="mx-auto">
       <div class="flex flex-row">
         {#if !userTournament.ready}
@@ -111,7 +108,7 @@
             <button
               type="submit"
               class="btn rounded-sm text-xs lowercase px-2 w-12
-              {ready && tournament.registeredUsers.length > 1 ? 'btn-success' : 'btn-disabled'}"
+              {tournament.expand.registeredUsers.every((userTournament) => userTournament.ready) && tournament.registeredUsers.length > 1 ? 'btn-success' : 'btn-disabled'}"
             >
               <div class="flex flex-col">
                 <Icon src={Play} class="w-8 h-8 mx-auto" />
@@ -126,7 +123,7 @@
     <div class="divider divider-horizontal mx-auto" />
   {/if}
 
-  {#if userTournament && (state === "NOT_STARTED" || state === "FINISHED")}
+  {#if userTournament && (tournament.expand.state.tournamentState === "NOT_STARTED" || tournament.expand.state.tournamentState === "FINISHED")}
     {#if tournament.host === userTournament.user}
       <DeleteTournament id={tournament.id} />
     {:else}
@@ -137,7 +134,7 @@
         action="/tournament/{tournament.id}?/leave"
       />
     {/if}
-  {:else if state === "NOT_STARTED"}
+  {:else if tournament.expand.state.tournamentState === "NOT_STARTED"}
     <form method="POST" action="/tournament/{tournament.id}?/join">
       <input type="text" name="id" class="input" value={tournament.id} hidden />
       <button class="btn btn-ghost rounded-sm text-xs lowercase px-2 w-12">

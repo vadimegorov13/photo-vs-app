@@ -13,6 +13,7 @@ import Preview from "$lib/components/tournament/Preview.svelte";
 import TournamentCard from "$lib/components/tournament/TournamentCard.svelte";
 import TournamentDetails from "$lib/components/tournament/TournamentDetails.svelte";
 import UserCard from "$lib/components/tournament/UserCard.svelte";
+import RealtimeSubscriber from "$lib/components/RealtimeSubscriber.svelte";
 
 export {
   ActionButtons,
@@ -30,4 +31,5 @@ export {
   TournamentDetails,
   UserCard,
   ValidatedInput,
+  RealtimeSubscriber,
 };

@@ -6,12 +6,6 @@
   export let form: any;
   export let tournament: Tournament;
   export let userTournament: UserTournament | undefined;
-
-  let readyUsersNumber = tournament.expand.registeredUsers.filter(
-    (userTournament) => userTournament.ready
-  ).length;
-
-  let state = tournament.expand.state.tournamentState;
 </script>
 
 <div class="flex flex-col mt-8 mx-auto max-w-4xl">
@@ -25,14 +19,17 @@
           <Icon class="w-8 ml-2" src={UserGroup} />
         </span>
       </div>
-      {#if state === "NOT_STARTED"}
+      {#if tournament.expand.state.tournamentState === "NOT_STARTED"}
         <p
-          class="text-xs text-center {readyUsersNumber ===
-            tournament.expand.registeredUsers.length && tournament.expand.registeredUsers.length > 1
+          class="text-xs text-center {tournament.expand.registeredUsers.filter(
+            (userTournament) => userTournament.ready
+          ).length === tournament.expand.registeredUsers.length &&
+          tournament.expand.registeredUsers.length > 1
             ? 'text-success'
             : 'text-warning'}"
         >
-          {readyUsersNumber} out of {tournament.expand.registeredUsers.length} are ready
+          {tournament.expand.registeredUsers.filter((userTournament) => userTournament.ready)
+            .length} out of {tournament.expand.registeredUsers.length} are ready
         </p>
       {/if}
       <div class="divider mt-2 mb-0" />
@@ -40,7 +37,7 @@
         {#if id !== 0}
           <div class="divider my-0" />
         {/if}
-        <UserCard {userTournament} {state} />
+        <UserCard {userTournament} state={tournament.expand.state.tournamentState} />
       {/each}
     </div>
   </div>
@@ -64,7 +61,7 @@
         <div class="divider my-2" />
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {#each userTournament.expand.submissions as submission}
-            <SubmissionCard {submission} {state} />
+            <SubmissionCard {submission} state={tournament.expand.state.tournamentState} />
           {/each}
         </div>
       {/if}

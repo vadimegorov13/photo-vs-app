@@ -29,6 +29,6 @@ export const actions: Actions = {
       };
     }
 
-    redirectTo(url);
+    redirectTo(url, "register");
   },
 };

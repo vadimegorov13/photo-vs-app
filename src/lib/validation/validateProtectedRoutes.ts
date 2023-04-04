@@ -23,11 +23,15 @@ const handleLoginRedirect = (
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const redirectTo = (url: any) => {
+export const redirectTo = (url: any, action: string | undefined) => {
   const redirectTo = url.searchParams.get("redirectTo");
 
   if (redirectTo) {
     throw redirect(303, `/${redirectTo.slice(1)}`);
+  }
+
+  if (action === "register") {
+    throw redirect(303, "/login");
   }
 
   throw redirect(303, "/");

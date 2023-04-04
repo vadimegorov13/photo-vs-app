@@ -1,28 +1,31 @@
 <script lang="ts">
-  import Preview from "$lib/components/tournament/Preview.svelte";
-  import type { Tournament, UserTournament } from "$lib/types";
-  import { onDestroy, onMount } from "svelte";
-  // import PocketBase from "pocketbase";
-
+  import { Preview, RealtimeSubscriber } from "$lib/components";
   export let data: any;
   export let form;
 
-  // let unsubscribe: () => void;
-
-  // onMount(async () => {
-  //   unsubscribe = await pb.collection("tournament").subscribe(data.id, async ({ action }) => {
-  //     console.log(action);
-  //   });
-  // });
-
-  // // Unsubscribe from realtime messages
-  // onDestroy(() => {
-  //   unsubscribe?.();
-  // });
+  const handleUpdate = (updatedData: any) => {
+    data.props.tournament = updatedData;
+  };
 </script>
 
 <div class="mx-2 md:mx-10">
-  {#if data.success && data.props.tournament}
+  {#if data.success}
+    <RealtimeSubscriber
+      collectionName="tournament"
+      id={data.props.tournament.id}
+      expand="registeredUsers, registeredUsers.user, state, settings, host, registeredUsers.submissions"
+      onUpdate={handleUpdate}
+    />
+    {#each data.props.tournament.registeredUsers as userTournament}
+      <RealtimeSubscriber
+        collectionName="userTournament"
+        id={userTournament}
+        relationName="tournament"
+        relationId={data.props.tournament.id}
+        expand="registeredUsers, registeredUsers.user, state, settings, host, registeredUsers.submissions"
+        onUpdate={handleUpdate}
+      />
+    {/each}
     {#if data.props.tournament.expand.state.tournamentState === "IN_PROGRESS" && data.props.userTournament}
       <Preview
         tournament={data.props.tournament}
@@ -38,7 +41,7 @@
     {/if}
   {:else}
     <div class="flex flex-col items-center text-black text-3xl my-10 font-semibold">
-      {data.errors.message[0]}
+      {data.errors.message ? `${data.errors.message[0]}` : "Tournament not found"}
     </div>
   {/if}
 </div>

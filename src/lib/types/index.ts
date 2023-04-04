@@ -1,6 +1,7 @@
 import type {
+  BaseFields,
   Match,
-  PocketBase,
+  PocketBaseClient,
   Round,
   Submission,
   Tournament,
@@ -14,9 +15,10 @@ import type {
 import type { PbError } from "$lib/types/errorTypes";
 
 export {
+  BaseFields,
   Match,
   PbError,
-  PocketBase,
+  PocketBaseClient,
   Round,
   Submission,
   Tournament,

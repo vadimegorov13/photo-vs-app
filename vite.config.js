@@ -6,6 +6,11 @@ const config = {
   test: {
     include: ["src/**/*.{test,spec}.{js,ts}"],
   },
+  server: {
+    proxy: {
+      "/api": "http://127.0.0.1:8090" ?? "",
+    },
+  },
 };
 
 export default config;

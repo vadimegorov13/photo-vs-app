@@ -5,24 +5,21 @@
   export let tournament: Tournament;
   export let userTournament: UserTournament | undefined;
   export let showPhotosButton: boolean = false;
-
-  let state = tournament.expand.state.tournamentState;
-  let ready = tournament.expand.registeredUsers.every((userTournament) => userTournament.ready);
 </script>
 
 <div class="flex flex-col rounded-sm shadow-lg p-4 border-t-8 border-primary w-full space-y-2">
   <h1 class="text-3xl font-semibold prevent-overflow md:max-w-[22rem] lg:max-w-[30rem]">
     {tournament.title}
   </h1>
-  {#if state === "NOT_STARTED"}
-    {#if ready && tournament.registeredUsers.length > 1}
+  {#if tournament.expand.state.tournamentState === "NOT_STARTED"}
+    {#if tournament.expand.registeredUsers.every((userTournament) => userTournament.ready) && tournament.registeredUsers.length > 1}
       <p class="badge badge-success my-auto">ready to start</p>
     {:else}
       <p class="badge badge-warning my-auto">waiting for players</p>
     {/if}
-  {:else if state === "FINISHED"}
+  {:else if tournament.expand.state.tournamentState === "FINISHED"}
     <p class="badge my-auto">finished</p>
-  {:else if state === "IN_PROGRESS"}
+  {:else if tournament.expand.state.tournamentState === "IN_PROGRESS"}
     <p class="badge badge-success my-auto">in progress</p>
   {/if}
   <div class="divider m-0" />

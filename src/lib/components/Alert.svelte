@@ -25,7 +25,11 @@
       class:opacity-100={isHighOpacity}
       class:opacity-0={!isHighOpacity}
     >
-      <div class="alert alert-{alertType}  rounded-sm {customClass} ">
+      <div
+        class="alert rounded-sm {customClass} {alertType === 'error'
+          ? 'alert-error'
+          : 'alert-success'}"
+      >
         <div class="flex flex-row">
           <div class="w-8">
             <Icon class="w-8" src={alertType === "success" ? CheckCircle : XCircle} />

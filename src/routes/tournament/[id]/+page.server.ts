@@ -25,7 +25,7 @@ export const load: ServerLoad = async ({ locals, params }) => {
     return {
       success: true,
       props: {
-        tournament: serializeNonPOJOs(tournament),
+        tournament: serializeNonPOJOs(tournament) as Tournament,
         userTournament,
       },
     };
