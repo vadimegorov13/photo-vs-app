@@ -5,7 +5,6 @@
 
   const handleUpdate = (updatedData: any) => {
     data.props.tournament = updatedData;
-    console.log(data.props.tournament.expand.state)
   };
 </script>
 
