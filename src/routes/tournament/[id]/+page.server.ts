@@ -217,8 +217,14 @@ export const actions: Actions = {
   deleteSubmission: async ({ locals, request }) => {
     const data = await request.formData();
     const id = data.get("id") as string;
+    const userTournamentId = data.get("userTournamentId") as string;
+    const numberOfSubmissions = parseInt(data.get("numberOfSubmissions") as string);
 
     try {
+      if (numberOfSubmissions === 1) {
+        await locals.pb.collection("userTournament").update(userTournamentId, { ready: false });
+      }
+
       await locals.pb.collection("submission").delete(id);
       return {
         action: "submission",
@@ -227,6 +233,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      console.log(err)
       if (err?.response?.code) {
         const errors = { message: ["Something went wrong"] };
 

@@ -61,7 +61,7 @@
         <div class="divider my-2" />
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           {#each userTournament.expand.submissions as submission}
-            <SubmissionCard {submission} state={tournament.expand.state.tournamentState} />
+            <SubmissionCard {userTournament} {submission} state={tournament.expand.state.tournamentState} />
           {/each}
         </div>
       {/if}

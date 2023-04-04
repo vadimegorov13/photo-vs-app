@@ -1,8 +1,9 @@
 <script lang="ts">
   import { DeleteSubmission, EditSubmission } from "$lib/components";
   import { getImageUrl } from "$lib/helpers";
-  import type { Submission } from "$lib/types";
+  import type { Submission, UserTournament } from "$lib/types";
 
+  export let userTournament: UserTournament;
   export let submission: Submission;
   export let state: string;
 </script>
@@ -13,10 +14,16 @@
       <div class="border-t border-l absolute -bottom-0 -right-0 bg-base-100 rounded-sm">
         {#if state === "NOT_STARTED"}
           <EditSubmission {submission} />
-          <DeleteSubmission submissionId={submission.id} />
+          <DeleteSubmission
+            submissionId={submission.id}
+            {userTournament}
+          />
         {/if}
         {#if state === "FINISHED"}
-          <DeleteSubmission submissionId={submission.id} />
+          <DeleteSubmission
+            submissionId={submission.id}
+            {userTournament}
+          />
         {/if}
       </div>
 
