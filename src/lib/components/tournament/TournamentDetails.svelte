@@ -24,7 +24,7 @@
   {/if}
   <div class="divider m-0" />
   <div>
-    <p class="text-md text-gray-600">{tournament.description}</p>
+    <p class="text-md text-gray-600 prevent-overflow max-w-md">{tournament.description}</p>
     <div class="text-sm">
       <p class="badge badge-lg badge-outline mx-auto mt-2 text-sm">
         max participants: {tournament.expand.settings.maxPlayers}

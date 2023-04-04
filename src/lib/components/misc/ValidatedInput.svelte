@@ -10,6 +10,8 @@
   export let errors: string[] | null = null;
   export let customClass: string = "";
   export let autocomplete: string = "";
+  export let max: number = 128;
+  export let min: number = 0;
 </script>
 
 <div class="form-control w-full max-w-md {hidden ? 'hidden' : 'form-control'}">
@@ -27,6 +29,8 @@
     {required}
     {hidden}
     autocomplete={autocomplete ? autocomplete : null}
+    {max}
+    {min}
   />
   {#if errors}
     <label for={id} class="label">

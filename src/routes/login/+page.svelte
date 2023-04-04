@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { ValidatedInput } from "$lib/components";
-  import Alert from "$lib/components/Alert.svelte";
+  import { ValidatedInput, Alert } from "$lib/components";
   export let form;
   let message: string;
   let search: string;

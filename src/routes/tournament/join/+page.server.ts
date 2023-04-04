@@ -13,6 +13,7 @@ export const actions: Actions = {
   default: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as Join;
     const user = locals.user;
+    let tournamentId
 
     try {
       if (!user) throw error(401, "Unauthorized");
@@ -25,7 +26,8 @@ export const actions: Actions = {
 
       validateTournamentEntry(serializeNonPOJOs(tournament) as Tournament, user);
 
-      await registerUserForTournament(locals.pb, user, tournament.id, tournament.registeredUsers);
+      tournamentId = tournament.id;
+      await registerUserForTournament(locals.pb, user, tournamentId, tournament.registeredUsers);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const { joinCode } = data;
@@ -36,6 +38,6 @@ export const actions: Actions = {
       };
     }
 
-    throw redirect(303, `/tournament/list`);
+    throw redirect(303, `/tournament/${tournamentId}`);
   },
 };

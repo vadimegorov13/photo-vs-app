@@ -1,7 +1,5 @@
 <script>
-  import { ValidatedInput } from "$lib/components";import Alert from "$lib/components/Alert.svelte";
-;
-
+  import { ValidatedInput, Alert } from "$lib/components";
   export let form;
 </script>
 

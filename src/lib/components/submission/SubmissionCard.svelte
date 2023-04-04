@@ -6,6 +6,8 @@
   export let userTournament: UserTournament;
   export let submission: Submission;
   export let state: string;
+
+  let imageUrl = getImageUrl(submission.collectionId, submission.id, submission.image)
 </script>
 
 <div class="border rounded-sm">
@@ -27,12 +29,14 @@
         {/if}
       </div>
 
-      <img
-        src={getImageUrl(submission.collectionId, submission.id, submission.image)}
+      <a href={imageUrl} target="_blank">
+        <img
+        src={imageUrl}
         alt="submission"
         id="submission-{submission.id}"
         class="w-full static"
       />
+      </a>
     </div>
     <div class="p-4">
       <h1 class="text-lg font-semibold">{submission.title}</h1>

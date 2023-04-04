@@ -27,7 +27,7 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {#each data.props.userTournaments as userTournament}
-          <a href="/tournament/{userTournament.expand.tournament.id}" class="w-full">
+          <a href="/tournament/{userTournament.expand.tournament.id}" class="w-full duration-300 hover:scale-105">
             <TournamentCard tournament={userTournament.expand.tournament} {userTournament} />
           </a>
         {/each}
