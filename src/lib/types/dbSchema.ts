@@ -32,7 +32,6 @@ export type TournamentState = BaseFields & {
   tournamentState: string;
   matchState: string;
   roundState: string;
-  bracket: string;
 
   expand: {
     tournament: Tournament;

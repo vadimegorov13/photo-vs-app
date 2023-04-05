@@ -1,4 +1,4 @@
-import { registerUserForTournament, serializeNonPOJOs } from "$lib/helpers";
+import { generateBracket, registerUserForTournament, serializeNonPOJOs } from "$lib/helpers";
 import type { Tournament, UserTournament } from "$lib/types";
 import { handleError, submissionSchema, validateTournamentEntry } from "$lib/validation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
@@ -93,9 +93,9 @@ export const actions: Actions = {
     try {
       await locals.pb.collection("userTournament").update(userTournamentId, { ready: true });
 
-      const tournament: Tournament = await locals.pb
-        .collection("tournament")
-        .getOne(tournamentId, { expand: "registeredUsers, settings, state" });
+      const tournament: Tournament = await locals.pb.collection("tournament").getOne(tournamentId, {
+        expand: "registeredUsers, settings, state, registeredUsers.submissions, ",
+      });
 
       if (tournament.host !== userId) {
         throw error(401, "Unauthorized");
@@ -109,9 +109,11 @@ export const actions: Actions = {
         throw error(400, "Not all users are ready");
       }
 
-      await locals.pb
-        .collection("tournamentState")
-        .update(tournament.expand.state.id, { tournamentState: "IN_PROGRESS" });
+      await generateBracket(tournament);
+
+      // await locals.pb
+      //   .collection("tournamentState")
+      //   .update(tournament.expand.state.id, { tournamentState: "IN_PROGRESS", bracket });
 
       return {
         action: "tournament",
@@ -120,6 +122,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      console.log(err)
       return {
         action: "tournament",
         success: false,
@@ -233,7 +236,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err)
+      console.log(err);
       if (err?.response?.code) {
         const errors = { message: ["Something went wrong"] };
 
