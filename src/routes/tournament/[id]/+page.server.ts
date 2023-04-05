@@ -109,11 +109,11 @@ export const actions: Actions = {
         throw error(400, "Not all users are ready");
       }
 
-      await generateBracket(tournament);
+      const bracket = await generateBracket(locals.pb, tournament);
 
-      // await locals.pb
-      //   .collection("tournamentState")
-      //   .update(tournament.expand.state.id, { tournamentState: "IN_PROGRESS", bracket });
+      await locals.pb
+        .collection("tournamentState")
+        .update(tournament.expand.state.id, { tournamentState: "IN_PROGRESS", bracket });
 
       return {
         action: "tournament",
@@ -122,7 +122,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err)
+      console.log(err);
       return {
         action: "tournament",
         success: false,
