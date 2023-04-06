@@ -68,11 +68,13 @@ export type UserTournament = BaseFields & {
 
 export type Round = BaseFields & {
   tournament: string;
+  nextRound: string;
   matches: string[];
   currentMatch: string;
 
   expand: {
     tournament: Tournament;
+    nextRound: Round;
     matches: Match[];
     currentMatch: Match;
   };
@@ -80,6 +82,7 @@ export type Round = BaseFields & {
 
 export type Match = BaseFields & {
   round: string;
+  nextMatch: string;
   submission1: string;
   submission2: string;
   winner: string;
@@ -88,6 +91,7 @@ export type Match = BaseFields & {
 
   expand: {
     round: Round;
+    nextMatch: Match;
     submission1: Submission;
     submission2: Submission;
     winner: Submission;
