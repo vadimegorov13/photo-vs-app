@@ -1,5 +1,5 @@
 import { generateBracket, registerUserForTournament, serializeNonPOJOs } from "$lib/helpers";
-import type { Tournament, UserTournament } from "$lib/types";
+import type { Match, Tournament, UserTournament } from "$lib/types";
 import { handleError, submissionSchema, validateTournamentEntry } from "$lib/validation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
@@ -13,7 +13,10 @@ export const load: ServerLoad = async ({ locals, params }) => {
     const userId = locals.user?.id;
     const tournament = await locals.pb.collection("tournament").getOne(id, {
       expand:
-        "registeredUsers, registeredUsers.user, state, settings, host, registeredUsers.submissions",
+        "registeredUsers, registeredUsers.user, \
+        state, settings, host, registeredUsers.submissions, \
+        state.rounds, state.rounds.matches, state.rounds.matches, \
+        state.rounds.matches.submission1, state.rounds.matches.submission2",
     });
 
     const userTournament: UserTournament | undefined = serializeNonPOJOs(
@@ -111,14 +114,12 @@ export const actions: Actions = {
 
       const [bracket, rounds] = await generateBracket(locals.pb, tournament);
 
-      await locals.pb
-        .collection("tournamentState")
-        .update(tournament.expand.state.id, {
-          tournamentState: "IN_PROGRESS",
-          rounds: rounds.map((r) => r.id),
-          currentRound: rounds[0].id,
-          bracket,
-        });
+      await locals.pb.collection("tournamentState").update(tournament.expand.state.id, {
+        tournamentState: "IN_PROGRESS",
+        rounds: rounds.map((r) => r.id),
+        currentRound: rounds[0].id,
+        bracket,
+      });
 
       return {
         action: "tournament",
@@ -253,7 +254,6 @@ export const actions: Actions = {
   },
   editSubmission: async ({ locals, request }) => {
     const data = await request.formData();
-
     const id = data.get("id") as string;
     const title = data.get("title") as string;
     const description = data.get("description") as string;
@@ -285,6 +285,36 @@ export const actions: Actions = {
         data: { title, description },
         errors: handleError(err, "edit"),
       };
+    }
+  },
+  vote: async ({ locals, request }) => {
+    const data = await request.formData();
+    const submissionId = data.get("submissionId") as string;
+    const matchId = data.get("matchId") as string;
+    const user = locals.user;
+
+    try {
+      if (!user) throw error(401, "Unauthorized");
+      
+      const match: Match = await locals.pb.collection("match").getOne(matchId);
+      const userVote = await locals.pb
+        .collection("userVote")
+        .create({ user: user.id, match: matchId });
+
+      await locals.pb.collection("match").update(
+        matchId,
+        match.submission1 === submissionId
+          ? {
+              userVotes1: [...match.userVotes1, userVote.id],
+            }
+          : {
+              userVotes2: [...match.userVotes2, userVote.id],
+            }
+      );
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.log(serializeNonPOJOs(err));
     }
   },
 };

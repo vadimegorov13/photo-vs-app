@@ -1,7 +1,14 @@
 <script lang="ts">
   import { Preview, RealtimeSubscriber } from "$lib/components";
+  import OngoingTournament from "$lib/components/tournament/OngoingTournament.svelte";
   export let data: any;
   export let form;
+
+  const expand: string =
+    "registeredUsers, registeredUsers.user, \
+        state, settings, host, registeredUsers.submissions, \
+        state.rounds, state.rounds.matches, state.rounds.matches, \
+        state.rounds.matches.submission1, state.rounds.matches.submission2";
 
   const handleUpdate = (updatedData: any) => {
     data.props.tournament = updatedData;
@@ -13,7 +20,7 @@
     <RealtimeSubscriber
       collectionName="tournament"
       id={data.props.tournament.id}
-      expand="registeredUsers, registeredUsers.user, state, settings, host, registeredUsers.submissions"
+      {expand}
       onUpdate={handleUpdate}
     />
     <RealtimeSubscriber
@@ -21,25 +28,34 @@
       id={data.props.tournament.state}
       relationName="tournament"
       relationId={data.props.tournament.id}
-      expand="registeredUsers, registeredUsers.user, state, settings, host, registeredUsers.submissions"
+      {expand}
       onUpdate={handleUpdate}
     />
+
+    <RealtimeSubscriber
+      collectionName="match"
+      id={data.props.tournament.expand.state.expand.rounds[0].expand.matches[0].id}
+      relationName="tournament"
+      relationId={data.props.tournament.id}
+      expand="registeredUsers, registeredUsers.user, \
+  state, settings, host, registeredUsers.submissions, \
+  state.rounds, state.rounds.matches, state.rounds.matches, \
+  state.rounds.matches.submission1, state.rounds.matches.submission2"
+      onUpdate={handleUpdate}
+    />
+
     {#each data.props.tournament.registeredUsers as userTournament}
       <RealtimeSubscriber
         collectionName="userTournament"
         id={userTournament}
         relationName="tournament"
         relationId={data.props.tournament.id}
-        expand="registeredUsers, registeredUsers.user, state, settings, host, registeredUsers.submissions"
+        {expand}
         onUpdate={handleUpdate}
       />
     {/each}
     {#if data.props.tournament.expand.state.tournamentState === "IN_PROGRESS" && data.props.userTournament}
-      <Preview
-        tournament={data.props.tournament}
-        userTournament={data.props.userTournament}
-        {form}
-      />
+      <OngoingTournament tournament={data.props.tournament} />
     {:else}
       <Preview
         tournament={data.props.tournament}
