@@ -7,7 +7,7 @@
   export let submission: Submission;
   export let state: string;
 
-  let imageUrl = getImageUrl(submission.collectionId, submission.id, submission.image)
+  let imageUrl = getImageUrl(submission.collectionId, submission.id, submission.image);
 </script>
 
 <div class="border rounded-sm">
@@ -16,26 +16,20 @@
       <div class="border-t border-l absolute -bottom-0 -right-0 bg-base-100 rounded-sm">
         {#if state === "NOT_STARTED"}
           <EditSubmission {submission} />
-          <DeleteSubmission
-            submissionId={submission.id}
-            {userTournament}
-          />
+          <DeleteSubmission submissionId={submission.id} {userTournament} />
         {/if}
         {#if state === "FINISHED"}
-          <DeleteSubmission
-            submissionId={submission.id}
-            {userTournament}
-          />
+          <DeleteSubmission submissionId={submission.id} {userTournament} />
         {/if}
       </div>
 
       <a href={imageUrl} target="_blank">
         <img
-        src={imageUrl}
-        alt="submission"
-        id="submission-{submission.id}"
-        class="w-full static"
-      />
+          src={imageUrl}
+          alt="submission"
+          id="submission-{submission.id}"
+          class="w-full static"
+        />
       </a>
     </div>
     <div class="p-4">

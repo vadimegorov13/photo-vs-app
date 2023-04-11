@@ -13,7 +13,7 @@ export const actions: Actions = {
   default: async ({ locals, request }) => {
     const data = Object.fromEntries(await request.formData()) as Join;
     const user = locals.user;
-    let tournamentId
+    let tournamentId;
 
     try {
       if (!user) throw error(401, "Unauthorized");

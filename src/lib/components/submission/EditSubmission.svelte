@@ -40,6 +40,8 @@
       />
     </div>
 
-    <button type="submit" class="btn btn-primary w-full max-w-md rounded-sm mt-4">Update my submission</button>
+    <button type="submit" class="btn btn-primary w-full max-w-md rounded-sm mt-4"
+      >Update my submission</button
+    >
   </form>
 </Modal>

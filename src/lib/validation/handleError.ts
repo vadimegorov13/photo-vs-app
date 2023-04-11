@@ -102,6 +102,12 @@ const handleHttpError = (err: HttpError, action: string | null = null) => {
       return { message: [err.body.message] };
     }
   }
+
+  if (action === "vote") {
+    if (err?.status === 400) {
+      return { message: [err.body.message] };
+    }
+  }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

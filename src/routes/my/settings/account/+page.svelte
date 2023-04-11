@@ -13,9 +13,7 @@
     <div class="divider" />
 
     <Modal label="change-email" checked={emailModalOpen}>
-      <span slot="trigger"><div class="btn btn-primary rounded-sm">
-        Change Email
-      </div></span>
+      <span slot="trigger"><div class="btn btn-primary rounded-sm">Change Email</div></span>
       <h3 slot="heading">Change Your Email</h3>
       <form method="POST" class="max-w-md mx-auto">
         <ValidatedInput
@@ -26,7 +24,8 @@
           value={data.user?.email}
           errors={form?.errors?.username}
         />
-        <button type="submit" class="btn btn-primary w-full rounded-sm mt-4">Change my email</button>
+        <button type="submit" class="btn btn-primary w-full rounded-sm mt-4">Change my email</button
+        >
       </form>
     </Modal>
   </div>

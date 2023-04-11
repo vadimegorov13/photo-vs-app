@@ -1,11 +1,17 @@
 <script lang="ts">
+  import { RealtimeSubscriber, VoteSubmission } from "$lib/components";
   import { getImageUrl } from "$lib/helpers";
-  import { client } from "$lib/pocketbase";
-  import type { Tournament } from "$lib/types";
-  import { RealtimeSubscriber, ValidatedInput, VoteSubmission } from "$lib/components";
-  import { onDestroy, onMount } from "svelte";
+  import type { Tournament, UserTournament, UserVote } from "$lib/types";
 
   export let tournament: Tournament;
+  export let userTournament: UserTournament;
+
+  const expand: string =
+    "registeredUsers, registeredUsers.user, \
+        state, settings, host, registeredUsers.submissions, \
+        state.rounds, state.rounds.matches, state.rounds.matches, \
+        state.rounds.matches.submission1, state.rounds.matches.submission2, \
+        state.rounds.matches.userVotes1, state.rounds.matches.userVotes2";
 
   let currentRound = tournament.expand.state.expand.rounds[0];
   let currentMatch = currentRound.expand.matches[0];
@@ -23,6 +29,15 @@
     getImageUrl(submission2.collectionId, submission2.id, submission2.image),
   ];
 
+  const userId = userTournament.user; // Assuming userTournament has a user field containing the user ID
+  const userVotedInVotes1 = currentMatch.expand.userVotes1
+    ? currentMatch.expand.userVotes1.some((vote: UserVote) => vote.user === userId)
+    : false;
+  const userVotedInVotes2 = currentMatch.expand.userVotes2
+    ? currentMatch.expand.userVotes2.some((vote: UserVote) => vote.user === userId)
+    : false;
+  let voted = userVotedInVotes1 || userVotedInVotes2;
+
   const handleUpdate = (updatedData: any) => {
     tournament = updatedData;
     currentRound = updatedData.expand.state.expand.rounds[0];
@@ -30,7 +45,16 @@
     votes1 = currentMatch.userVotes1;
     votes2 = currentMatch.userVotes2;
 
-    console.log(submission2)
+    // Check if user has voted on the current match
+    const userId = userTournament.user; // Assuming userTournament has a user field containing the user ID
+    const userVotedInVotes1 = currentMatch.expand.userVotes1
+      ? currentMatch.expand.userVotes1.some((vote: UserVote) => vote.user === userId)
+      : false;
+    const userVotedInVotes2 = currentMatch.expand.userVotes2
+      ? currentMatch.expand.userVotes2.some((vote: UserVote) => vote.user === userId)
+      : false;
+
+    voted = userVotedInVotes1 || userVotedInVotes2;
   };
 </script>
 
@@ -39,10 +63,7 @@
   id={currentMatch.id}
   relationName="tournament"
   relationId={tournament.id}
-  expand="registeredUsers, registeredUsers.user, \
-  state, settings, host, registeredUsers.submissions, \
-  state.rounds, state.rounds.matches, state.rounds.matches, \
-  state.rounds.matches.submission1, state.rounds.matches.submission2"
+  {expand}
   onUpdate={handleUpdate}
 />
 
@@ -66,6 +87,7 @@
     votes={votes1}
     imageUrls={imageUrls[0]}
     matchId={currentMatch.id}
+    {voted}
   />
   <p class="text-center text-3xl text-primary m-6">VS</p>
   <VoteSubmission
@@ -73,9 +95,9 @@
     votes={votes2}
     imageUrls={imageUrls[1]}
     matchId={currentMatch.id}
+    {voted}
   />
 </div>
-
 <div>
   <!-- <form method="POST" class="flex flex-col items-center" action="?/vote" use:enhance={vote}>
     <ValidatedInput

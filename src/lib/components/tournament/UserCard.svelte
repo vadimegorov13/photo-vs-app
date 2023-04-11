@@ -22,7 +22,9 @@
       </div>
     </div>
     <div class="flex flex-col space-y-2">
-      <h1 class="text-md break-word max-w-[16rem] sm:max-w-[16rem] md:max-w-[9rem]">{user.username}</h1>
+      <h1 class="text-md break-word max-w-[16rem] sm:max-w-[16rem] md:max-w-[9rem]">
+        {user.username}
+      </h1>
       <p class="text-xs text-gray-500">
         Submitted {userTournament.submissions.length}
         {userTournament.submissions.length === 1 ? "photo" : "photos"}

@@ -1,5 +1,5 @@
 <script>
-  import { ValidatedInput } from "$lib/components";;
+  import { ValidatedInput } from "$lib/components";
 
   export let form;
 </script>
@@ -31,7 +31,9 @@
         value=""
       />
       <div class="w-full max-w-md mt-4">
-        <button type="submit" class="btn btn-primary w-full max-w-md rounded-sm"> Update Password </button>
+        <button type="submit" class="btn btn-primary w-full max-w-md rounded-sm">
+          Update Password
+        </button>
       </div>
     </div>
   </form>

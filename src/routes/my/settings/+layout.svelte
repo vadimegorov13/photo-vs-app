@@ -50,16 +50,16 @@
     <div class="flex">
       <ul class="bg-base-100 w-56 p-2 rounded-box gap-2 hidden sm:menu">
         {#each navigaiton as navItem}
-        <a href={navItem.href}>
-          <button
-            class="btn btn-primary rounded-sm w-full font-medium {$page.url.pathname ===
-            navItem.href
-              ? 'active '
-              : 'btn-ghost'}"
-          >
-            {navItem.title}
-          </button>
-        </a>
+          <a href={navItem.href}>
+            <button
+              class="btn btn-primary rounded-sm w-full font-medium {$page.url.pathname ===
+              navItem.href
+                ? 'active '
+                : 'btn-ghost'}"
+            >
+              {navItem.title}
+            </button>
+          </a>
         {/each}
       </ul>
       <div class="w-full">

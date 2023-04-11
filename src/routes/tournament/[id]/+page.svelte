@@ -8,7 +8,8 @@
     "registeredUsers, registeredUsers.user, \
         state, settings, host, registeredUsers.submissions, \
         state.rounds, state.rounds.matches, state.rounds.matches, \
-        state.rounds.matches.submission1, state.rounds.matches.submission2";
+        state.rounds.matches.submission1, state.rounds.matches.submission2, \
+        state.rounds.matches.userVotes1, state.rounds.matches.userVotes2";
 
   const handleUpdate = (updatedData: any) => {
     data.props.tournament = updatedData;
@@ -43,7 +44,10 @@
       />
     {/each}
     {#if data.props.tournament.expand.state.tournamentState === "IN_PROGRESS" && data.props.userTournament}
-      <OngoingTournament tournament={data.props.tournament} />
+      <OngoingTournament
+        tournament={data.props.tournament}
+        userTournament={data.props.userTournament}
+      />
     {:else}
       <Preview
         tournament={data.props.tournament}

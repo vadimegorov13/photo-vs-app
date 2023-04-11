@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ValidatedInput } from "$lib/components";;
+  import { ValidatedInput } from "$lib/components";
 
   export let data;
   export let form;
@@ -11,7 +11,12 @@
   </div>
 
   <div class="w-full">
-    <form method="POST" action="?/create" class="flex flex-col items-center" enctype="multipart/form-data">
+    <form
+      method="POST"
+      action="?/create"
+      class="flex flex-col items-center"
+      enctype="multipart/form-data"
+    >
       <ValidatedInput
         id="title"
         value={form?.data?.title ?? ""}
@@ -49,7 +54,7 @@
 
       <input type="text" name="tournamentId" value={data.id} hidden />
 
-      <div class="w-full max-w-md ">
+      <div class="w-full max-w-md">
         <button class="btn btn-primary w-full">Submit</button>
       </div>
     </form>

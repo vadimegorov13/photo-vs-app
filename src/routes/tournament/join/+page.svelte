@@ -1,5 +1,5 @@
 <script>
-  import { ValidatedInput } from "$lib/components";;
+  import { ValidatedInput } from "$lib/components";
 
   export let form;
 </script>

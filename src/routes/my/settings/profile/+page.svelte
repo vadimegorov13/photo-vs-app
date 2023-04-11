@@ -28,7 +28,7 @@
     <div class="form-control flex flex-col items-center">
       <h3 class="text-2xl font-medium">Update Profile</h3>
       <div class="divider" />
-      
+
       <label for="avatar" class="label font-medium">
         <span class="label-text">Profile Picture</span>
       </label>
@@ -73,11 +73,11 @@
       </div>
       <div class="w-full max-w-md">
         {#if form?.success === true}
-        <Alert alertType="success" customClass="max-w-md w-full">Your profile has been updated!</Alert>
-      {/if}
+          <Alert alertType="success" customClass="max-w-md w-full"
+            >Your profile has been updated!</Alert
+          >
+        {/if}
       </div>
     </div>
-    
   </form>
-  
 </div>

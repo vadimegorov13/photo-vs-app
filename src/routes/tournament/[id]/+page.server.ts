@@ -1,5 +1,5 @@
 import { generateBracket, registerUserForTournament, serializeNonPOJOs } from "$lib/helpers";
-import type { Match, Tournament, UserTournament } from "$lib/types";
+import type { Match, Tournament, UserTournament, UserVote } from "$lib/types";
 import { handleError, submissionSchema, validateTournamentEntry } from "$lib/validation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
@@ -16,7 +16,8 @@ export const load: ServerLoad = async ({ locals, params }) => {
         "registeredUsers, registeredUsers.user, \
         state, settings, host, registeredUsers.submissions, \
         state.rounds, state.rounds.matches, state.rounds.matches, \
-        state.rounds.matches.submission1, state.rounds.matches.submission2",
+        state.rounds.matches.submission1, state.rounds.matches.submission2, \
+        state.rounds.matches.userVotes1, state.rounds.matches.userVotes2",
     });
 
     const userTournament: UserTournament | undefined = serializeNonPOJOs(
@@ -295,8 +296,19 @@ export const actions: Actions = {
 
     try {
       if (!user) throw error(401, "Unauthorized");
-      
+
       const match: Match = await locals.pb.collection("match").getOne(matchId);
+
+      const userVotedInVotes1 = match.expand.userVotes1
+        ? match.expand.userVotes1.some((vote: UserVote) => vote.user === user.id)
+        : false;
+      const userVotedInVotes2 = match.expand.userVotes2
+        ? match.expand.userVotes2.some((vote: UserVote) => vote.user === user.id)
+        : false;
+      const voted = userVotedInVotes1 || userVotedInVotes2;
+
+      if (voted) throw error(400, "Already voted");
+
       const userVote = await locals.pb
         .collection("userVote")
         .create({ user: user.id, match: matchId });
@@ -311,10 +323,13 @@ export const actions: Actions = {
               userVotes2: [...match.userVotes2, userVote.id],
             }
       );
-
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(serializeNonPOJOs(err));
+      return {
+        action: "vote",
+        data: {},
+        errors: handleError(err, "vote"),
+      };
     }
   },
 };

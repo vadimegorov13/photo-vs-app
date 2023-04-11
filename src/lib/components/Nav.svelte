@@ -15,8 +15,8 @@
   <div class="flex-none">
     {#if !user}
       <div>
-        <a href="/login" class="btn btn-outline rounded-sm ">Login</a>
-        <a href="/register" class="btn btn-primary rounded-sm ">Register</a>
+        <a href="/login" class="btn btn-outline rounded-sm">Login</a>
+        <a href="/register" class="btn btn-primary rounded-sm">Register</a>
       </div>
     {:else}
       <div class="dropdown dropdown-end">

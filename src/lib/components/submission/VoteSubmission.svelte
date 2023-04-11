@@ -8,6 +8,7 @@
   export let votes: string[];
   export let imageUrls: string;
   export let matchId: string;
+  export let voted: boolean;
 
   let loading: boolean = false;
 
@@ -55,7 +56,7 @@
       disabled={loading}
     />
     <div class=" mt-4">
-      <button class="btn btn-primary w-full rounded-sm">Vote</button>
+      <button class="btn btn-primary w-full rounded-sm {voted ? 'btn-disabled' : ''}">Vote</button>
     </div>
   </form>
 </div>

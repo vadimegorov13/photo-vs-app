@@ -42,9 +42,7 @@
       {/if}
     </div>
   </div>
-  <div class="w-full grow">
-
-  </div>
+  <div class="w-full grow" />
 
   <div class="divider m-0" />
   <ActionButtons {tournament} {userTournament} showPhotos={showPhotosButton} />

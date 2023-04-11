@@ -15,17 +15,15 @@
   const subscribeToRecord = async () => {
     try {
       // Subscribe to realtime updates
-      unsubscribe = await client
-        .collection(collectionName)
-        .subscribe(id, async ({ action }) => {
-          if (action === "update") {
-            const result = await client
-              .collection(relationName ? relationName : collectionName)
-              .getOne(relationId ? relationId : id, { expand });
-            onUpdate(serializeNonPOJOs(result));
-          }
-        });
-      
+      unsubscribe = await client.collection(collectionName).subscribe(id, async ({ action }) => {
+        if (action === "update") {
+          const result = await client
+            .collection(relationName ? relationName : collectionName)
+            .getOne(relationId ? relationId : id, { expand });
+          onUpdate(serializeNonPOJOs(result));
+        }
+      });
+
       // Fetch the record
     } catch (error) {
       console.log(error);
