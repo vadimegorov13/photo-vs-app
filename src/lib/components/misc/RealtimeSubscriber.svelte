@@ -18,7 +18,6 @@
       unsubscribe = await client
         .collection(collectionName)
         .subscribe(id, async ({ action }) => {
-          console.log(collectionName, id, action)
           if (action === "update") {
             const result = await client
               .collection(relationName ? relationName : collectionName)
@@ -27,7 +26,6 @@
           }
         });
       
-        console.log(collectionName, id)
       // Fetch the record
     } catch (error) {
       console.log(error);

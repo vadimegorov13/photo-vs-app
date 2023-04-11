@@ -32,18 +32,6 @@
       onUpdate={handleUpdate}
     />
 
-    <RealtimeSubscriber
-      collectionName="match"
-      id={data.props.tournament.expand.state.expand.rounds[0].expand.matches[0].id}
-      relationName="tournament"
-      relationId={data.props.tournament.id}
-      expand="registeredUsers, registeredUsers.user, \
-  state, settings, host, registeredUsers.submissions, \
-  state.rounds, state.rounds.matches, state.rounds.matches, \
-  state.rounds.matches.submission1, state.rounds.matches.submission2"
-      onUpdate={handleUpdate}
-    />
-
     {#each data.props.tournament.registeredUsers as userTournament}
       <RealtimeSubscriber
         collectionName="userTournament"

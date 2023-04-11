@@ -2,9 +2,8 @@
   import { getImageUrl } from "$lib/helpers";
   import { client } from "$lib/pocketbase";
   import type { Tournament } from "$lib/types";
+  import { RealtimeSubscriber, ValidatedInput, VoteSubmission } from "$lib/components";
   import { onDestroy, onMount } from "svelte";
-  import { RealtimeSubscriber } from "..";
-  import VoteSubmission from "../submission/VoteSubmission.svelte";
 
   export let tournament: Tournament;
 
@@ -25,36 +24,17 @@
   ];
 
   const handleUpdate = (updatedData: any) => {
-    console.log("match updated")
     tournament = updatedData;
+    currentRound = updatedData.expand.state.expand.rounds[0];
+    currentMatch = currentRound.expand.matches[0];
+    votes1 = currentMatch.userVotes1;
+    votes2 = currentMatch.userVotes2;
+
+    console.log(submission2)
   };
-
-
-  let unsubscribe: () => void;
-
-  const subscribeToRecord = async () => {
-    try {
-      // Subscribe to realtime updates
-      unsubscribe = await client
-        .collection("match")
-        .subscribe("9qzcba2jpd68kax", async ({ action }) => {
-          console.log(action)
-        });
-      // Fetch the record
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  onMount(subscribeToRecord);
-
-  // Unsubscribe from realtime updates
-  onDestroy(() => {
-    unsubscribe?.();
-  });
 </script>
 
-<!-- <RealtimeSubscriber
+<RealtimeSubscriber
   collectionName="match"
   id={currentMatch.id}
   relationName="tournament"
@@ -64,7 +44,7 @@
   state.rounds, state.rounds.matches, state.rounds.matches, \
   state.rounds.matches.submission1, state.rounds.matches.submission2"
   onUpdate={handleUpdate}
-/> -->
+/>
 
 <div class="bg-white p-6">
   <h1 class="text-4xl text-center text-primary font-semibold mb-4">
@@ -83,15 +63,30 @@
 <div class="flex flex-col md:flex-row justify-center items-center space-x-0 md:space-x-10">
   <VoteSubmission
     submission={submission1}
-    votes={tournament.expand.state.expand.rounds[0].expand.matches[0].userVotes1}
+    votes={votes1}
     imageUrls={imageUrls[0]}
     matchId={currentMatch.id}
   />
   <p class="text-center text-3xl text-primary m-6">VS</p>
   <VoteSubmission
     submission={submission2}
-    votes={tournament.expand.state.expand.rounds[0].expand.matches[0].userVotes2}
+    votes={votes2}
     imageUrls={imageUrls[1]}
     matchId={currentMatch.id}
   />
+</div>
+
+<div>
+  <!-- <form method="POST" class="flex flex-col items-center" action="?/vote" use:enhance={vote}>
+    <ValidatedInput
+      id="submissionId"
+      value={submission.id}
+      label="submission-{submission.id}"
+      hidden
+      disabled={loading}
+    />
+    <div class=" mt-4">
+      <button class="btn btn-primary w-full rounded-sm">Vote</button>
+    </div>
+  </form> -->
 </div>
