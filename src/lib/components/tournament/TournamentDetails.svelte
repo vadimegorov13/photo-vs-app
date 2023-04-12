@@ -11,15 +11,15 @@
   <h1 class="text-3xl font-semibold prevent-overflow md:max-w-[22rem] lg:max-w-[30rem]">
     {tournament.title}
   </h1>
-  {#if tournament.expand.state.tournamentState === "NOT_STARTED"}
+  {#if tournament.expand.state.state === "NOT_STARTED"}
     {#if tournament.expand.registeredUsers.every((userTournament) => userTournament.ready) && tournament.registeredUsers.length > 1}
       <p class="badge badge-success my-auto">ready to start</p>
     {:else}
       <p class="badge badge-warning my-auto">waiting for players</p>
     {/if}
-  {:else if tournament.expand.state.tournamentState === "FINISHED"}
+  {:else if tournament.expand.state.state === "FINISHED"}
     <p class="badge my-auto">finished</p>
-  {:else if tournament.expand.state.tournamentState === "IN_PROGRESS"}
+  {:else if tournament.expand.state.state === "IN_PROGRESS"}
     <p class="badge badge-success my-auto">in progress</p>
   {/if}
   <div class="divider m-0" />

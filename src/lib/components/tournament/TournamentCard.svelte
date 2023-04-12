@@ -4,7 +4,7 @@
   export let tournament: Tournament;
   export let userTournament: UserTournament | undefined;
 
-  let state = tournament.expand.state.tournamentState;
+  let state = tournament.expand.state.state;
   let ready = tournament.expand.registeredUsers.every((userTournament) => userTournament.ready);
 </script>
 

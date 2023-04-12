@@ -31,13 +31,13 @@
   </button>
 
   <div
-    class="divider divider-horizontal mx-auto {tournament.expand.state.tournamentState ===
+    class="divider divider-horizontal mx-auto {tournament.expand.state.state ===
     'IN_PROGRESS'
       ? 'hidden'
       : ''}"
   />
 
-  {#if userTournament && tournament.expand.state.tournamentState === "NOT_STARTED"}
+  {#if userTournament && tournament.expand.state.state === "NOT_STARTED"}
     <div class="mx-auto">
       <div class="flex flex-row">
         {#if !userTournament.ready}
@@ -131,7 +131,7 @@
     <div class="divider divider-horizontal mx-auto" />
   {/if}
 
-  {#if userTournament && (tournament.expand.state.tournamentState === "NOT_STARTED" || tournament.expand.state.tournamentState === "FINISHED")}
+  {#if userTournament && (tournament.expand.state.state === "NOT_STARTED" || tournament.expand.state.state === "FINISHED")}
     {#if tournament.host === userTournament.user}
       <DeleteTournament id={tournament.id} />
     {:else}
@@ -142,7 +142,7 @@
         action="/tournament/{tournament.id}?/leave"
       />
     {/if}
-  {:else if tournament.expand.state.tournamentState === "NOT_STARTED"}
+  {:else if tournament.expand.state.state === "NOT_STARTED"}
     <form method="POST" action="/tournament/{tournament.id}?/join">
       <input type="text" name="id" class="input" value={tournament.id} hidden />
       <button class="btn btn-ghost rounded-sm text-xs lowercase px-2 w-12">

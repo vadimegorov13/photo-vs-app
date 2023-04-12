@@ -19,7 +19,7 @@
           <Icon class="w-8 ml-2" src={UserGroup} />
         </span>
       </div>
-      {#if tournament.expand.state.tournamentState === "NOT_STARTED"}
+      {#if tournament.expand.state.state === "NOT_STARTED"}
         <p
           class="text-xs text-center {tournament.expand.registeredUsers.filter(
             (userTournament) => userTournament.ready
@@ -37,7 +37,7 @@
         {#if id !== 0}
           <div class="divider my-0" />
         {/if}
-        <UserCard {userTournament} state={tournament.expand.state.tournamentState} />
+        <UserCard {userTournament} state={tournament.expand.state.state} />
       {/each}
     </div>
   </div>
@@ -64,7 +64,7 @@
             <SubmissionCard
               {userTournament}
               {submission}
-              state={tournament.expand.state.tournamentState}
+              state={tournament.expand.state.state}
             />
           {/each}
         </div>

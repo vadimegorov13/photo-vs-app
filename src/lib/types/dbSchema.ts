@@ -29,10 +29,8 @@ export type TournamentState = BaseFields & {
   tournament: string;
   rounds: string[];
   currentRound: string;
-  tournamentState: string;
-  matchState: string;
-  roundState: string;
-
+  state: string;
+  
   expand: {
     tournament: Tournament;
     rounds: Round[];
@@ -71,6 +69,7 @@ export type Round = BaseFields & {
   nextRound: string;
   matches: string[];
   currentMatch: string;
+  state: string;
 
   expand: {
     tournament: Tournament;
@@ -88,6 +87,7 @@ export type Match = BaseFields & {
   winner: string;
   userVotes1: string[];
   userVotes2: string[];
+  state: string;
 
   expand: {
     round: Round;
