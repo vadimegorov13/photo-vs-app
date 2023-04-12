@@ -1,12 +1,17 @@
 import type { Match, PocketBaseClient, Round, Tournament, User } from "$lib/types";
 import { serializeNonPOJOs } from "./helpers";
 
-const createUserTournament = async (pb: PocketBaseClient, userId: string, tournamentId: string) => {
+const createUserTournament = async (
+  pb: PocketBaseClient,
+  userId: string,
+  tournamentId: string,
+  host = false
+) => {
   const userTournamentData = {
     user: userId,
     tournament: tournamentId,
     submissions: [],
-    ready: false,
+    ready: host,
   };
   return pb.collection("userTournament").create(userTournamentData);
 };
@@ -37,9 +42,10 @@ export const registerUserForTournament = async (
   pb: PocketBaseClient,
   user: User,
   tournamentId: string,
-  registeredUsers: string[]
+  registeredUsers: string[],
+  host = false
 ) => {
-  const userTournament = await createUserTournament(pb, user.id, tournamentId);
+  const userTournament = await createUserTournament(pb, user.id, tournamentId, host);
 
   await updateTournamentRegisteredUsers(pb, tournamentId, registeredUsers, userTournament.id);
 
@@ -313,11 +319,10 @@ export const generateBracket = async (
   return [generatedMatches, updatedRounds];
 };
 
-
 export const getNextNotStartedMatch = (currentMatch: Match, matches: Match[]) => {
   // Find the index of the current match
-  const currentIndex = matches.findIndex(match => match.id === currentMatch.id);
-  
+  const currentIndex = matches.findIndex((match) => match.id === currentMatch.id);
+
   // Iterate over the matches array starting from the current match index
   for (let i = currentIndex; i < matches.length; i++) {
     // Check if the match has a "NOT_STARTED" state
@@ -326,7 +331,7 @@ export const getNextNotStartedMatch = (currentMatch: Match, matches: Match[]) =>
       return matches[i].id;
     }
   }
-  
+
   // If no match with a "NOT_STARTED" state is found, return null
   return null;
-}
+};

@@ -56,7 +56,12 @@
       disabled={loading}
     />
     <div class=" mt-4">
-      <button class="btn btn-primary w-full rounded-sm {voted ? 'btn-disabled' : ''}">Vote</button>
+      <button
+        class="btn btn-primary w-full rounded-sm {voted ? 'btn-disabled' : ''}"
+        disabled={loading}
+      >
+        Vote
+      </button>
     </div>
   </form>
 </div>

@@ -56,15 +56,7 @@ export const actions: Actions = {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err?.response?.code) {
-        const errors = { message: ["Something went wrong"] };
-
-        return {
-          action: "tournament",
-          success: false,
-          errors,
-        };
-      }
+      console.log(serializeNonPOJOs(err));
     }
     throw redirect(303, `/tournament/list`);
   },
@@ -82,15 +74,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err?.response?.code) {
-        const errors = { message: ["Something went wrong"] };
-
-        return {
-          action: "tournament",
-          success: false,
-          errors,
-        };
-      }
+      console.log(serializeNonPOJOs(err));
     }
   },
   start: async ({ locals, request }) => {
@@ -134,11 +118,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      return {
-        action: "tournament",
-        success: false,
-        errors: handleError(err, "start"),
-      };
+      console.log(serializeNonPOJOs(err));
     }
   },
   ready: async ({ locals, request }) => {
@@ -149,7 +129,7 @@ export const actions: Actions = {
       const userTournament = await locals.pb.collection("userTournament").getOne(userTournamentId);
 
       if (userTournament.submissions.length === 0) {
-        throw error(400, "No submissions");
+        throw error(400, "Please make at least one submission");
       }
       await locals.pb.collection("userTournament").update(userTournamentId, { ready: true });
 
@@ -160,17 +140,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      let errors = { message: "" };
-
-      if (err?.status === 400) {
-        errors = { message: "Please make at least one submission" };
-      }
-
-      return {
-        action: "tournament",
-        success: false,
-        errors,
-      };
+      console.log(serializeNonPOJOs(err));
     }
   },
   unready: async ({ locals, request }) => {
@@ -187,15 +157,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err?.response?.code) {
-        const errors = { message: ["Something went wrong"] };
-
-        return {
-          action: "tournament",
-          success: false,
-          errors,
-        };
-      }
+      console.log(serializeNonPOJOs(err));
     }
   },
   join: async ({ locals, request }) => {
@@ -221,11 +183,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      return {
-        action: "tournament",
-        success: false,
-        error: handleError(err, "join"),
-      };
+      console.log(serializeNonPOJOs(err));
     }
   },
   deleteSubmission: async ({ locals, request }) => {
@@ -233,9 +191,15 @@ export const actions: Actions = {
     const id = data.get("id") as string;
     const userTournamentId = data.get("userTournamentId") as string;
     const numberOfSubmissions = parseInt(data.get("numberOfSubmissions") as string);
+    const tournamentId = data.get("tournamentId") as string;
+    const userId = locals.user?.id;
 
     try {
-      if (numberOfSubmissions === 1) {
+      const tournament: Tournament = serializeNonPOJOs(
+        await locals.pb.collection("tournament").getOne(tournamentId)
+      );
+
+      if (numberOfSubmissions === 1 && tournament.host !== userId) {
         await locals.pb.collection("userTournament").update(userTournamentId, { ready: false });
       }
 
@@ -247,15 +211,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      if (err?.response?.code) {
-        const errors = { message: ["Something went wrong"] };
-
-        return {
-          action: "submission",
-          success: false,
-          errors,
-        };
-      }
+      console.log(serializeNonPOJOs(err));
     }
   },
   editSubmission: async ({ locals, request }) => {
@@ -263,18 +219,11 @@ export const actions: Actions = {
     const id = data.get("id") as string;
     const title = data.get("title") as string;
     const description = data.get("description") as string;
-    const image = data.get("image") as File;
 
     try {
       const submissionData = new FormData();
       submissionData.append("title", title);
       submissionData.append("description", description);
-
-      if (image.size !== 0) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        submissionData.append("image", data.get("image") as any);
-      }
-
       submissionSchema.parse(Object.fromEntries(data));
 
       await locals.pb.collection("submission").update(id, submissionData);
@@ -286,11 +235,7 @@ export const actions: Actions = {
       };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      return {
-        action: "submission",
-        data: { title, description },
-        errors: handleError(err, "edit"),
-      };
+      console.log(serializeNonPOJOs(err));
     }
   },
   vote: async ({ locals, request }) => {
@@ -306,7 +251,7 @@ export const actions: Actions = {
       const match: Match = await locals.pb
         .collection("match")
         .getOne(matchId, { expand: "userVotes1,userVotes2" });
-        
+
       const voted =
         (match?.expand.userVotes1?.some((vote: UserVote) => vote.user === user.id) ?? false) ||
         (match?.expand.userVotes2?.some((vote: UserVote) => vote.user === user.id) ?? false);
@@ -329,12 +274,7 @@ export const actions: Actions = {
       );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.log(err);
-      return {
-        action: "vote",
-        data: {},
-        errors: handleError(err, "vote"),
-      };
+      console.log(serializeNonPOJOs(err));
     }
   },
   finilizeMatch: async ({ locals, request }) => {

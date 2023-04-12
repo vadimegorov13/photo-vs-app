@@ -56,7 +56,7 @@ export const actions: Actions = {
         .collection("tournamentState")
         .update(tournamentState.id, { tournament: tournament.id });
 
-      await registerUserForTournament(locals.pb, user, tournament.id, tournament.registeredUsers);
+      await registerUserForTournament(locals.pb, user, tournament.id, tournament.registeredUsers, true);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const { title, description } = data;

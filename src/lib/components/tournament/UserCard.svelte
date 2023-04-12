@@ -4,6 +4,7 @@
 
   export let userTournament: UserTournament;
   export let state: string;
+  export let host: boolean;
 
   let user: User = userTournament.expand.user;
 </script>
@@ -30,7 +31,9 @@
         {userTournament.submissions.length === 1 ? "photo" : "photos"}
       </p>
       {#if state === "NOT_STARTED"}
-        {#if userTournament.ready}
+        {#if host}
+          <span class="badge badge-success text-sm">Host</span>
+        {:else if userTournament.ready}
           <span class="badge badge-success text-sm">Ready</span>
         {:else}
           <span class="badge badge-error">Not Ready</span>

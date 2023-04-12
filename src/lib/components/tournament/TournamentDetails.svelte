@@ -4,7 +4,6 @@
 
   export let tournament: Tournament;
   export let userTournament: UserTournament | undefined;
-  export let showPhotosButton: boolean = false;
 </script>
 
 <div class="flex flex-col rounded-sm shadow-lg p-4 border-t-8 border-primary w-full space-y-2">
@@ -45,7 +44,7 @@
   <div class="w-full grow" />
 
   <div class="divider m-0" />
-  <ActionButtons {tournament} {userTournament} showPhotos={showPhotosButton} />
+  <ActionButtons {tournament} {userTournament} />
 </div>
 
 <style>

@@ -137,12 +137,10 @@ export const joinSchema = z.object({
 export const submissionSchema = z.object({
   title: z
     .string({ required_error: "Title is required" })
-    .min(3, { message: "Title must be at least 3 characters long" })
-    .max(64, { message: "Title must be less than 64 characters" })
+    .min(1, { message: "Title must be at least 1 characters long" })
     .trim(),
   description: z
     .string({ required_error: "Description is required" })
-    .min(3, { message: "Description must be at least 3 characters long" })
-    .max(256, { message: "Description must be less than 256 characters" })
+    .min(1, { message: "Description must be at least 1 characters long" })
     .trim(),
 });

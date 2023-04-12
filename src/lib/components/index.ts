@@ -8,13 +8,14 @@ import ValidatedInput from "$lib/components/misc/ValidatedInput.svelte";
 import DeleteSubmission from "$lib/components/submission/DeleteSubmission.svelte";
 import EditSubmission from "$lib/components/submission/EditSubmission.svelte";
 import SubmissionCard from "$lib/components/submission/SubmissionCard.svelte";
+import VoteSubmission from "$lib/components/submission/VoteSubmission.svelte";
 import ActionButtons from "$lib/components/tournament/ActionButtons.svelte";
 import DeleteTournament from "$lib/components/tournament/DeleteTournament.svelte";
+import ParticipantsDetails from "$lib/components/tournament/ParticipantsDetails.svelte";
 import Preview from "$lib/components/tournament/Preview.svelte";
 import TournamentCard from "$lib/components/tournament/TournamentCard.svelte";
 import TournamentDetails from "$lib/components/tournament/TournamentDetails.svelte";
 import UserCard from "$lib/components/tournament/UserCard.svelte";
-import VoteSubmission from "./submission/VoteSubmission.svelte";
 
 export {
   ActionButtons,
@@ -26,6 +27,7 @@ export {
   Footer,
   Modal,
   Nav,
+  ParticipantsDetails,
   Preview,
   RealtimeSubscriber,
   SubmissionCard,
