@@ -1,5 +1,10 @@
-import { generateBracket, registerUserForTournament, serializeNonPOJOs } from "$lib/helpers";
-import type { Match, Tournament, UserTournament, UserVote } from "$lib/types";
+import {
+  generateBracket,
+  getNextNotStartedMatch,
+  registerUserForTournament,
+  serializeNonPOJOs,
+} from "$lib/helpers";
+import type { Match, Round, Tournament, UserTournament, UserVote } from "$lib/types";
 import { handleError, submissionSchema, validateTournamentEntry } from "$lib/validation";
 import { error, redirect, type Actions, type ServerLoad } from "@sveltejs/kit";
 
@@ -116,7 +121,7 @@ export const actions: Actions = {
       const [bracket, rounds] = await generateBracket(locals.pb, tournament);
 
       await locals.pb.collection("tournamentState").update(tournament.expand.state.id, {
-        tournamentState: "IN_PROGRESS",
+        state: "IN_PROGRESS",
         rounds: rounds.map((r) => r.id),
         currentRound: rounds[0].id,
         bracket,
@@ -296,16 +301,15 @@ export const actions: Actions = {
 
     try {
       if (!user) throw error(401, "Unauthorized");
+      if (!submissionId) throw error(400, "No submission id");
 
-      const match: Match = await locals.pb.collection("match").getOne(matchId);
-
-      const userVotedInVotes1 = match.expand.userVotes1
-        ? match.expand.userVotes1.some((vote: UserVote) => vote.user === user.id)
-        : false;
-      const userVotedInVotes2 = match.expand.userVotes2
-        ? match.expand.userVotes2.some((vote: UserVote) => vote.user === user.id)
-        : false;
-      const voted = userVotedInVotes1 || userVotedInVotes2;
+      const match: Match = await locals.pb
+        .collection("match")
+        .getOne(matchId, { expand: "userVotes1,userVotes2" });
+        
+      const voted =
+        (match?.expand.userVotes1?.some((vote: UserVote) => vote.user === user.id) ?? false) ||
+        (match?.expand.userVotes2?.some((vote: UserVote) => vote.user === user.id) ?? false);
 
       if (voted) throw error(400, "Already voted");
 
@@ -325,11 +329,109 @@ export const actions: Actions = {
       );
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
+      console.log(err);
       return {
         action: "vote",
         data: {},
         errors: handleError(err, "vote"),
       };
+    }
+  },
+  finilizeMatch: async ({ locals, request }) => {
+    const data = await request.formData();
+    const tournamentId = data.get("tournamentId") as string;
+    const user = locals.user;
+
+    const expand =
+      "state, state.rounds, state.rounds.matches, state.rounds.matches, \
+        state.rounds.matches.submission1, state.rounds.matches.submission2, \
+        state.rounds.matches.userVotes1, state.rounds.matches.userVotes2";
+
+    try {
+      // get tournament data
+      const tournament: Tournament = serializeNonPOJOs(
+        await locals.pb.collection("tournament").getOne(tournamentId, { expand })
+      );
+      if (!user || user.id !== tournament.host) throw error(401, "Unauthorized");
+
+      const currentRound = tournament.expand.state.expand.rounds.find(
+        (round: Round) => round.id === tournament.expand.state.currentRound
+      );
+      if (!currentRound) throw error(400, "Round not found");
+
+      const currentMatch = currentRound.expand.matches.find(
+        (match: Match) => match.id === currentRound.currentMatch
+      );
+      if (!currentMatch) throw error(400, "Match not found");
+
+      // pick a winner
+      let winner = null;
+      if (currentMatch.userVotes1.length === currentMatch.userVotes2.length) {
+        const randomWinner = Math.floor(Math.random() * 2) + 1;
+        winner = randomWinner === 1 ? currentMatch.submission1 : currentMatch.submission2;
+      } else {
+        winner =
+          currentMatch.userVotes1.length > currentMatch.userVotes2.length
+            ? currentMatch.submission1
+            : currentMatch.submission2;
+      }
+
+      const nextRound = tournament.expand.state.expand.rounds.find(
+        (round: Round) => round.id === currentRound.nextRound
+      );
+
+      // check if next round exists
+      if (nextRound) {
+        const nextSubmissionMatch = nextRound.expand.matches.find(
+          (match: Match) => match.id === currentMatch.nextMatch
+        );
+
+        // save winner to its next match
+        if (nextSubmissionMatch) {
+          await locals.pb
+            .collection("match")
+            .update(
+              currentMatch.nextMatch,
+              !nextSubmissionMatch.submission1 ? { submission1: winner } : { submission2: winner }
+            );
+        }
+      }
+
+      // update state of the current match
+      await locals.pb.collection("match").update(currentMatch.id, { winner, state: "FINISHED" });
+
+      // get next match
+      const nextMatch = getNextNotStartedMatch(currentMatch, currentRound.expand.matches);
+
+      // change currentMatch in round, or change currentRound in tournamentState
+      if (nextMatch) {
+        await locals.pb.collection("match").update(nextMatch, { state: "IN_PROGRESS" });
+        await locals.pb.collection("round").update(currentMatch.round, {
+          currentMatch: nextMatch,
+        });
+      } else {
+        // update state of the current round
+        await locals.pb.collection("round").update(currentMatch.round, {
+          state: "FINISHED",
+        });
+
+        // check if there is a next round
+        if (currentRound.nextRound) {
+          // update state of the next round
+          await locals.pb.collection("round").update(currentRound.nextRound, {
+            state: "IN_PROGRESS",
+          });
+
+          // update currentRound in tournamentState
+          await locals.pb.collection("tournamentState").update(tournament.state, {
+            currentRound: currentRound.nextRound,
+          });
+        }
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.log(serializeNonPOJOs(err));
     }
   },
 };

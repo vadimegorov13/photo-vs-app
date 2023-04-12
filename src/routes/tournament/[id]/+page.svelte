@@ -43,7 +43,7 @@
         onUpdate={handleUpdate}
       />
     {/each}
-    {#if data.props.tournament.expand.state.tournamentState === "IN_PROGRESS" && data.props.userTournament}
+    {#if data.props.tournament.expand.state.state === "IN_PROGRESS" && data.props.userTournament}
       <OngoingTournament
         tournament={data.props.tournament}
         userTournament={data.props.userTournament}

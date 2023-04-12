@@ -260,20 +260,29 @@ export const generateBracket = async (
     // Create round
     const roundResult = await pb.collection("round").create({
       tournament: tournament.id,
+      state: round === 1 ? "IN_PROGRESS" : "NOT_STARTED",
     });
 
     // Create matches
     for (let i = 0; i < generatedMatches.length; i++) {
       if (generatedMatches[i].round === round) {
         // Get submissions for the match
-        const submission1 = submissions.length !== 0 ? submissions.pop()?.id : "";
-        const submission2 = submissions.length !== 0 ? submissions.pop()?.id : "";
+
+        const submission1 =
+          submissions.length !== 0 && typeof generatedMatches[i].left !== "number"
+            ? submissions.pop()?.id
+            : "";
+        const submission2 =
+          submissions.length !== 0 && typeof generatedMatches[i].right !== "number"
+            ? submissions.pop()?.id
+            : "";
 
         // Create match
         const matchResult = await pb.collection("match").create({
           round: roundResult.id,
           submission1: submission1,
           submission2: submission2,
+          state: i === 0 ? "IN_PROGRESS" : "NOT_STARTED",
         });
 
         // Get ids of the matches in the round
@@ -303,3 +312,21 @@ export const generateBracket = async (
 
   return [generatedMatches, updatedRounds];
 };
+
+
+export const getNextNotStartedMatch = (currentMatch: Match, matches: Match[]) => {
+  // Find the index of the current match
+  const currentIndex = matches.findIndex(match => match.id === currentMatch.id);
+  
+  // Iterate over the matches array starting from the current match index
+  for (let i = currentIndex; i < matches.length; i++) {
+    // Check if the match has a "NOT_STARTED" state
+    if (matches[i].state === "NOT_STARTED") {
+      // Return the first match with a "NOT_STARTED" state
+      return matches[i].id;
+    }
+  }
+  
+  // If no match with a "NOT_STARTED" state is found, return null
+  return null;
+}
