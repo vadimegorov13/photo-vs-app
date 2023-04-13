@@ -33,7 +33,7 @@ export type TournamentState = BaseFields & {
   round: number;
   match: number;
   votes: number;
-  
+
   expand: {
     tournament: Tournament;
     rounds: Round[];

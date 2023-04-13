@@ -14,19 +14,19 @@
     </span>
   </div>
   {#if tournament.expand.state.state === "NOT_STARTED"}
-  <div class="flex place-content-center mt-2">
-    <p
-      class="text-xs text-center badge {tournament.expand.registeredUsers.filter(
-        (userTournament) => userTournament.ready
-      ).length === tournament.expand.registeredUsers.length &&
-      tournament.expand.registeredUsers.length > 1
-        ? 'badge-success'
-        : 'badge-warning'}"
-    >
-      {tournament.expand.registeredUsers.filter((userTournament) => userTournament.ready).length} out
-      of {tournament.expand.registeredUsers.length} are ready
-    </p>
-</div>
+    <div class="flex place-content-center mt-2">
+      <p
+        class="text-xs text-center badge {tournament.expand.registeredUsers.filter(
+          (userTournament) => userTournament.ready
+        ).length === tournament.expand.registeredUsers.length &&
+        tournament.expand.registeredUsers.length > 1
+          ? 'badge-success'
+          : 'badge-warning'}"
+      >
+        {tournament.expand.registeredUsers.filter((userTournament) => userTournament.ready).length} out
+        of {tournament.expand.registeredUsers.length} are ready
+      </p>
+    </div>
   {/if}
   <div class="divider mt-2 mb-0" />
   {#each tournament.expand.registeredUsers as userTournament, id}

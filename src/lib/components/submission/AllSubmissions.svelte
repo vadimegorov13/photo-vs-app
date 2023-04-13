@@ -33,8 +33,6 @@
     submissions.splice(submissions.indexOf(winnerSubmission), 1);
     submissions.unshift(winnerSubmission);
   }
-
-  console.log(submissions);
 </script>
 
 <div class="flex place-content-center">
