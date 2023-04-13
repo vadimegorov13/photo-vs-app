@@ -22,7 +22,8 @@ export const load: ServerLoad = async ({ locals, params }) => {
         state, settings, host, registeredUsers.submissions, \
         state.rounds, state.rounds.matches, state.rounds.matches, \
         state.rounds.matches.submission1, state.rounds.matches.submission2, \
-        state.rounds.matches.userVotes1, state.rounds.matches.userVotes2",
+        state.rounds.matches.userVotes1, state.rounds.matches.userVotes2, \
+        state.currentRound.currentMatch",
     });
 
     const userTournament: UserTournament | undefined = serializeNonPOJOs(

@@ -5,6 +5,7 @@ import CopyClipBoard from "$lib/components/misc/CopyClipBoard.svelte";
 import Modal from "$lib/components/misc/Modal.svelte";
 import RealtimeSubscriber from "$lib/components/misc/RealtimeSubscriber.svelte";
 import ValidatedInput from "$lib/components/misc/ValidatedInput.svelte";
+import AllSubmissions from "$lib/components/submission/AllSubmissions.svelte";
 import DeleteSubmission from "$lib/components/submission/DeleteSubmission.svelte";
 import EditSubmission from "$lib/components/submission/EditSubmission.svelte";
 import SubmissionCard from "$lib/components/submission/SubmissionCard.svelte";
@@ -20,6 +21,7 @@ import UserCard from "$lib/components/tournament/UserCard.svelte";
 export {
   ActionButtons,
   Alert,
+  AllSubmissions,
   CopyClipBoard,
   DeleteSubmission,
   DeleteTournament,

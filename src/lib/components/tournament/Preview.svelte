@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Alert, SubmissionCard, TournamentDetails, ParticipantsDetails } from "$lib/components";
+  import {
+    Alert,
+    AllSubmissions,
+    ParticipantsDetails,
+    SubmissionCard,
+    TournamentDetails,
+  } from "$lib/components";
   import type { Tournament, UserTournament } from "$lib/types";
   import { Folder, Icon } from "svelte-hero-icons";
 
@@ -18,24 +24,29 @@
 {#if userTournament}
   <div class="flex flex-col mt-4 mx-auto max-w-4xl">
     <div class="rounded-sm shadow-lg p-4 border-t-8 border-primary">
-      <div class="flex place-content-center">
-        <span class="text-xl pt-2">Your Submissions</span>
-        <span>
-          <Icon class="w-8 ml-2" src={Folder} />
-        </span>
-      </div>
-      <p class="text-center text-xs text-gray-500">
-        You've submitted
-        <slug>{userTournament.submissions.length}</slug>
-        {userTournament.submissions.length === 1 ? "photo" : "photos"}
-      </p>
-      {#if userTournament.expand.submissions}
-        <div class="divider my-2" />
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {#each userTournament.expand.submissions as submission}
-            <SubmissionCard {userTournament} {submission} state={tournament.expand.state.state} />
-          {/each}
+      {#if tournament.expand.state.state !== "FINISHED"}
+        <div class="flex place-content-center">
+          <span class="text-xl pt-2">Your Submissions</span>
+          <span>
+            <Icon class="w-8 ml-2" src={Folder} />
+          </span>
         </div>
+        <p class="text-center text-xs text-gray-500">
+          You've submitted
+          <slug>{userTournament.submissions.length}</slug>
+          {userTournament.submissions.length === 1 ? "photo" : "photos"}
+        </p>
+
+        {#if userTournament.expand.submissions}
+          <div class="divider my-2" />
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {#each userTournament.expand.submissions as submission}
+              <SubmissionCard {userTournament} {submission} state={tournament.expand.state.state} />
+            {/each}
+          </div>
+        {/if}
+      {:else}
+        <AllSubmissions {tournament} />
       {/if}
     </div>
   </div>

@@ -2,26 +2,33 @@
   import { DeleteSubmission, EditSubmission } from "$lib/components";
   import { getImageUrl } from "$lib/helpers";
   import type { Submission, UserTournament } from "$lib/types";
+  import { Icon, Trophy } from "svelte-hero-icons";
 
-  export let userTournament: UserTournament;
+  export let userTournament: UserTournament | null = null;
   export let submission: Submission;
   export let state: string;
+  export let winner: string | null = null;
 
   let imageUrl = getImageUrl(submission.collectionId, submission.id, submission.image);
 </script>
 
-<div class="border rounded-sm">
+<div class="border rounded-sm {winner === submission.id ? 'border-green-500' : ''}">
   <div class="flex flex-col">
     <div class="relative border-b">
       <div class="border-t border-l absolute -bottom-0 -right-0 bg-base-100 rounded-sm">
-        {#if state === "NOT_STARTED"}
+        {#if userTournament && state === "NOT_STARTED"}
           <EditSubmission {submission} />
           <DeleteSubmission submissionId={submission.id} {userTournament} />
         {/if}
-        {#if state === "FINISHED"}
-          <DeleteSubmission submissionId={submission.id} {userTournament} />
-        {/if}
       </div>
+
+      {#if winner === submission.id}
+        <div class="absolute -bottom-0 -right-0 rounded-sm">
+          <p class="text-xl text-success">
+            <Icon src={Trophy} class="w-10 h-10 mx-auto" />
+          </p>
+        </div>
+      {/if}
 
       <a href={imageUrl} target="_blank">
         <img
