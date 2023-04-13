@@ -5,14 +5,13 @@
   import type { Submission } from "$lib/types";
 
   export let submission: Submission;
-  export let votes: string[];
   export let imageUrls: string;
   export let matchId: string;
   export let voted: boolean;
 
   let loading: boolean = false;
 
-  const vote = () => {
+  const enhanceForm = () => {
     loading = true;
     return async ({ result }: any) => {
       switch (result.type) {
@@ -39,8 +38,7 @@
       class="border w-[40rem]"
     />
   </a>
-  <p>Votes: {votes ? votes.length : 0}</p>
-  <form method="POST" class="flex flex-col items-center" action="?/vote" use:enhance={vote}>
+  <form method="POST" class="flex flex-col items-center" action="?/vote" use:enhance={enhanceForm}>
     <ValidatedInput
       id="submissionId"
       value={submission.id}

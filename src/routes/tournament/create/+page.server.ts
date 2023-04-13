@@ -36,6 +36,9 @@ export const actions: Actions = {
 
       const tournamentState = await locals.pb.collection("tournamentState").create({
         state: "NOT_STARTED",
+        round: 0,
+        match: 0,
+        votes: 0,
       });
 
       const tournamentData = {

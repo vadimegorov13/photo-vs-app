@@ -109,6 +109,9 @@ export const actions: Actions = {
         rounds: rounds.map((r) => r.id),
         currentRound: rounds[0].id,
         bracket,
+        round: 1,
+        match: 1,
+        votes: 0,
       });
 
       return {
@@ -248,9 +251,9 @@ export const actions: Actions = {
       if (!user) throw error(401, "Unauthorized");
       if (!submissionId) throw error(400, "No submission id");
 
-      const match: Match = await locals.pb
-        .collection("match")
-        .getOne(matchId, { expand: "userVotes1,userVotes2" });
+      const match: Match = await locals.pb.collection("match").getOne(matchId, {
+        expand: "userVotes1, userVotes2, round, round.tournament, round.tournament.state",
+      });
 
       const voted =
         (match?.expand.userVotes1?.some((vote: UserVote) => vote.user === user.id) ?? false) ||
@@ -272,6 +275,12 @@ export const actions: Actions = {
               userVotes2: [...match.userVotes2, userVote.id],
             }
       );
+
+      await locals.pb
+        .collection("tournamentState")
+        .update(match.expand.round.expand.tournament.state, {
+          votes: match.expand.round.expand.tournament.expand.state.votes + 1,
+        });
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.log(serializeNonPOJOs(err));
@@ -316,11 +325,31 @@ export const actions: Actions = {
             : currentMatch.submission2;
       }
 
+      // MAIN LOGIC OF THE TOURNAMENT
+
+      // update state of the current match
+      await locals.pb.collection("match").update(currentMatch.id, { winner, state: "FINISHED" });
+
+      // update match counter in tournamentState
+      await locals.pb.collection("tournamentState").update(tournament.state, {
+        match: tournament.expand.state.match + 1,
+        votes: 0,
+      });
+
+      // get next match of the round
+      const nextMatch = getNextNotStartedMatch(currentMatch, currentRound.expand.matches);
+      if (nextMatch) {
+        // update state of the next match and set it as current match of the round
+        await locals.pb.collection("match").update(nextMatch, { state: "IN_PROGRESS" });
+        await locals.pb.collection("round").update(currentRound.id, {
+          currentMatch: nextMatch,
+        });
+      }
+
+      // get next round of the tournament to set the winner of the current match
       const nextRound = tournament.expand.state.expand.rounds.find(
         (round: Round) => round.id === currentRound.nextRound
       );
-
-      // check if next round exists
       if (nextRound) {
         const nextSubmissionMatch = nextRound.expand.matches.find(
           (match: Match) => match.id === currentMatch.nextMatch
@@ -337,38 +366,40 @@ export const actions: Actions = {
         }
       }
 
-      // update state of the current match
-      await locals.pb.collection("match").update(currentMatch.id, { winner, state: "FINISHED" });
-
-      // get next match
-      const nextMatch = getNextNotStartedMatch(currentMatch, currentRound.expand.matches);
-
-      // change currentMatch in round, or change currentRound in tournamentState
-      if (nextMatch) {
-        await locals.pb.collection("match").update(nextMatch, { state: "IN_PROGRESS" });
-        await locals.pb.collection("round").update(currentMatch.round, {
-          currentMatch: nextMatch,
-        });
-      } else {
+      // if the round is over and there is a next round
+      if (!nextMatch && nextRound) {
         // update state of the current round
-        await locals.pb.collection("round").update(currentMatch.round, {
+        await locals.pb.collection("round").update(currentRound.id, {
           state: "FINISHED",
         });
 
-        // check if there is a next round
-        if (currentRound.nextRound) {
-          // update state of the next round
-          await locals.pb.collection("round").update(currentRound.nextRound, {
-            state: "IN_PROGRESS",
-          });
+        // update state of the next round
+        await locals.pb.collection("round").update(nextRound.id, {
+          state: "IN_PROGRESS",
+        });
 
-          // update currentRound in tournamentState
-          await locals.pb.collection("tournamentState").update(tournament.state, {
-            currentRound: currentRound.nextRound,
-          });
-        }
+        // updte state of the next match
+        await locals.pb
+          .collection("match")
+          .update(nextRound.currentMatch, { state: "IN_PROGRESS" });
+
+        // update currentRound in tournamentState
+        await locals.pb.collection("tournamentState").update(tournament.state, {
+          currentRound: nextRound.id,
+          round: tournament.expand.state.round + 1,
+          votes: 0,
+        });
       }
 
+      if (!nextMatch && !nextRound) {
+        await locals.pb.collection("round").update(currentRound.id, {
+          state: "FINISHED",
+        });
+        // update state of the tournament
+        await locals.pb.collection("tournamentState").update(tournament.state, {
+          state: "FINISHED",
+        });
+      }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       console.log(serializeNonPOJOs(err));

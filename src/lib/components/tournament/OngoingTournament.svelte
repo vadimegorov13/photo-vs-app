@@ -20,6 +20,7 @@
   let currentMatch: Match | undefined = undefined;
   let submission1: Submission | null = null;
   let submission2: Submission | null = null;
+  let matchTotal: number = 0;
   let votes1: string[] = [];
   let votes2: string[] = [];
   let imageUrls: string[] = [];
@@ -34,6 +35,10 @@
     );
     submission1 = currentMatch?.expand.submission1 ?? null;
     submission2 = currentMatch?.expand.submission2 ?? null;
+    matchTotal = tournament.expand.state.expand.rounds.reduce(
+      (acc, round) => acc + round.expand.matches.length,
+      0
+    );
     votes1 = currentMatch?.userVotes1 ?? [];
     votes2 = currentMatch?.userVotes2 ?? [];
     imageUrls = [
@@ -77,47 +82,25 @@
   onUpdate={handleUpdate}
 />
 
-{#if currentMatch}
-  <RealtimeSubscriber
-    collectionName="match"
-    id={currentMatch.id}
-    relationName="tournament"
-    relationId={tournament.id}
-    {expand}
-    onUpdate={handleUpdate}
-  />
-{/if}
-
-{#if currentRound}
-  <RealtimeSubscriber
-    collectionName="round"
-    id={currentRound.id}
-    relationName="tournament"
-    relationId={tournament.id}
-    {expand}
-    onUpdate={handleUpdate}
-  />
-{/if}
-
 <div class="bg-white p-6">
   <h1 class="text-4xl text-center text-primary font-semibold mb-4">
     {tournament.title}
   </h1>
   <h2 class="text-2xl text-center text-gray-700 font-medium mb-2">
-    Round {tournament.expand.state.expand.rounds.findIndex(
-      (round) => round.id === currentRound?.id
-    ) + 1}/{tournament.expand.state.expand.rounds.length}
+    Round {tournament.expand.state.round}/{tournament.expand.state.expand.rounds.length}
   </h2>
-  <!-- <h2 class="text-xl text-center text-gray-600 font-medium">
-    Match {matchCount}/{matchTotal}
-  </h2> -->
+  <h2 class="text-xl text-center text-gray-600 font-medium">
+    Match {tournament.expand.state.match}/{matchTotal}
+  </h2>
+  <h2 class="text-xl text-center text-gray-600 font-medium">
+    Votes {tournament.expand.state.votes}/{tournament.registeredUsers.length}
+  </h2>
 </div>
 
 {#if currentMatch && submission1 && submission2}
   <div class="flex flex-col md:flex-row justify-center items-center space-x-0 md:space-x-10">
     <VoteSubmission
       submission={submission1}
-      votes={votes1}
       imageUrls={imageUrls[0]}
       matchId={currentMatch.id}
       {voted}
@@ -125,7 +108,6 @@
     <p class="text-center text-3xl text-primary m-6">VS</p>
     <VoteSubmission
       submission={submission2}
-      votes={votes2}
       imageUrls={imageUrls[1]}
       matchId={currentMatch.id}
       {voted}
