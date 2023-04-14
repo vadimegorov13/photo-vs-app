@@ -11,7 +11,7 @@ git clone https://github.com/vadimegorov13/photo-vs-app.git
 # 2. Install the dependencies:
 npm install
 
-# 3. Install and run [PocketBase](https://pocketbase.io) server
+# 3. Install and run PocketBase server
 ./pocketbase serve
 
 # 4. Create .env and provide PocketBase api
