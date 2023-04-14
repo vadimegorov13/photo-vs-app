@@ -27,7 +27,7 @@ npm run dev
 - [SvelteKit](https://kit.svelte.dev) - A JavaScript framework for building web apps
 - [Tailwind CSS](https://tailwindcss.com/) - A utility-based CSS library
 - [TypeScript](https://www.typescriptlang.org/) - A typed superset of JavaScript that compiles to plain JavaScript
-- [PocketBase] - Open Source backend for your next SaaS and Mobile app in 1 file
+- [PocketBase](https://pocketbase.io) - Open Source backend for your next SaaS and Mobile app in 1 file
 
 ## Author
 
