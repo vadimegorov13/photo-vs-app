@@ -24,16 +24,32 @@
   let submission1: Submission | null = null;
   let submission2: Submission | null = null;
   let matchTotal: number = 0;
-  let votes1: string[] = [];
-  let votes2: string[] = [];
   let imageUrls: string[] = [];
   let voted: string | null = null;
 
   let showWinner: boolean = false;
   let lastMatch: boolean = false;
+  let loading = false;
+
+  let votingTime = 10;
+  let intervalId: any;
+  let buttonDisabled = false;
+
+  const startTimer = () => {
+    buttonDisabled = true;
+    intervalId = setInterval(() => {
+      votingTime--;
+      if (votingTime === 0) {
+        clearInterval(intervalId);
+        buttonDisabled = false;
+        votingTime = 10;
+      }
+    }, 1000);
+  };
 
   const handleWinner = () => {
     showWinner = true;
+    votingTime += 3;
 
     setTimeout(() => {
       showWinner = false;
@@ -57,8 +73,6 @@
       (acc, round) => acc + round.expand.matches.length,
       0
     );
-    votes1 = currentMatch?.userVotes1 ?? [];
-    votes2 = currentMatch?.userVotes2 ?? [];
     imageUrls = [
       submission1 ? getImageUrl(submission1.collectionId, submission1.id, submission1.image) : "",
       submission2 ? getImageUrl(submission2.collectionId, submission2.id, submission2.image) : "",
@@ -93,12 +107,14 @@
       handleWinner();
     }
 
+    if (tournament.host === userTournament.user && voted === null) {
+      startTimer();
+    }
+
     if (lastMatch) {
       showWinner = true;
     }
   };
-
-  updateTournamentData();
 
   const handleUpdate = (updatedData: any) => {
     tournament = updatedData;
@@ -109,8 +125,6 @@
     showWinner = false;
     onFinish(serializeNonPOJOs(tournament));
   };
-
-  let loading = false;
 
   const finilizeMatch = () => {
     loading = true;
@@ -124,6 +138,8 @@
       }
     };
   };
+
+  updateTournamentData();
 </script>
 
 <RealtimeSubscriber
@@ -178,7 +194,9 @@
         disabled={loading}
       />
       <div class=" mt-4">
-        <button class="btn btn-primary w-full rounded-sm" disabled={loading}>Next</button>
+        <button class="btn btn-primary w-full rounded-sm" disabled={loading || buttonDisabled}>
+          Next {buttonDisabled ? `(${votingTime} s)` : ""}
+        </button>
       </div>
     </form>
   {/if}

@@ -30,7 +30,7 @@ const handlePocketBaseError = (err: PbError, action: string | null = null) => {
       return { joinCode: ["Something went wrong"] };
     }
     if (err.status === 404) {
-      return { joinCode: ["Tournament doesn't exist"] };
+      return { joinCode: ["Couldn't find the tournament"] };
     }
   }
 
@@ -39,7 +39,7 @@ const handlePocketBaseError = (err: PbError, action: string | null = null) => {
       return { message: ["Something went wrong"] };
     }
     if (err.status === 404) {
-      return { message: ["Tournament doesn't exist"] };
+      return { message: ["This tournament doesn't exist"] };
     }
   }
 
