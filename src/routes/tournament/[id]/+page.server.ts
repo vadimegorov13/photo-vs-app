@@ -128,14 +128,21 @@ export const actions: Actions = {
   ready: async ({ locals, request }) => {
     const data = await request.formData();
     const userTournamentId = data.get("userTournamentId") as string;
+    const tournamentStateId = data.get("tournamentStateId") as string;
 
     try {
+      const tournamentState = await locals.pb
+        .collection("tournamentState")
+        .getOne(tournamentStateId);
       const userTournament = await locals.pb.collection("userTournament").getOne(userTournamentId);
 
       if (userTournament.submissions.length === 0) {
         throw error(400, "Please make at least one submission");
       }
       await locals.pb.collection("userTournament").update(userTournamentId, { ready: true });
+      await locals.pb
+        .collection("tournamentState")
+        .update(tournamentStateId, { usersReady: tournamentState.usersReady + 1 });
 
       return {
         action: "tournament",
@@ -150,10 +157,17 @@ export const actions: Actions = {
   unready: async ({ locals, request }) => {
     const data = await request.formData();
     const userTournamentId = data.get("userTournamentId") as string;
+    const tournamentStateId = data.get("tournamentStateId") as string;
 
     try {
-      await locals.pb.collection("userTournament").update(userTournamentId, { ready: false });
+      const tournamentState = await locals.pb
+        .collection("tournamentState")
+        .getOne(tournamentStateId);
 
+      await locals.pb.collection("userTournament").update(userTournamentId, { ready: false });
+      await locals.pb
+        .collection("tournamentState")
+        .update(tournamentStateId, { usersReady: tournamentState.usersReady - 1 });
       return {
         action: "tournament",
         success: true,
@@ -331,12 +345,6 @@ export const actions: Actions = {
       // update state of the current match
       await locals.pb.collection("match").update(currentMatch.id, { winner, state: "FINISHED" });
 
-      // update match counter in tournamentState
-      await locals.pb.collection("tournamentState").update(tournament.state, {
-        match: tournament.expand.state.match + 1,
-        votes: 0,
-      });
-
       // get next match of the round
       const nextMatch = getNextNotStartedMatch(currentMatch, currentRound.expand.matches);
       if (nextMatch) {
@@ -344,6 +352,12 @@ export const actions: Actions = {
         await locals.pb.collection("match").update(nextMatch, { state: "IN_PROGRESS" });
         await locals.pb.collection("round").update(currentRound.id, {
           currentMatch: nextMatch,
+        });
+
+        // update match counter in tournamentState
+        await locals.pb.collection("tournamentState").update(tournament.state, {
+          match: tournament.expand.state.match + 1,
+          votes: 0,
         });
       }
 
@@ -388,6 +402,7 @@ export const actions: Actions = {
         await locals.pb.collection("tournamentState").update(tournament.state, {
           currentRound: nextRound.id,
           round: tournament.expand.state.round + 1,
+          match: tournament.expand.state.match + 1,
           votes: 0,
         });
       }

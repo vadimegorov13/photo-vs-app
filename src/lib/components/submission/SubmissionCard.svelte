@@ -22,14 +22,6 @@
         {/if}
       </div>
 
-      {#if winner === submission.id}
-        <div class="absolute -bottom-0 -right-0 rounded-sm">
-          <p class="text-xl text-success">
-            <Icon src={Trophy} class="w-10 h-10 mx-auto" />
-          </p>
-        </div>
-      {/if}
-
       <a href={imageUrl} target="_blank">
         <img
           src={imageUrl}
@@ -44,6 +36,11 @@
       <p class="text-md text-gray-500">
         {submission.description}
       </p>
+      {#if winner === submission.id}
+        <p class="text-xl text-success">
+          <Icon src={Trophy} class="w-10 h-10 mx-auto" />
+        </p>
+      {/if}
     </div>
   </div>
 </div>

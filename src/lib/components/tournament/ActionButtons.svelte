@@ -59,6 +59,14 @@
               hidden
               disabled={loading}
             />
+            <ValidatedInput
+              id="tournamentStateId"
+              type="text"
+              label="tournamentStateId"
+              value={tournament.state}
+              hidden
+              disabled={loading}
+            />
             <button
               type="submit"
               class="btn rounded-sm text-xs lowercase px-2 w-12

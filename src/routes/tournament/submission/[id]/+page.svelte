@@ -55,7 +55,7 @@
       <input type="text" name="tournamentId" value={data.id} hidden />
 
       <div class="w-full max-w-md">
-        <button class="btn btn-primary w-full">Submit</button>
+        <button class="btn btn-primary w-full rounded-sm">Submit</button>
       </div>
     </form>
   </div>

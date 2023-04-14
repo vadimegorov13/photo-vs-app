@@ -5,9 +5,9 @@
   import type { Submission } from "$lib/types";
 
   export let submission: Submission;
-  export let imageUrls: string;
+  export let imageUrl: string;
   export let matchId: string;
-  export let voted: boolean;
+  export let voted: string | null;
 
   let loading: boolean = false;
 
@@ -28,16 +28,13 @@
   };
 </script>
 
-<div>
-  <h1 class="text-center text-xl mb-4">{submission.title}</h1>
-  <a href={imageUrls} target="_blank">
-    <img
-      src={imageUrls}
-      alt="submission2"
-      id="submission-{submission.id}"
-      class="border w-[40rem]"
-    />
-  </a>
+<div
+  class="border rounded-sm duration-300 {voted === submission.id
+    ? 'rounded-sm border-2 border-green-500 shadow-lg shadow-green-200 scale-105'
+    : ''} 
+  {voted && voted !== submission.id ? 'scale-95' : ''}"
+>
+  <h1 class="text-center text-xl">{submission.title}</h1>
   <form method="POST" class="flex flex-col items-center" action="?/vote" use:enhance={enhanceForm}>
     <ValidatedInput
       id="submissionId"
@@ -53,13 +50,15 @@
       hidden
       disabled={loading}
     />
-    <div class=" mt-4">
-      <button
-        class="btn btn-primary w-full rounded-sm {voted ? 'btn-disabled' : ''}"
-        disabled={loading}
-      >
-        Vote
-      </button>
-    </div>
+    <button class={voted ? "btn-disabled" : ""} disabled={loading}>
+      <img
+        src={imageUrl}
+        alt="submission2"
+        id="submission-{submission.id}"
+        class="hover:cursor-pointer border w-[40rem] {voted && voted !== submission.id
+          ? 'duration-100 prose prose-xl'
+          : ''}"
+      />
+    </button>
   </form>
 </div>

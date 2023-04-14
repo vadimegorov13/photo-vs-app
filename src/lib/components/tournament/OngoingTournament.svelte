@@ -2,11 +2,12 @@
   import { applyAction, enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
   import { RealtimeSubscriber, ValidatedInput, VoteSubmission } from "$lib/components";
-  import { getImageUrl } from "$lib/helpers";
+  import { getImageUrl, serializeNonPOJOs } from "$lib/helpers";
   import type { Match, Round, Submission, Tournament, UserTournament, UserVote } from "$lib/types";
 
   export let tournament: Tournament;
   export let userTournament: UserTournament;
+  export let onFinish: (data: any) => void;
 
   const userId = userTournament.user;
   const expand: string =
@@ -14,7 +15,8 @@
     state, settings, host, registeredUsers.submissions, \
     state.rounds, state.rounds.matches, state.rounds.matches, \
     state.rounds.matches.submission1, state.rounds.matches.submission2, \
-    state.rounds.matches.userVotes1, state.rounds.matches.userVotes2";
+    state.rounds.matches.userVotes1, state.rounds.matches.userVotes2, \
+    state.currentRound.currentMatch";
 
   let currentRound: Round | undefined = undefined;
   let currentMatch: Match | undefined = undefined;
@@ -24,7 +26,7 @@
   let votes1: string[] = [];
   let votes2: string[] = [];
   let imageUrls: string[] = [];
-  let voted: boolean = false;
+  let voted: string | null = null;
 
   const updateTournamentData = () => {
     currentRound = tournament.expand.state.expand.rounds.find(
@@ -45,9 +47,21 @@
       submission1 ? getImageUrl(submission1.collectionId, submission1.id, submission1.image) : "",
       submission2 ? getImageUrl(submission2.collectionId, submission2.id, submission2.image) : "",
     ];
-    voted =
-      (currentMatch?.expand.userVotes1?.some((vote: UserVote) => vote.user === userId) ?? false) ||
-      (currentMatch?.expand.userVotes2?.some((vote: UserVote) => vote.user === userId) ?? false);
+    const userVotedInVotes1 =
+      currentMatch?.expand.userVotes1?.some((vote: UserVote) => vote.user === userId) ?? false;
+    const userVotedInVotes2 =
+      currentMatch?.expand.userVotes2?.some((vote: UserVote) => vote.user === userId) ?? false;
+
+    if (userVotedInVotes1) {
+      voted = submission1?.id ?? null;
+    } else if (userVotedInVotes2) {
+      voted = submission2?.id ?? null;
+    } else {
+      voted = null;
+    }
+
+    console.log(tournament.expand.state.state);
+    console.log(tournament);
   };
 
   updateTournamentData();
@@ -55,6 +69,9 @@
   const handleUpdate = (updatedData: any) => {
     tournament = updatedData;
     updateTournamentData();
+    if (tournament.expand.state.state === "FINISHED") {
+      onFinish(serializeNonPOJOs(tournament));
+    }
   };
 
   let loading = false;
@@ -82,11 +99,8 @@
   onUpdate={handleUpdate}
 />
 
-<div class="bg-white p-6">
-  <h1 class="text-4xl text-center text-primary font-semibold mb-4">
-    {tournament.title}
-  </h1>
-  <h2 class="text-2xl text-center text-gray-700 font-medium mb-2">
+<div class="bg-white my-6 grid grid-cols-3 w-full">
+  <h2 class="text-xl text-center text-gray-600 font-medium">
     Round {tournament.expand.state.round}/{tournament.expand.state.expand.rounds.length}
   </h2>
   <h2 class="text-xl text-center text-gray-600 font-medium">
@@ -98,17 +112,17 @@
 </div>
 
 {#if currentMatch && submission1 && submission2}
-  <div class="flex flex-col md:flex-row justify-center items-center space-x-0 md:space-x-10">
+  <div class="mx-4 flex flex-col md:flex-row justify-center items-center">
     <VoteSubmission
       submission={submission1}
-      imageUrls={imageUrls[0]}
+      imageUrl={imageUrls[0]}
       matchId={currentMatch.id}
       {voted}
     />
-    <p class="text-center text-3xl text-primary m-6">VS</p>
+    <p class="text-center text-3xl text-primary my-2 md:mx-6">VS</p>
     <VoteSubmission
       submission={submission2}
-      imageUrls={imageUrls[1]}
+      imageUrl={imageUrls[1]}
       matchId={currentMatch.id}
       {voted}
     />

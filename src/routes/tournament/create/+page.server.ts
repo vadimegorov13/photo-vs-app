@@ -39,6 +39,7 @@ export const actions: Actions = {
         round: 0,
         match: 0,
         votes: 0,
+        usersReady: 1,
       });
 
       const tournamentData = {

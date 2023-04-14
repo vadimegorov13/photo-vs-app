@@ -9,46 +9,32 @@
         state, settings, host, registeredUsers.submissions, \
         state.rounds, state.rounds.matches, state.rounds.matches, \
         state.rounds.matches.submission1, state.rounds.matches.submission2, \
-        state.rounds.matches.userVotes1, state.rounds.matches.userVotes2";
+        state.rounds.matches.userVotes1, state.rounds.matches.userVotes2, \
+        state.currentRound.currentMatch";
 
   const handleUpdate = (updatedData: any) => {
     data.props.tournament = updatedData;
+    console.log("yo")
   };
 </script>
 
 <div class="mx-2 md:mx-10">
   {#if data.success}
-    <RealtimeSubscriber
-      collectionName="tournament"
-      id={data.props.tournament.id}
-      {expand}
-      onUpdate={handleUpdate}
-    />
-    <RealtimeSubscriber
-      collectionName="tournamentState"
-      id={data.props.tournament.state}
-      relationName="tournament"
-      relationId={data.props.tournament.id}
-      {expand}
-      onUpdate={handleUpdate}
-    />
-
-    {#each data.props.tournament.registeredUsers as userTournament}
+    {#if data.props.tournament.expand.state.state === "IN_PROGRESS" && data.props.userTournament}
+      <OngoingTournament
+        tournament={data.props.tournament}
+        userTournament={data.props.userTournament}
+        onFinish={handleUpdate}
+      />
+    {:else}
       <RealtimeSubscriber
-        collectionName="userTournament"
-        id={userTournament}
+        collectionName="tournamentState"
+        id={data.props.tournament.state}
         relationName="tournament"
         relationId={data.props.tournament.id}
         {expand}
         onUpdate={handleUpdate}
       />
-    {/each}
-    {#if data.props.tournament.expand.state.state === "IN_PROGRESS" && data.props.userTournament}
-      <OngoingTournament
-        tournament={data.props.tournament}
-        userTournament={data.props.userTournament}
-      />
-    {:else}
       <Preview
         tournament={data.props.tournament}
         userTournament={data.props.userTournament}
