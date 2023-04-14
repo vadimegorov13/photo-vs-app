@@ -35,7 +35,7 @@ export const registerSchema = z
       .min(6, { message: "Password must be at least 8 characters long" })
       .max(32, { message: "Password must be less than 32 characters" })
       .trim(),
-    terms: z.enum(["on"], { required_error: "You must accept the terms and conditions" }),
+    // terms: z.enum(["on"], { required_error: "You must accept the terms and conditions" }),
   })
   .superRefine(({ passwordConfirm, password }, ctx) => {
     if (passwordConfirm !== password) {

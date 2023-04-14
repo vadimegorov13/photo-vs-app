@@ -15,7 +15,7 @@
 </svelte:head>
 
 <div class="flex flex-col mx-10 items-center">
-  <div class="m-10 w-full">
+  <div class="m-10 w-full mb-4">
     <h2 class="text-primary text-center text-3xl font-bold">Login</h2>
     <p class="text-black text-center">
       Or

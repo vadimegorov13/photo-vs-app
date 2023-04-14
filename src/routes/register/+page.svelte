@@ -14,7 +14,7 @@
 </svelte:head>
 
 <div class="flex flex-col items-center mx-10">
-  <div class="m-10">
+  <div class="m-10 mb-4">
     <h2 class="text-primary text-center text-3xl font-bold">Register</h2>
     <p class="text-black">
       Or
@@ -71,7 +71,7 @@
         </div>
       </div>
 
-      <div class="form-control my-2">
+      <!-- <div class="form-control my-2">
         <label class="label cursor-pointer justify-start space-x-2">
           <input
             type="checkbox"
@@ -87,9 +87,9 @@
             <span class="label-text-alt text-error">{form?.errors.terms[0]}</span>
           </label>
         {/if}
-      </div>
+      </div> -->
 
-      <button class="btn btn-primary w-full max-w-md rounded-sm">Register</button>
+      <button class="btn btn-primary w-full max-w-md rounded-sm mt-4">Register</button>
     </form>
   </div>
 </div>
