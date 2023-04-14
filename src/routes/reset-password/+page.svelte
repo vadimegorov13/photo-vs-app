@@ -3,6 +3,10 @@
   export let form;
 </script>
 
+<svelte:head>
+  <title>Reset password</title>
+</svelte:head>
+
 <div class="flex flex-col items-center mx-10 sm:mx-20">
   <div class="mt-10 mb-4">
     <h2 class="text-primary text-center text-3xl font-bold">Reset Your Password</h2>

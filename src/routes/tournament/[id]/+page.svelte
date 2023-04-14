@@ -1,5 +1,7 @@
 <script lang="ts">
   import { Preview, RealtimeSubscriber, OngoingTournament } from "$lib/components";
+  import TournamentCard from "$lib/components/tournament/TournamentCard.svelte";
+  import TournamentDetails from "$lib/components/tournament/TournamentDetails.svelte";
   export let data: any;
   export let form;
   export let ongoing = false;
@@ -33,6 +35,10 @@
     ongoing = false;
   };
 </script>
+
+<svelte:head>
+  <title>{data.success ? data.props.tournament.title : "Not found"}</title>
+</svelte:head>
 
 <div class="mx-2 md:mx-10">
   {#if data.success}

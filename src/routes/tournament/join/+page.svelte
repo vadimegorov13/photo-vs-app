@@ -4,6 +4,10 @@
   export let form;
 </script>
 
+<svelte:head>
+  <title>Join Tournament</title>
+</svelte:head>
+
 <div class="flex flex-col items-center mx-10 sm:mx-20">
   <div class="py-6 w-full max-w-md">
     <form method="POST" class="flex flex-col items-center space-y-4 w-full">

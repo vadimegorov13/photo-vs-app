@@ -7,6 +7,10 @@
   $: emailModalOpen = false;
 </script>
 
+<svelte:head>
+  <title>Settings | Account</title>
+</svelte:head>
+
 <div class="flex flex-col w-full h-full space-y-4">
   <div class="w-full flex flex-col items-center">
     <h3 class="text-2xl font-medium">Change Email</h3>

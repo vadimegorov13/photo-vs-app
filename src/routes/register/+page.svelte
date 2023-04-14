@@ -9,6 +9,10 @@
   $: search = $page.url.search ?? "";
 </script>
 
+<svelte:head>
+  <title>PhotoVS | Register</title>
+</svelte:head>
+
 <div class="flex flex-col items-center mx-10">
   <div class="m-10">
     <h2 class="text-primary text-center text-3xl font-bold">Register</h2>

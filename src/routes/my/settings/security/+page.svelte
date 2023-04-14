@@ -4,6 +4,10 @@
   export let form;
 </script>
 
+<svelte:head>
+  <title>Settings | Security</title>
+</svelte:head>
+
 <div class="flex flex-col justify-center">
   <form method="POST" class="flex flex-col space-y-2 w-full">
     <div class="form-control flex flex-col items-center">

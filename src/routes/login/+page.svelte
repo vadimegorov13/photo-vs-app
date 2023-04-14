@@ -10,6 +10,10 @@
   $: message = $page.url.searchParams.get("message") ?? "";
 </script>
 
+<svelte:head>
+  <title>PhotoVS | Login</title>
+</svelte:head>
+
 <div class="flex flex-col mx-10 items-center">
   <div class="m-10 w-full">
     <h2 class="text-primary text-center text-3xl font-bold">Login</h2>

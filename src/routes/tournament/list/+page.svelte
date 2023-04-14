@@ -4,6 +4,10 @@
   export let data;
 </script>
 
+<svelte:head>
+  <title>Your Tournaments</title>
+</svelte:head>
+
 <div class="mx-10 mb-12">
   <div class="container mx-auto">
     {#if !data.props}

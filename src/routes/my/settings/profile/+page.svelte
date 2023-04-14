@@ -23,6 +23,10 @@
   };
 </script>
 
+<svelte:head>
+  <title>Settings | Profile</title>
+</svelte:head>
+
 <div class="flex flex-col">
   <form method="POST" class="flex flex-col w-full" enctype="multipart/form-data">
     <div class="form-control flex flex-col items-center">

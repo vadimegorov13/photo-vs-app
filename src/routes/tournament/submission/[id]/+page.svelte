@@ -5,6 +5,10 @@
   export let form;
 </script>
 
+<svelte:head>
+  <title>Submit Photo</title>
+</svelte:head>
+
 <div class="flex flex-col items-center">
   <div class="m-10">
     <h2 class="text-primary text-center text-3xl font-bold">Submit your photo</h2>
