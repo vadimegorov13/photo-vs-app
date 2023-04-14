@@ -19,9 +19,9 @@
       <p class="badge badge-warning my-auto">waiting for players</p>
     {/if}
   {:else if state === "FINISHED"}
-    <p class="badge my-auto">finished</p>
+    <p class="badge badge-success my-auto">finished</p>
   {:else if state === "IN_PROGRESS"}
-    <p class="badge badge-success my-auto">in progress</p>
+    <p class="badge badge-warning my-auto">in progress</p>
   {/if}
   <div class="divider m-0" />
   <div>

@@ -2,7 +2,7 @@
   import { applyAction, enhance } from "$app/forms";
   import { invalidateAll } from "$app/navigation";
   import { RealtimeSubscriber, ValidatedInput, VoteSubmission } from "$lib/components";
-  import { getImageUrl, serializeNonPOJOs } from "$lib/helpers";
+  import { getImageUrl, getNumberSuffix, serializeNonPOJOs } from "$lib/helpers";
   import type { Match, Round, Submission, Tournament, UserTournament, UserVote } from "$lib/types";
 
   export let tournament: Tournament;
@@ -30,15 +30,15 @@
   let voted: string | null = null;
 
   let showWinner: boolean = false;
+  let lastMatch: boolean = false;
 
   const handleWinner = () => {
     showWinner = true;
-    console.log("show winner");
+
     setTimeout(() => {
       showWinner = false;
       prevMatch = undefined;
-      console.log("reset show winner");
-    }, 1000);
+    }, 3000);
   };
 
   const updateTournamentData = () => {
@@ -81,6 +81,8 @@
         .find((round) => round.id === prevRoundId)
         ?.expand.matches.find((match) => match.id === prevMatchId) ?? undefined;
 
+    lastMatch = tournament.expand.state.state === "FINISHED";
+
     if (
       prevMatch !== undefined &&
       prevMatch !== currentMatch &&
@@ -90,6 +92,10 @@
     ) {
       handleWinner();
     }
+
+    if (lastMatch) {
+      showWinner = true;
+    }
   };
 
   updateTournamentData();
@@ -97,10 +103,11 @@
   const handleUpdate = (updatedData: any) => {
     tournament = updatedData;
     updateTournamentData();
+  };
 
-    if (tournament.expand.state.state === "FINISHED") {
-      onFinish(serializeNonPOJOs(tournament));
-    }
+  const handleFinish = () => {
+    showWinner = false;
+    onFinish(serializeNonPOJOs(tournament));
   };
 
   let loading = false;
@@ -128,19 +135,18 @@
   onUpdate={handleUpdate}
 />
 
-<div class="bg-white my-6 grid grid-cols-3 w-full">
-  <h2 class="text-xl text-center text-gray-600 font-medium">
-    Round {tournament.expand.state.round}/{tournament.expand.state.expand.rounds.length}
-  </h2>
-  <h2 class="text-xl text-center text-gray-600 font-medium">
-    Match {tournament.expand.state.match}/{matchTotal}
-  </h2>
-  <h2 class="text-xl text-center text-gray-600 font-medium">
-    Votes {tournament.expand.state.votes}/{tournament.registeredUsers.length}
-  </h2>
-</div>
-
 {#if currentMatch && submission1 && submission2 && !showWinner}
+  <div class="my-6 grid grid-cols-3 w-full">
+    <h2 class="text-xl text-center text-gray-600 font-medium">
+      Round {tournament.expand.state.round}/{tournament.expand.state.expand.rounds.length}
+    </h2>
+    <h2 class="text-xl text-center text-gray-600 font-medium">
+      Match {tournament.expand.state.match}/{matchTotal}
+    </h2>
+    <h2 class="text-xl text-center text-gray-600 font-medium">
+      Votes {tournament.expand.state.votes}/{tournament.registeredUsers.length}
+    </h2>
+  </div>
   <div class="mx-4 flex flex-col md:flex-row justify-center items-center">
     <VoteSubmission
       submission={submission1}
@@ -180,16 +186,38 @@
 
 {#if showWinner && prevMatch && prevMatch.winner}
   <div class="mx-4 flex flex-col justify-center items-center">
-    <h1 class="text-center text-xl">{prevMatch.expand.winner.title}</h1>
-    <img
-      src={getImageUrl(
-        prevMatch.expand.winner.collectionId,
-        prevMatch.expand.winner.id,
-        prevMatch.expand.winner.image
-      )}
-      alt="submission2"
-      id="submission-{prevMatch.expand.winner.id}"
-      class="border w-[40rem]"
-    />
+    <div class="felx flex-row justify-center w-full my-6">
+      <h2 class="text-xl text-center text-gray-600 font-medium">
+        {lastMatch
+          ? "Winner of the tournament!"
+          : `Winner of the ${getNumberSuffix(tournament.expand.state.match - 1)} match`}
+      </h2>
+    </div>
+    <div class="border rounded-sm">
+      <h1 class="text-center text-xl">{prevMatch.expand.winner.title}</h1>
+      <img
+        src={getImageUrl(
+          prevMatch.expand.winner.collectionId,
+          prevMatch.expand.winner.id,
+          prevMatch.expand.winner.image
+        )}
+        alt="submission2"
+        id="submission-{prevMatch.expand.winner.id}"
+        class="w-[40rem]"
+      />
+      <h1 class="text-center text-md text-gray-500">{prevMatch.expand.winner.description}</h1>
+    </div>
+
+    {#if lastMatch}
+      <div class=" mt-4">
+        <button
+          class="btn btn-primary w-full rounded-sm"
+          disabled={loading}
+          on:click={handleFinish}
+        >
+          Continue
+        </button>
+      </div>
+    {/if}
   </div>
 {/if}

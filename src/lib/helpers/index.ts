@@ -1,4 +1,9 @@
-import { copyToClipBoard, getImageUrl, serializeNonPOJOs } from "$lib/helpers/helpers";
+import {
+  copyToClipBoard,
+  getImageUrl,
+  getNumberSuffix,
+  serializeNonPOJOs,
+} from "$lib/helpers/helpers";
 import {
   generateBracket,
   getNextNotStartedMatch,
@@ -10,6 +15,7 @@ export {
   generateBracket,
   getImageUrl,
   getNextNotStartedMatch,
+  getNumberSuffix,
   registerUserForTournament,
   serializeNonPOJOs,
 };

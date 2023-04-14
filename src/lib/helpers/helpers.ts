@@ -29,3 +29,10 @@ export const copyToClipBoard = (tournamentId: string) => {
 const handleCopy = () => {
   alert(`Copied a link to your clipboard`);
 };
+
+export const getNumberSuffix = (number: number) => {
+  const suffixes = ["st", "nd", "rd"];
+  const suffix =
+    number % 100 >= 11 && number % 100 <= 13 ? "th" : suffixes[(number % 10) - 1] || "th";
+  return `${number}${suffix}`;
+};

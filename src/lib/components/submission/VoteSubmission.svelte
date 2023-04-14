@@ -55,10 +55,11 @@
         src={imageUrl}
         alt="submission2"
         id="submission-{submission.id}"
-        class="hover:cursor-pointer border w-[40rem] {voted && voted !== submission.id
+        class="hover:cursor-pointer w-[40rem] {voted && voted !== submission.id
           ? 'duration-100 prose prose-xl'
           : ''}"
       />
     </button>
   </form>
+  <h1 class="text-center text-md text-gray-500">{submission.description}</h1>
 </div>

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { Preview, RealtimeSubscriber } from "$lib/components";
-  import OngoingTournament from "$lib/components/tournament/OngoingTournament.svelte";
+  import { Preview, RealtimeSubscriber, OngoingTournament } from "$lib/components";
   export let data: any;
   export let form;
+  export let ongoing = false
 
   const expand: string =
     "registeredUsers, registeredUsers.user, \
@@ -14,16 +14,29 @@
 
   const handleUpdate = (updatedData: any) => {
     data.props.tournament = updatedData;
+
+    if (data.props.tournament.expand.state.state === "IN_PROGRESS" && data.props.userTournament){
+      ongoing = true
+    }
+  };
+
+  if (data.props.tournament.expand.state.state === "IN_PROGRESS" && data.props.userTournament){
+      ongoing = true
+    }
+
+  const handleFinish = (updatedData: any) => {
+    handleUpdate(updatedData)
+    ongoing = false;
   };
 </script>
 
 <div class="mx-2 md:mx-10">
   {#if data.success}
-    {#if data.props.tournament.expand.state.state === "IN_PROGRESS" && data.props.userTournament}
+    {#if ongoing}
       <OngoingTournament
         tournament={data.props.tournament}
         userTournament={data.props.userTournament}
-        onFinish={handleUpdate}
+        onFinish={handleFinish}
       />
     {:else}
       <RealtimeSubscriber
