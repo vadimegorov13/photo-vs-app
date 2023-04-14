@@ -10,11 +10,10 @@
         state.rounds, state.rounds.matches, state.rounds.matches, \
         state.rounds.matches.submission1, state.rounds.matches.submission2, \
         state.rounds.matches.userVotes1, state.rounds.matches.userVotes2, \
-        state.currentRound.currentMatch";
+        state.currentRound.currentMatch, state.rounds.matches.winner";
 
   const handleUpdate = (updatedData: any) => {
     data.props.tournament = updatedData;
-    console.log("yo")
   };
 </script>
 

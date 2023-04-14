@@ -155,8 +155,12 @@ const extractMatches = (
           typeof element[0] === "number"
             ? { submission: element[0] }
             : round > 2
-            ? matchId - countRightSubmissions(element[1], round)
+            ? matchId - countRightSubmissions(arr[1], round) === -1
+              ? 0
+              : matchId - countRightSubmissions(arr[1], round)
             : matchId - 2;
+
+        console.log(left)
         const right = typeof element[1] === "number" ? { submission: element[1] } : matchId - 1;
         matches.push({ id: matchId, round, left, right });
         matchId++;
@@ -178,9 +182,14 @@ const generateMatches = (
   const left =
     typeof arr[1] === "number"
       ? { submission: arr[1] }
-      : round > 2
-      ? matchId - countRightSubmissions(arr[1], round)
+      : round >= 2
+      ? matchId - countRightSubmissions(arr[1], round) === -1
+        ? 0
+        : matchId - countRightSubmissions(arr[1], round)
       : matchId - 2;
+
+  console.log(left)
+  console.log(matchId - countRightSubmissions(arr[1], round))
   const right = typeof arr[0] === "number" ? { submission: arr[0] } : matchId - 1;
   const lastMatch: MatchGen = { id: matchId, round: round, left, right };
 

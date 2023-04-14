@@ -31,9 +31,9 @@
       <p class="badge badge-lg badge-outline mx-auto mt-2 text-sm">
         max submissions: {tournament.expand.settings.maxSubmissions}
       </p>
-      <p class="badge badge-lg badge-outline mx-auto mt-2 text-sm">
+      <!-- <p class="badge badge-lg badge-outline mx-auto mt-2 text-sm">
         voting time: {tournament.expand.settings.voteTime}s
-      </p>
+      </p> -->
       {#if userTournament}
         <p class="badge badge-lg badge-outline mx-auto mt-2 text-sm">
           join code: {tournament.joinCode}

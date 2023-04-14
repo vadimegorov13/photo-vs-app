@@ -16,10 +16,11 @@
     state.rounds, state.rounds.matches, state.rounds.matches, \
     state.rounds.matches.submission1, state.rounds.matches.submission2, \
     state.rounds.matches.userVotes1, state.rounds.matches.userVotes2, \
-    state.currentRound.currentMatch";
+    state.currentRound.currentMatch, state.rounds.matches.winner";
 
   let currentRound: Round | undefined = undefined;
   let currentMatch: Match | undefined = undefined;
+  let prevMatch: Match | undefined = undefined;
   let submission1: Submission | null = null;
   let submission2: Submission | null = null;
   let matchTotal: number = 0;
@@ -28,7 +29,22 @@
   let imageUrls: string[] = [];
   let voted: string | null = null;
 
+  let showWinner: boolean = false;
+
+  const handleWinner = () => {
+    showWinner = true;
+    console.log("show winner");
+    setTimeout(() => {
+      showWinner = false;
+      prevMatch = undefined;
+      console.log("reset show winner");
+    }, 1000);
+  };
+
   const updateTournamentData = () => {
+    const prevMatchId = currentMatch?.id ?? undefined;
+    const prevRoundId = currentRound?.id ?? undefined;
+
     currentRound = tournament.expand.state.expand.rounds.find(
       (round) => round.id === tournament.expand.state.currentRound
     );
@@ -60,8 +76,20 @@
       voted = null;
     }
 
-    console.log(tournament.expand.state.state);
-    console.log(tournament);
+    prevMatch =
+      tournament.expand.state.expand.rounds
+        .find((round) => round.id === prevRoundId)
+        ?.expand.matches.find((match) => match.id === prevMatchId) ?? undefined;
+
+    if (
+      prevMatch !== undefined &&
+      prevMatch !== currentMatch &&
+      prevMatch.winner !== undefined &&
+      !showWinner &&
+      !voted
+    ) {
+      handleWinner();
+    }
   };
 
   updateTournamentData();
@@ -69,6 +97,7 @@
   const handleUpdate = (updatedData: any) => {
     tournament = updatedData;
     updateTournamentData();
+
     if (tournament.expand.state.state === "FINISHED") {
       onFinish(serializeNonPOJOs(tournament));
     }
@@ -111,7 +140,7 @@
   </h2>
 </div>
 
-{#if currentMatch && submission1 && submission2}
+{#if currentMatch && submission1 && submission2 && !showWinner}
   <div class="mx-4 flex flex-col md:flex-row justify-center items-center">
     <VoteSubmission
       submission={submission1}
@@ -127,24 +156,40 @@
       {voted}
     />
   </div>
+
+  {#if tournament.host === userTournament.user}
+    <form
+      method="POST"
+      class="flex flex-col items-center"
+      action="?/finilizeMatch"
+      use:enhance={finilizeMatch}
+    >
+      <ValidatedInput
+        id="tournamentId"
+        value={tournament.id}
+        label="tournamentId"
+        hidden
+        disabled={loading}
+      />
+      <div class=" mt-4">
+        <button class="btn btn-primary w-full rounded-sm" disabled={loading}>Next</button>
+      </div>
+    </form>
+  {/if}
 {/if}
 
-{#if tournament.host === userTournament.user}
-  <form
-    method="POST"
-    class="flex flex-col items-center"
-    action="?/finilizeMatch"
-    use:enhance={finilizeMatch}
-  >
-    <ValidatedInput
-      id="tournamentId"
-      value={tournament.id}
-      label="tournamentId"
-      hidden
-      disabled={loading}
+{#if showWinner && prevMatch && prevMatch.winner}
+  <div class="mx-4 flex flex-col justify-center items-center">
+    <h1 class="text-center text-xl">{prevMatch.expand.winner.title}</h1>
+    <img
+      src={getImageUrl(
+        prevMatch.expand.winner.collectionId,
+        prevMatch.expand.winner.id,
+        prevMatch.expand.winner.image
+      )}
+      alt="submission2"
+      id="submission-{prevMatch.expand.winner.id}"
+      class="border w-[40rem]"
     />
-    <div class=" mt-4">
-      <button class="btn btn-primary w-full rounded-sm" disabled={loading}>Next</button>
-    </div>
-  </form>
+  </div>
 {/if}
