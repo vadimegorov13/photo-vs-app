@@ -16,7 +16,7 @@
 <div class="flex flex-col items-center mx-10">
   <div class="m-10 mb-4">
     <h2 class="text-primary text-center text-3xl font-bold">Register</h2>
-    <p class="text-black">
+    <p class="text-black text-center">
       Or
       <a
         href="/login{search}"
