@@ -4,6 +4,7 @@
   import { RealtimeSubscriber, ValidatedInput, VoteSubmission } from "$lib/components";
   import { getImageUrl, getNumberSuffix, serializeNonPOJOs } from "$lib/helpers";
   import type { Match, Round, Submission, Tournament, UserTournament, UserVote } from "$lib/types";
+  import { Confetti } from "svelte-confetti";
 
   export let tournament: Tournament;
   export let userTournament: UserTournament;
@@ -31,7 +32,7 @@
   let lastMatch: boolean = false;
   let loading = false;
 
-  let votingTime = 10;
+  let votingTime = 5;
   let intervalId: any;
   let buttonDisabled = false;
 
@@ -42,7 +43,7 @@
       if (votingTime === 0) {
         clearInterval(intervalId);
         buttonDisabled = false;
-        votingTime = 10;
+        votingTime = 5;
       }
     }, 1000);
   };
@@ -193,7 +194,7 @@
         hidden
         disabled={loading}
       />
-      <div class=" mt-4">
+      <div class="mt-4 z-10">
         <button class="btn btn-primary w-full rounded-sm" disabled={loading || buttonDisabled}>
           Next {buttonDisabled ? `(${votingTime} s)` : ""}
         </button>
@@ -211,8 +212,10 @@
           : `Winner of the ${getNumberSuffix(tournament.expand.state.match - 1)} match`}
       </h2>
     </div>
+
     <div class="border rounded-sm">
       <h1 class="text-center text-xl">{prevMatch.expand.winner.title}</h1>
+
       <img
         src={getImageUrl(
           prevMatch.expand.winner.collectionId,
@@ -227,7 +230,7 @@
     </div>
 
     {#if lastMatch}
-      <div class=" mt-4">
+      <div class="mt-4 z-10">
         <button
           class="btn btn-primary w-full rounded-sm"
           disabled={loading}
@@ -238,4 +241,29 @@
       </div>
     {/if}
   </div>
+
+  <div class="confetti z-0">
+    <Confetti
+      x={[-5, 5]}
+      y={[0, 0.1]}
+      delay={[100, 2000]}
+      infinite
+      duration="3000"
+      amount="400"
+      fallDistance="100vh"
+    />
+  </div>
 {/if}
+
+<style>
+  .confetti {
+    position: fixed;
+    top: -50px;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+</style>
