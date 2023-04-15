@@ -11,7 +11,7 @@ export const getImageUrl = (
   fileName: string,
   size = "0x0"
 ) => {
-  return `http://127.0.0.1:8090/api/files/${collectionId}/${recordId}/${fileName}?thumb=${size}`;
+  return `${import.meta.env.VITE_POCKETBASE_API}/api/files/${collectionId}/${recordId}/${fileName}?thumb=${size}`;
 };
 
 export const copyToClipBoard = (tournamentId: string) => {
